@@ -1,4 +1,4 @@
-# helmerzNL Home Assistant add-ons
+# Home Assistant Add-On Repository by Helmer
 
 *English first · Nederlands hieronder.*
 
