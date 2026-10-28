@@ -68,6 +68,16 @@ class DefectsAreCaughtTest(unittest.TestCase):
         dockerfile.write_text(dockerfile.read_text(encoding="utf-8").replace("discvault:beta", "discvault:latest"), encoding="utf-8")
         self.assertTrue(any("beta" in p for p in self.problems()))
 
+    def test_every_addon_opens_from_its_page(self):
+        import yaml
+        for folder in check_addons.addon_dirs():
+            self.assertIn("[PORT:", yaml.safe_load((folder / "config.yaml").read_text()).get("webui", ""), folder.name)
+
+    def test_addon_without_web_ui_button(self):
+        config = self.tmp / "doorbell-map" / "config.yaml"
+        config.write_text("\n".join(l for l in config.read_text(encoding="utf-8").splitlines() if not l.startswith("webui:")) + "\n", encoding="utf-8")
+        self.assertTrue(any("webui" in p for p in self.problems()))
+
     def test_addon_without_source(self):
         (self.tmp / "sources.json").write_text('{"discvault": {}}', encoding="utf-8")
         self.assertTrue(any("sources.json" in p for p in self.problems()))

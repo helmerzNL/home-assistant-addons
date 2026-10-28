@@ -22,7 +22,7 @@ run in this one container; everything they store lives in the app's own data fol
 2. Choose **3D Print Pricing (beta)** and **Install**. Home Assistant builds the app on your device, which takes a few minutes the first time.
 3. Optionally fill in **rp_id** on the **Configuration** tab (see below), save, and **Start** the app.
 4. Open the **Log** tab: the setup code for the first screen is printed there (or type your own under *Setup code*).
-5. Open the app (`https://<your domain>` with a domain, otherwise `http://<address of Home Assistant>:6081`) and go through the onboarding: setup code, your name, a passkey or a password, and save the 8 recovery codes.
+5. Open the app with **Open web UI** (it opens in a new window at `http://<address of Home Assistant>:6081`) or at `https://<your domain>`, and go through the onboarding: setup code, your name, a passkey or a password, and save the 8 recovery codes.
 
 ### Passkey or password
 
@@ -37,7 +37,7 @@ The app works on any address. How you sign in depends on it:
 | Option | What to enter |
 |---|---|
 | **rp_id** | Optional. The domain only, for example `print.example.com`. Leave it empty to follow the address the app is opened on. Passkeys are bound to it: changing it later makes existing passkeys unusable (recovery codes still work). Set it once you use passkeys. |
-| **rp_origins** | Optional. The full address(es), comma separated, for example `https://print.example.com`. Empty means `https://` plus the domain, or the address the app is opened on when there is no domain. When set, writes from any other address are refused. |
+| **rp_origins** | Optional. The full address(es), comma separated, for example `https://print.example.com`. Empty means `https://` plus the domain, or the address the app is opened on when there is no domain. When set, writes from any other address are refused, so then open the app at one of those addresses instead of with **Open web UI**. |
 | **proxy_hops** | `1` when one reverse proxy sits in front of the app (the usual case), `0` when the app is opened on its port directly. |
 
 For passkeys put a reverse proxy with a certificate in front of port **6081** of this app (for example the Nginx Proxy Manager or Caddy app, a
@@ -82,7 +82,7 @@ samen in deze ene container; alles wat ze opslaan staat in de eigen data-map van
 2. Kies **3D Print Pricing (beta)** en klik op **Installeren**. Home Assistant bouwt de app op je apparaat; de eerste keer duurt dat een paar minuten.
 3. Vul op het tabblad **Configuratie** eventueel **rp_id** in (zie hieronder), sla op en **Start** de app.
 4. Open het tabblad **Logboek**: daar staat de instelcode voor het eerste scherm (of typ zelf een code bij *Instelcode*).
-5. Open de app (`https://<jouw domein>` met een domein, anders `http://<adres van Home Assistant>:6081`) en doorloop de onboarding: instelcode, je naam, een passkey of een wachtwoord, en bewaar de 8 herstelcodes.
+5. Open de app met **Webinterface openen** (die opent in een nieuw venster op `http://<adres van Home Assistant>:6081`) of op `https://<jouw domein>`, en doorloop de onboarding: instelcode, je naam, een passkey of een wachtwoord, en bewaar de 8 herstelcodes.
 
 ### Passkey of wachtwoord
 
@@ -97,7 +97,7 @@ De app werkt op elk adres. Hoe je inlogt hangt daarvan af:
 | Optie | Wat invullen |
 |---|---|
 | **rp_id** | Optioneel. Alleen het domein, bijvoorbeeld `print.example.com`. Leeg betekent het adres waarop de app wordt geopend. Passkeys zijn eraan gebonden: later wijzigen maakt bestaande passkeys onbruikbaar (herstelcodes werken nog). Vul het in zodra je passkeys gebruikt. |
-| **rp_origins** | Optioneel. Het volledige adres (of adressen, kommagescheiden), bijvoorbeeld `https://print.example.com`. Leeg betekent `https://` plus het domein, of het adres waarop de app wordt geopend als er geen domein is. Als het is ingevuld, worden wijzigingen vanaf een ander adres geweigerd. |
+| **rp_origins** | Optioneel. Het volledige adres (of adressen, kommagescheiden), bijvoorbeeld `https://print.example.com`. Leeg betekent `https://` plus het domein, of het adres waarop de app wordt geopend als er geen domein is. Als het is ingevuld, worden wijzigingen vanaf een ander adres geweigerd; open de app dan op een van die adressen in plaats van met **Webinterface openen**. |
 | **proxy_hops** | `1` als er één reverse proxy voor de app staat (het gebruikelijke geval), `0` als de app rechtstreeks op zijn poort wordt geopend. |
 
 Voor passkeys: zet een reverse proxy met certificaat voor poort **6081** van deze app (bijvoorbeeld de Nginx Proxy Manager- of Caddy-app, een Cloudflare

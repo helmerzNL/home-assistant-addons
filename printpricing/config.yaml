@@ -17,6 +17,7 @@ ports:
   6080/tcp: 6080
 ports_description:
   6080/tcp: Web interface
+webui: "http://[HOST]:[PORT:6080]"
 watchdog: "http://[HOST]:[PORT:6080]/healthz"
 # /data of this app is the app's DATA_PATH: the database in /data/postgres, the uploads in /data/uploads, the generated secrets in /data/secrets.json.
 options:
