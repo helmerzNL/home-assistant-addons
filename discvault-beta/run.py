@@ -48,24 +48,30 @@ def read_options() -> dict:
 
 
 def settings(options: dict, kept: dict) -> dict:
-    """The environment of the app, from the options and the kept secrets. Stops with a readable message when the domain is not set."""
+    """The environment of the app, from the options and the kept secrets. Stops with a readable message when neither a domain nor password login is set."""
     rp_id = str(options.get("rp_id") or "").strip().lower()
     if "://" in rp_id or "/" in rp_id or ":" in rp_id:
         fail("rp_id must be a domain name only, without https://, a path or a port (for example vault.example.com).")
     origins = str(options.get("rp_origins") or "").strip() or (f"https://{rp_id}" if rp_id else "")
-    if not rp_id or not origins:
+    password_login = bool(options.get("password_login", False))
+    if not password_login and (not rp_id or not origins):
         fail("Set rp_id (the domain DiscVault is opened on, for example vault.example.com) on the Configuration tab of this app, then start it again. "
-             "Passkeys are bound to that domain and only work over https (see the Documentation tab).")
+             "Passkeys are bound to that domain and only work over https (see the Documentation tab). "
+             "Or turn on password_login to sign in with a username and password instead.")
     env = {
         "DATABASE_URL": f"postgresql://{DB_USER}:{kept['postgres_password']}@127.0.0.1:{PGPORT}/{DB_NAME}",
         "JWT_SECRET": kept["jwt_secret"],
-        "RP_ID": rp_id,
-        "RP_ORIGINS": origins,
         "RP_NAME": str(options.get("rp_name") or "").strip() or "DiscVault",
+        "LEGACY_AUTH_ENABLED": "true" if password_login else "false",
         "DISCVAULT_LEGACY_DATA_DIR": str(DATA),
         "DISCVAULT_DATA_DIR": str(DATA),
         "DISCVAULT_BLOCK_CRAWLERS": "true" if options.get("block_crawlers", True) else "false",
     }
+    # Without a domain the app finds no valid passkey set-up and offers the password onboarding only.
+    if rp_id:
+        env["RP_ID"] = rp_id
+    if origins:
+        env["RP_ORIGINS"] = origins
     for option, variable in (("trusted_proxies", "DISCVAULT_TRUSTED_PROXIES"), ("omdb_api_key", "OMDB_API_KEY"), ("tmdb_api_key", "TMDB_API_KEY")):
         value = str(options.get(option) or "").strip()
         if value:
