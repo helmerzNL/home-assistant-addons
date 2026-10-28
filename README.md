@@ -43,7 +43,10 @@ tag pattern and image belong to which add-on.
 The beta images only have a moving `beta` tag, so a beta add-on's version is `<newest release>-beta.<build time of the beta image>` (for example
 `1.0.30-beta.202610281205`): every new beta build gives a higher version and an update. The Supervisor then rebuilds the add-on and pulls the
 `beta` image again. The beta folders of DiscVault, Doorbell Map and 3D Print Pricing are **generated** from their stable folders by
-`scripts/derive_beta.py`; change the stable folder and run the script (CI fails when a beta folder has drifted).
+`scripts/derive_beta.py`; change the stable folder and run the script (CI fails when a beta folder has drifted). **Exception:** `printpricing-beta` is
+edited by hand (`"hand_kept"` in `sources.json`) for as long as the beta app is ahead of the stable app (now: optional `rp_id`/`rp_origins`, a password
+on its own, and arm64 images). When that reaches the stable app, copy the beta files into `printpricing` (without the beta notice, name and port),
+remove `hand_kept` and run `scripts/derive_beta.py`.
 
 ### Maintaining this repository
 
@@ -86,7 +89,9 @@ door de workflow *Update add-on versions*) vergelijkt die versie met de nieuwste
 release gepubliceerd is**; de workflow opent dan een pull request. Merge die en Home Assistant biedt de update aan. In `sources.json` staat welke
 repository, tag en welk image bij welke add-on horen. De beta-images hebben alleen een meebewegende `beta`-tag; de versie van een beta-add-on is
 daarom `<nieuwste release>-beta.<bouwtijd van het beta-image>`, zodat elke nieuwe beta-build een update geeft. De beta-mappen worden gegenereerd
-uit de stabiele mappen met `scripts/derive_beta.py`.
+uit de stabiele mappen met `scripts/derive_beta.py`, behalve `printpricing-beta`: die wordt met de hand onderhouden zolang de beta-app voorloopt op de
+stabiele (nu: optionele `rp_id`/`rp_origins`, inloggen met alleen een wachtwoord en arm64-images). Komt dat in de stabiele app, kopieer de beta-bestanden
+dan naar `printpricing`, haal `hand_kept` weg en draai `scripts/derive_beta.py`.
 
 ### Beheer van deze repository
 

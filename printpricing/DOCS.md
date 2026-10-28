@@ -38,8 +38,8 @@ not offered through the Home Assistant sidebar (Ingress): it is made to be serve
 |---|---|
 | **setup_code** | Typed once on the first screen. Empty makes one and prints it in the Log. |
 | **max_upload_mb** | Largest STL/3MF upload. A proxy in front has to allow at least as much. |
-| **ai_images_enabled** | Switches on the optional AI product images. The OpenAI key is entered in the app, under Settings. |
-| **spoolman_url** | Address of a Spoolman, for example `http://homeassistant.local:7912`. Empty: type it in the app (Settings > Filaments). |
+| **ai_images_enabled** | Switches on the optional AI product images. The OpenAI key is entered in the app, under *Settings → AI images*. |
+| **spoolman_url** | Address of a Spoolman, for example `http://homeassistant.local:7912`. Empty: type it in the app (*Settings → Filaments*, in the *Spoolman* card, which is folded at first). |
 | **update_check** | The app asks GitHub whether a newer release exists and tells the owner. It never updates anything; updating is done here, in Home Assistant. |
 
 Changes take effect after a restart of the app.
@@ -49,7 +49,7 @@ Changes take effect after a restart of the app.
 - The database is in `/data/postgres`, the uploads in `/data/uploads` and the generated secrets (session key, database password, push keys)
   in `/data/secrets.json`. Home Assistant stops the app while it makes a backup (a running database is not a consistent copy), so a backup
   takes the app offline for a moment.
-- The app also has its own backup and restore (Settings > System), which is the way to move an installation between this app and the Docker
+- The app also has its own backup and restore (*Settings → System*), which is the way to move an installation between this app and the Docker
   Compose installation, in either direction. A backup file never contains passkeys or users: the person restoring signs up again.
 - The database is PostgreSQL 17. A data folder cannot be opened by another major version; the app refuses to start rather than touch it.
 
@@ -60,7 +60,7 @@ architecture is **amd64** only for now (the published image is built for that).
 
 ## Nederlands
 
-This app runs [3D Print Pricing](https://github.com/Flux76HQ/3dprint_pricing) in Home Assistant. De app en de PostgreSQL-database draaien
+Deze app draait [3D Print Pricing](https://github.com/Flux76HQ/3dprint_pricing) in Home Assistant. De app en de PostgreSQL-database draaien
 samen in deze ene container; alles wat ze opslaan staat in de eigen data-map van de app, die Home Assistant meeneemt in zijn back-ups.
 
 ### Installeren
@@ -94,8 +94,8 @@ via de zijbalk van Home Assistant (Ingress) aangeboden: hij is gemaakt om op de 
 |---|---|
 | **setup_code** | Eenmalig in het eerste scherm in te typen. Leeg maakt er een en toont die in het Logboek. |
 | **max_upload_mb** | Grootste STL/3MF-upload. Een proxy ervoor moet minstens zoveel toestaan. |
-| **ai_images_enabled** | Schakelt de optionele AI-productafbeeldingen in. De OpenAI-sleutel voer je in de app in, onder Instellingen. |
-| **spoolman_url** | Adres van een Spoolman, bijvoorbeeld `http://homeassistant.local:7912`. Leeg: typ het in de app (Instellingen > Filamenten). |
+| **ai_images_enabled** | Schakelt de optionele AI-productafbeeldingen in. De OpenAI-sleutel voer je in de app in, onder *Instellingen → AI-afbeeldingen*. |
+| **spoolman_url** | Adres van een Spoolman, bijvoorbeeld `http://homeassistant.local:7912`. Leeg: typ het in de app (*Instellingen → Filamenten*, in de kaart *Spoolman*, die eerst ingeklapt is). |
 | **update_check** | De app vraagt GitHub of er een nieuwere release is en meldt dat aan de eigenaar. Hij werkt nooit zelf bij; bijwerken doe je hier, in Home Assistant. |
 
 Wijzigingen gaan in na een herstart van de app.
@@ -105,7 +105,7 @@ Wijzigingen gaan in na een herstart van de app.
 - De database staat in `/data/postgres`, de uploads in `/data/uploads` en de gegenereerde geheimen (sessiesleutel, databasewachtwoord,
   pushsleutels) in `/data/secrets.json`. Home Assistant stopt de app tijdens een back-up (een draaiende database is geen consistente kopie),
   dus een back-up haalt de app even offline.
-- De app heeft ook een eigen back-up en terugzetten (Instellingen > Systeem); daarmee verhuis je een installatie tussen deze app en de
+- De app heeft ook een eigen back-up en terugzetten (*Instellingen → Systeem*); daarmee verhuis je een installatie tussen deze app en de
   Docker Compose-installatie, in beide richtingen. Een back-upbestand bevat nooit passkeys of gebruikers: wie terugzet, meldt zich opnieuw aan.
 - De database is PostgreSQL 17. Een data-map kan niet door een andere hoofdversie worden geopend; de app weigert te starten in plaats van eraan te komen.
 

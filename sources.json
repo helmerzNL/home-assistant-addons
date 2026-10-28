@@ -51,6 +51,7 @@
     "image": "ghcr.io/flux76hq/3dprint_pricing",
     "image_tag": "beta",
     "channel": "beta",
-    "stable": "printpricing"
+    "stable": "printpricing",
+    "hand_kept": true
   }
 }

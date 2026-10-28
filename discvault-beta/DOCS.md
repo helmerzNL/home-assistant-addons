@@ -56,17 +56,27 @@ first start and kept in `secrets.json` in the data folder. Do not delete that fi
 
 The MCP endpoint is on the same address, under `/mcp`. Create a personal API key in DiscVault and give the assistant that address.
 
+### Other ways to sign in (OpenID Connect)
+
+DiscVault 26.10 can sign people in through an OpenID Connect identity provider (Pocket ID, Authentik, Keycloak and the like). That needs the
+`DISCVAULT_OIDC_*` settings of the app, which this app does not offer as options yet, so it cannot be switched on from here for now.
+
 ### Data, backups and moving
 
 - The database is in `postgres`, the posters, profiles and backups in `posters`, `profiles` and `backups` inside the data folder.
   Home Assistant stops the app while it makes a backup (a running database is not a consistent copy), so a backup takes DiscVault offline for a moment.
 - DiscVault has its own backup and restore, which is the way to move an installation between this app and the Docker installation.
+  It can also back up on a schedule (**Admin → Backup → Schedule**: how often, skip when nothing changed, keep the newest N) and sync your
+  Jellyfin and Plex libraries (**Admin → Scheduled tasks**). Both are off until an admin turns them on. The scheduled backups are written to
+  the `backups` folder, so Home Assistant includes them in its own backups.
 - The database is PostgreSQL 17. A data folder cannot be opened by another major version; the app refuses to start rather than touch it.
 
 ### Updating
 
 A new release shows up as an update of this app. Updating rebuilds the app on your device and restarts it; migrations run on start.
-This app follows the stable line; the beta is not offered here.
+Some releases change the database (26.10 ran four migrations), so take a Home Assistant backup of this app first. If you restore or import a
+library that was made with a version older than 26.10, open **Admin → Metadata**, find the **Vote counts** card and press **Fill in vote
+counts** once: until then the *Minimum votes* filter leaves those films out. **Admin → Plugins** shows the installed plugin versions.
 
 ## Nederlands
 
@@ -115,14 +125,24 @@ ook de sleutels die in de database staan.
 
 Het MCP-eindpunt staat op hetzelfde adres, onder `/mcp`. Maak in DiscVault een persoonlijke API-sleutel aan en geef de assistent dat adres.
 
+### Andere manieren om in te loggen (OpenID Connect)
+
+DiscVault 26.10 kan mensen laten inloggen via een OpenID Connect-identiteitsprovider (Pocket ID, Authentik, Keycloak en dergelijke). Daarvoor zijn
+de `DISCVAULT_OIDC_*`-instellingen van de app nodig, die deze app nog niet als opties aanbiedt; je kunt het hier dus voorlopig niet aanzetten.
+
 ### Gegevens, back-ups en verhuizen
 
 - De database staat in `postgres`, de posters, profielen en back-ups in `posters`, `profiles` en `backups` in de data-map.
   Home Assistant stopt de app tijdens een back-up (een draaiende database is geen consistente kopie), dus DiscVault is daarbij even offline.
 - DiscVault heeft een eigen back-up en terugzetten; daarmee verhuis je een installatie tussen deze app en de Docker-installatie.
+  Hij kan ook volgens schema een back-up maken (**Beheer → Backup → Planning**: hoe vaak, overslaan als er niets is gewijzigd, de nieuwste N
+  bewaren) en je Jellyfin- en Plex-bibliotheken synchroniseren (**Beheer → Geplande taken**). Beide staan uit totdat een beheerder ze aanzet. De
+  geplande back-ups komen in de map `backups`, dus Home Assistant neemt ze mee in zijn eigen back-ups.
 - De database is PostgreSQL 17. Een data-map kan niet door een andere hoofdversie worden geopend; de app weigert te starten in plaats van eraan te komen.
 
 ### Updaten
 
 Een nieuwe release verschijnt als update van deze app. Bijwerken bouwt de app opnieuw op je apparaat en herstart hem; migraties draaien bij het starten.
-Deze app volgt de stabiele lijn; de beta wordt hier niet aangeboden.
+Sommige releases wijzigen de database (26.10 voerde vier migraties uit), dus maak eerst een Home Assistant-back-up van deze app. Zet je een
+bibliotheek terug of importeer je er een die met een oudere versie dan 26.10 is gemaakt, open dan **Beheer → Metadata**, zoek de kaart
+**Stemmenaantallen** en druk eenmaal op **Stemmenaantallen invullen**: tot die tijd laat het filter *Minimaal aantal stemmen* die films weg. Onder **Beheer → Plugins** zie je de geïnstalleerde pluginversies.

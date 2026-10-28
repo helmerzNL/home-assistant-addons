@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Make the beta add-ons from their stable add-ons, so the two cannot drift apart.
 
-`sources.json` marks a beta add-on with `"stable": "<folder>"`. Its folder is the stable folder with these differences: its own name, slug,
+`sources.json` marks a beta add-on with `"stable": "<folder>"` (and `"hand_kept": true` when its folder is edited by hand, because the beta image of the app is
+ahead of the stable one; the script then leaves it alone). Its folder is the stable folder with these differences: its own name, slug,
 host port (the stable one plus one) and data folder, a Dockerfile that builds on the `beta` image of the app, and a notice in the
 documentation. Its `version` is not touched here: scripts/sync_versions.py owns it. Everything else (start script, translations, icons) is a copy.
 
@@ -35,7 +36,7 @@ def _is_cache(path: Path) -> bool:
 
 def beta_pairs(root: Path = ROOT) -> dict[str, str]:
     sources = json.loads((root / "sources.json").read_text(encoding="utf-8"))
-    return {name: source["stable"] for name, source in sources.items() if source.get("stable")}
+    return {name: source["stable"] for name, source in sources.items() if source.get("stable") and not source.get("hand_kept")}
 
 
 def _line(text: str, pattern: str, replacement: str) -> str:
