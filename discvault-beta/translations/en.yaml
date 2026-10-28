@@ -3,7 +3,7 @@ configuration:
     name: Domain for passkeys (RP_ID)
     description: >-
       The domain name DiscVault is opened on, without https:// or a port, for example vault.example.com. Passkeys are bound to it, so
-      changing it later makes existing passkeys unusable. Required.
+      changing it later makes existing passkeys unusable. Required, unless password sign-in is turned on.
   rp_origins:
     name: Address(es) DiscVault is opened on (RP_ORIGINS)
     description: >-
@@ -11,6 +11,10 @@ configuration:
   rp_name:
     name: Name shown with passkeys
     description: The name your browser shows when you create or use a passkey. Default DiscVault.
+  password_login:
+    name: Sign in with a password (instead of passkeys)
+    description: >-
+      Lets you create the first account with a username and password (at least 15 characters) and an authenticator app (TOTP), without a domain or https. When it is on, rp_id is optional; with a domain set you can use passkeys as well. Off by default.
   trusted_proxies:
     name: Trusted proxies
     description: >-

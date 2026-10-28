@@ -10,12 +10,12 @@ PostgreSQL database, so nothing else has to be installed.
 
 **Quick start**
 
-1. Install the app and fill in **rp_id** on the *Configuration* tab: the domain you will open DiscVault on.
-2. Start the app (the first start takes a minute) and open it at `https://<your domain>`.
-3. Go through the onboarding and create your passkey.
+1. Install the app and, on the *Configuration* tab, either fill in **rp_id** (the domain you will open DiscVault on) or turn on **password_login**.
+2. Start the app (the first start takes a minute) and open it at `https://<your domain>`, or at `http://<ip>:6180` with password login.
+3. Go through the onboarding and create your passkey, or your username, password and authenticator app.
 
-Passkeys need an **https** address on a domain name, so put a reverse proxy with a certificate in front of port **6180**. The full
-explanation is on the *Documentation* tab.
+Passkeys need an **https** address on a domain name, so put a reverse proxy with a certificate in front of port **6180**. Password login
+works without. The full explanation is on the *Documentation* tab.
 
 ## Nederlands
 
@@ -25,9 +25,9 @@ brengt een eigen PostgreSQL-database mee, dus er hoeft niets anders geïnstallee
 
 **Snel starten**
 
-1. Installeer de app en vul op het tabblad *Configuratie* **rp_id** in: het domein waarop je DiscVault opent.
-2. Start de app (de eerste start duurt een minuutje) en open hem op `https://<jouw domein>`.
-3. Doorloop de onboarding en maak je passkey aan.
+1. Installeer de app en vul op het tabblad *Configuratie* **rp_id** in (het domein waarop je DiscVault opent) of zet **password_login** aan.
+2. Start de app (de eerste start duurt een minuutje) en open hem op `https://<jouw domein>`, of met wachtwoord-inloggen op `http://<ip>:6180`.
+3. Doorloop de onboarding en maak je passkey aan, of je gebruikersnaam, wachtwoord en authenticator-app.
 
-Passkeys vragen om een **https**-adres op een domeinnaam: zet dus een reverse proxy met certificaat voor poort **6180**. De volledige uitleg
-staat op het tabblad *Documentatie*.
+Passkeys vragen om een **https**-adres op een domeinnaam: zet dus een reverse proxy met certificaat voor poort **6180**. Wachtwoord-inloggen
+werkt ook zonder. De volledige uitleg staat op het tabblad *Documentatie*.

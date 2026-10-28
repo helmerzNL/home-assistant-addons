@@ -13,9 +13,10 @@ folder of this app, which Home Assistant includes in its backups.
 1. In Home Assistant open **Settings > Apps > Install app** (older versions: **Settings > Add-ons > Add-on store**), then the menu (⋮) >
    **Repositories**, and add `https://github.com/helmerzNL/home-assistant-addons`.
 2. Choose **DiscVault** and **Install**. Home Assistant builds the app on your device, which takes a few minutes the first time.
-3. Fill in **rp_id** on the **Configuration** tab (see below), save, and **Start** the app. The first start creates the database and
-   applies all migrations, which takes a minute.
-4. Open the app at `https://<your domain>` and go through the onboarding: your name, a passkey, and save the recovery codes.
+3. Fill in **rp_id** on the **Configuration** tab (see below), or turn on **password_login** to sign in with a username and password
+   instead (see *Signing in with a password*). Save, and **Start** the app. The first start creates the database and applies all
+   migrations, which takes a minute.
+4. Open the app and go through the onboarding: your name and a passkey (at `https://<your domain>`), or a username and password; and save the recovery codes.
 
 ### Domain and https: needed for passkeys
 
@@ -25,7 +26,7 @@ control, and that address is what you enter:
 
 | Option | What to enter |
 |---|---|
-| **rp_id** | The domain only, for example `vault.example.com`. Required. Passkeys are bound to it: changing it later makes existing passkeys unusable. |
+| **rp_id** | The domain only, for example `vault.example.com`. Required, unless **password_login** is on. Passkeys are bound to it: changing it later makes existing passkeys unusable. |
 | **rp_origins** | The full address(es), comma separated, for example `https://vault.example.com`. Empty means `https://` plus the domain. |
 | **trusted_proxies** | The address of your reverse proxy, so the client addresses in the audit log are right. |
 
@@ -33,10 +34,24 @@ Put a reverse proxy with a certificate in front of port **6180** of this app (fo
 Cloudflare Tunnel, or Tailscale serve). Home Assistant Cloud (Nabu Casa) only forwards Home Assistant itself, not other ports. The app is
 not offered through the Home Assistant sidebar (Ingress): it is made to be served from the root of its own domain, which is what passkeys are bound to.
 
+### Signing in with a password
+
+Without a domain and https there are no passkeys. Turn on **password_login** and DiscVault offers a password onboarding for the first
+owner instead, the same way MealieShopper does: a username, a password of at least 15 characters, and an authenticator app (TOTP) with
+recovery codes. **rp_id** may then stay empty.
+
+- When you open the app on a local IP address (for example `http://192.168.1.10:6180`) and no domain is set, the authenticator app is optional.
+  Over a domain or through a reverse proxy it is required.
+- With both a domain (**rp_id**) and **password_login** you can use passkeys and the password side by side.
+- This onboarding is for a brand-new installation. On an installation that already has users, an Owner or Admin turns password sign-in on
+  in **Users & roles**, confirmed with a passkey.
+- Do not expose the password login to the internet without https and a reverse proxy.
+
 ### Options
 
 | Option | Meaning |
 |---|---|
+| **password_login** | Allow signing in with a username and password (plus TOTP) next to, or instead of, passkeys. Off by default. |
 | **rp_name** | The name your browser shows with a passkey (default DiscVault). |
 | **omdb_api_key**, **tmdb_api_key** | Optional keys for movie metadata lookups (omdbapi.com, themoviedb.org). They can also be entered in the app. |
 | **block_crawlers** | Keeps this instance out of search engines and AI crawlers (on by default). |
@@ -81,9 +96,10 @@ data-map van deze app, die Home Assistant meeneemt in zijn back-ups.
 1. Ga in Home Assistant naar **Instellingen > Apps > App installeren** (oudere versies: **Instellingen > Add-ons > Add-on store**), open het
    menu (⋮) > **Repositories** en voeg `https://github.com/helmerzNL/home-assistant-addons` toe.
 2. Kies **DiscVault** en klik op **Installeren**. Home Assistant bouwt de app op je apparaat; de eerste keer duurt dat een paar minuten.
-3. Vul op het tabblad **Configuratie** **rp_id** in (zie hieronder), sla op en **Start** de app. De eerste start maakt de database aan en
-   voert alle migraties uit; dat duurt een minuutje.
-4. Open de app op `https://<jouw domein>` en doorloop de onboarding: je naam, een passkey, en bewaar de herstelcodes.
+3. Vul op het tabblad **Configuratie** **rp_id** in (zie hieronder), of zet **password_login** aan om met een gebruikersnaam en wachtwoord
+   in te loggen (zie *Inloggen met een wachtwoord*). Sla op en **Start** de app. De eerste start maakt de database aan en voert alle
+   migraties uit; dat duurt een minuutje.
+4. Open de app en doorloop de onboarding: je naam en een passkey (op `https://<jouw domein>`), of een gebruikersnaam en wachtwoord; en bewaar de herstelcodes.
 
 ### Domein en https: nodig voor passkeys
 
@@ -93,7 +109,7 @@ https-adres dat je zelf beheert, en dat adres vul je in:
 
 | Optie | Wat invullen |
 |---|---|
-| **rp_id** | Alleen het domein, bijvoorbeeld `vault.example.com`. Verplicht. Passkeys zijn eraan gebonden: later wijzigen maakt bestaande passkeys onbruikbaar. |
+| **rp_id** | Alleen het domein, bijvoorbeeld `vault.example.com`. Verplicht, tenzij **password_login** aanstaat. Passkeys zijn eraan gebonden: later wijzigen maakt bestaande passkeys onbruikbaar. |
 | **rp_origins** | Het volledige adres (of adressen, kommagescheiden), bijvoorbeeld `https://vault.example.com`. Leeg betekent `https://` plus het domein. |
 | **trusted_proxies** | Het adres van je reverse proxy, zodat de clientadressen in het auditlogboek kloppen. |
 
@@ -101,10 +117,24 @@ Zet een reverse proxy met certificaat voor poort **6180** van deze app (bijvoorb
 Tunnel of Tailscale serve). Home Assistant Cloud (Nabu Casa) stuurt alleen Home Assistant zelf door, geen andere poorten. De app wordt niet
 via de zijbalk van Home Assistant (Ingress) aangeboden: hij is gemaakt om op de root van een eigen domein te draaien, en daaraan zijn passkeys gebonden.
 
+### Inloggen met een wachtwoord
+
+Zonder domein en https zijn er geen passkeys. Zet **password_login** aan en DiscVault biedt in plaats daarvan een wachtwoord-onboarding voor
+de eerste eigenaar, zoals MealieShopper: een gebruikersnaam, een wachtwoord van minstens 15 tekens en een authenticator-app (TOTP) met
+herstelcodes. **rp_id** mag dan leeg blijven.
+
+- Open je de app op een lokaal IP-adres (bijvoorbeeld `http://192.168.1.10:6180`) en is er geen domein ingesteld, dan is de authenticator-app optioneel.
+  Via een domein of reverse proxy is hij verplicht.
+- Met zowel een domein (**rp_id**) als **password_login** kun je passkeys en wachtwoord naast elkaar gebruiken.
+- Deze onboarding is voor een gloednieuwe installatie. Bij een installatie die al gebruikers heeft, zet een Owner of Admin inloggen met wachtwoord
+  aan onder **Gebruikers & rollen**, bevestigd met een passkey.
+- Zet het wachtwoord-inloggen niet zonder https en reverse proxy op internet.
+
 ### Opties
 
 | Optie | Betekenis |
 |---|---|
+| **password_login** | Sta inloggen met gebruikersnaam en wachtwoord (plus TOTP) toe naast, of in plaats van, passkeys. Standaard uit. |
 | **rp_name** | De naam die je browser bij een passkey toont (standaard DiscVault). |
 | **omdb_api_key**, **tmdb_api_key** | Optionele sleutels voor het opzoeken van filmgegevens (omdbapi.com, themoviedb.org). Ze kunnen ook in de app worden ingevuld. |
 | **block_crawlers** | Houdt deze installatie uit zoekmachines en AI-crawlers (standaard aan). |

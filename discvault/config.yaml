@@ -22,11 +22,13 @@ watchdog: "http://[HOST]:[PORT:5000]/api/next/health"
 # /data of this app is the data folder of DiscVault: the database in /data/postgres, posters and backups next to it, the generated secrets in /data/secrets.json.
 options:
   rp_name: DiscVault
+  password_login: false
   block_crawlers: true
 schema:
   rp_id: "str?"
   rp_origins: "str?"
   rp_name: "str?"
+  password_login: bool
   trusted_proxies: "str?"
   omdb_api_key: "password?"
   tmdb_api_key: "password?"
