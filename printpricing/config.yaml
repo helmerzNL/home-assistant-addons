@@ -8,9 +8,6 @@ description: Cost price calculator and inventory for a 3D-print business, with i
 url: https://github.com/Flux76HQ/3dprint_pricing
 arch:
   - amd64
-init: true
-startup: application
-boot: auto
 # One container holds the app and its PostgreSQL. A running database is not a consistent file copy, so the app is stopped for a backup.
 backup: cold
 # Stopping has to give gunicorn and PostgreSQL time to finish cleanly.

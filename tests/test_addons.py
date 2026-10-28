@@ -28,8 +28,15 @@ class DefectsAreCaughtTest(unittest.TestCase):
                 continue
             (shutil.copytree if item.is_dir() else shutil.copy)(item, self.tmp / item.name)
 
+
     def problems(self):
         return check_addons.check_repository(self.tmp)
+
+    def test_bytecode_cache_in_a_stable_folder_is_not_a_difference(self):
+        cache = self.tmp / "discvault" / "__pycache__"
+        cache.mkdir()
+        (cache / "run.cpython-312.pyc").write_bytes(b"\0")
+        self.assertEqual(self.problems(), [])
 
     def test_missing_dutch_section(self):
         doc = self.tmp / "doorbell-map" / "DOCS.md"

@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
-REQUIRED_KEYS = ("name", "version", "slug", "description", "url", "arch", "startup", "boot")
+REQUIRED_KEYS = ("name", "version", "slug", "description", "url", "arch")
 REQUIRED_FILES = ("config.yaml", "README.md", "DOCS.md", "CHANGELOG.md", "icon.png", "logo.png", "translations/en.yaml", "translations/nl.yaml")
 LANGUAGES = ("en", "nl")
 
