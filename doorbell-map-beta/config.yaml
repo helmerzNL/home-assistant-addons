@@ -1,0 +1,29 @@
+# DERIVED from ../doorbell-map by `python scripts/derive_beta.py`: change the stable add-on, not this file. The beta add-on runs the `beta` image of the app;
+# its `version` ends in -beta.<build time of that image> and is raised by `scripts/sync_versions.py`, so Home Assistant offers an update for every new beta build.
+name: Doorbell Map (beta)
+version: "1.0.30-beta.202610280855"
+slug: doorbell_map_beta
+description: Development version (beta). Interactive neighbourhood map that shows which houses want (or do not want) a visit at the door, for example on St. Martin's Day
+url: https://github.com/helmerzNL/Doorbell-Map
+arch:
+  - amd64
+  - aarch64
+init: false
+startup: application
+boot: auto
+# The app keeps its data (houses, passkeys, backups) as files in /data; a stop gives a consistent copy.
+backup: cold
+ports:
+  9888/tcp: 9889
+ports_description:
+  9888/tcp: Web interface
+webui: "http://[HOST]:[PORT:9888]"
+watchdog: "http://[HOST]:[PORT:9888]/api/auth/status"
+# /data of this app is the DATA_DIR of the app; the generated secrets are kept in /data/secrets.json.
+options: {}
+schema:
+  origin: url?
+  rp_id: str?
+  site_title: str?
+  setup_token: password?
+  session_hours: int(1,720)?

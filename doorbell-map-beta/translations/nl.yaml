@@ -1,0 +1,22 @@
+configuration:
+  origin:
+    name: Adres waarop de kaart wordt geopend (ORIGIN)
+    description: >-
+      De volledige URL die je in de browser gebruikt, bijvoorbeeld https://kaart.example.com. Moet precies het adres in de adresbalk zijn. Verplicht.
+      Passkeys voor de beheerder werken alleen via https (of op localhost): zet dus een reverse proxy met certificaat voor poort 9888.
+  rp_id:
+    name: Domein voor passkeys (RP_ID)
+    description: >-
+      Alleen de domeinnaam, zonder https:// en zonder poort. Optioneel: leeg betekent de hostnaam van het adres hierboven. Passkeys zijn eraan gebonden.
+  site_title:
+    name: Sitenaam
+    description: De naam van de site totdat je die in het beheer aanpast. Optioneel.
+  setup_token:
+    name: Instelcode
+    description: >-
+      Eenmalig nodig om de allereerste passkey van de beheerder aan te maken. Leeg maakt er een en toont die op het tabblad Logboek.
+  session_hours:
+    name: Beheersessie (uren)
+    description: Hoe lang de beheerder ingelogd blijft. Optioneel; standaard 12.
+network:
+  9888/tcp: Webinterface

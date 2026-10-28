@@ -22,6 +22,8 @@ jobs:
         with:
           node-version: 22
       - run: pip install pyyaml
+      - name: The beta add-ons match their stable add-ons
+        run: python scripts/derive_beta.py --check
       - name: Every add-on is complete and consistent
         run: python scripts/check_addons.py
       - name: Python tests
@@ -37,7 +39,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        addon: [discvault, doorbell-map, mealieshopper, mealieshopper-beta, printpricing]
+        addon: [discvault, discvault-beta, doorbell-map, doorbell-map-beta, mealieshopper, mealieshopper-beta, printpricing, printpricing-beta]
     steps:
       - uses: actions/checkout@v4
       - uses: frenck/action-addon-linter@v2
@@ -51,7 +53,7 @@ jobs:
       fail-fast: false
       matrix:
         # The add-ons with a Dockerfile; the others pull a ready-made image and have nothing to build.
-        addon: [discvault, doorbell-map, printpricing]
+        addon: [discvault, discvault-beta, doorbell-map, doorbell-map-beta, printpricing, printpricing-beta]
     steps:
       - uses: actions/checkout@v4
       - id: version

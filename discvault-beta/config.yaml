@@ -1,0 +1,35 @@
+# DERIVED from ../discvault by `python scripts/derive_beta.py`: change the stable add-on, not this file. The beta add-on runs the `beta` image of the app;
+# its `version` ends in -beta.<build time of that image> and is raised by `scripts/sync_versions.py`, so Home Assistant offers an update for every new beta build.
+name: DiscVault (beta)
+version: "26.10.17-beta.202610281022"
+slug: discvault_beta
+description: Development version (beta). Self-hosted manager for your 4K UHD, Blu-ray and DVD collection, with its own PostgreSQL database
+url: https://github.com/helmerzNL/DiscVault
+arch:
+  - amd64
+  - aarch64
+init: true
+startup: application
+boot: auto
+# One container holds the app and its PostgreSQL. A running database is not a consistent file copy, so the app is stopped for a backup.
+backup: cold
+# Stopping has to give the app and PostgreSQL time to finish cleanly.
+timeout: 60
+ports:
+  5000/tcp: 6181
+ports_description:
+  5000/tcp: Web interface (the MCP endpoint is on the same port, under /mcp)
+webui: "http://[HOST]:[PORT:5000]"
+watchdog: "http://[HOST]:[PORT:5000]/api/next/health"
+# /data of this app is the data folder of DiscVault: the database in /data/postgres, posters and backups next to it, the generated secrets in /data/secrets.json.
+options:
+  rp_name: DiscVault
+  block_crawlers: true
+schema:
+  rp_id: "str?"
+  rp_origins: "str?"
+  rp_name: "str?"
+  trusted_proxies: "str?"
+  omdb_api_key: "password?"
+  tmdb_api_key: "password?"
+  block_crawlers: bool

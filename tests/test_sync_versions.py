@@ -39,6 +39,18 @@ class PureFunctionsTest(unittest.TestCase):
         self.assertEqual(sv.changelog_with(text, "1.0.1", "o/r"), text)
 
 
+class BetaVersionTest(unittest.TestCase):
+    def test_version_follows_the_build_time(self):
+        self.assertEqual(sv.beta_version("1.0.30", "2026-10-28T08:55:30.289512484Z"), "1.0.30-beta.202610280855")
+
+    def test_a_later_build_is_a_higher_version(self):
+        older, newer = sv.beta_version("1.0.30", "2026-10-28T08:55:30Z"), sv.beta_version("1.0.30", "2026-10-28T09:01:00Z")
+        self.assertGreater(sv.version_key(newer), sv.version_key(older))
+
+    def test_a_new_release_outranks_older_builds(self):
+        self.assertGreater(sv.version_key(sv.beta_version("1.0.31", "2026-10-01T00:00:00Z")), sv.version_key(sv.beta_version("1.0.30", "2026-10-28T00:00:00Z")))
+
+
 class SyncTest(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
@@ -71,6 +83,25 @@ class SyncTest(unittest.TestCase):
         before = (self.tmp / "doorbell-map" / "config.yaml").read_text()
         self.run_sync(tags, {("ghcr.io/helmerznl/doorbell-map", "v1.0.31")}, write=False)
         self.assertEqual((self.tmp / "doorbell-map" / "config.yaml").read_text(), before)
+
+    def test_beta_addon_follows_the_beta_image(self):
+        shutil.copytree(ROOT / "doorbell-map-beta", self.tmp / "doorbell-map-beta")
+        import json
+        sources = json.loads((ROOT / "sources.json").read_text())
+        (self.tmp / "sources.json").write_text(json.dumps({"doorbell-map-beta": sources["doorbell-map-beta"]}))
+        tags = {"helmerzNL/Doorbell-Map": ["v1.0.30"]}
+        report = sv.sync(self.tmp, tags_of=lambda repo: tags[repo], created=lambda image, tag: "2099-01-01T10:30:00Z" if tag == "beta" else None)
+        self.assertEqual(len(report), 1)
+        self.assertIn('version: "1.0.30-beta.209901011030"', (self.tmp / "doorbell-map-beta" / "config.yaml").read_text())
+        self.assertEqual(sv.sync(self.tmp, tags_of=lambda repo: tags[repo], created=lambda image, tag: "2099-01-01T10:30:00Z"), [])
+
+    def test_beta_addon_waits_when_the_image_is_missing(self):
+        shutil.copytree(ROOT / "doorbell-map-beta", self.tmp / "doorbell-map-beta")
+        import json
+        sources = json.loads((ROOT / "sources.json").read_text())
+        (self.tmp / "sources.json").write_text(json.dumps({"doorbell-map-beta": sources["doorbell-map-beta"]}))
+        report = sv.sync(self.tmp, tags_of=lambda repo: ["v1.0.30"], created=lambda image, tag: None)
+        self.assertIn("not published", report[0])
 
     def test_never_goes_back(self):
         tags = {"helmerzNL/Doorbell-Map": ["v1.0.2"], "helmerzNL/MealieShopper": ["v2.0.0"]}

@@ -19,10 +19,16 @@ Home Assistant apps (add-ons) for the self-hosted apps of helmerzNL and Flux76. 
 | App | What it does | Port | Architectures | Database |
 |---|---|---|---|---|
 | [**DiscVault**](discvault/DOCS.md) | Manager for your 4K UHD, Blu-ray and DVD collection | 6180 | amd64, aarch64 | PostgreSQL, built in |
+| [**DiscVault (beta)**](discvault-beta/DOCS.md) | The development version, next to the stable one | 6181 | amd64, aarch64 | PostgreSQL, built in |
 | [**MealieShopper**](mealieshopper/DOCS.md) | Week menu from Mealie to your supermarket basket | 5959 | amd64, aarch64 | SQLite |
 | [**MealieShopper (beta)**](mealieshopper-beta/DOCS.md) | The development version, next to the stable one | 5960 | amd64, aarch64 | SQLite |
 | [**3D Print Pricing**](printpricing/DOCS.md) | Cost price calculator and inventory for a 3D-print business | 6080 | amd64 | PostgreSQL, built in |
+| [**3D Print Pricing (beta)**](printpricing-beta/DOCS.md) | The development version, next to the stable one | 6081 | amd64 | PostgreSQL, built in |
 | [**Doorbell Map**](doorbell-map/DOCS.md) | Neighbourhood map of houses that do or do not want a visit | 9888 | amd64, aarch64 | files |
+| [**Doorbell Map (beta)**](doorbell-map-beta/DOCS.md) | The development version, next to the stable one | 9889 | amd64, aarch64 | files |
+
+Every app has a beta add-on with its own data folder and port, so it runs next to the stable one. A beta is for trying new features; do not
+point it at the data of the stable app.
 
 DiscVault, 3D Print Pricing and Doorbell Map sign in with **passkeys**, which only work on an **https** address with a domain name: put a
 reverse proxy with a certificate in front of them. The documentation of each app explains what to enter.
@@ -34,6 +40,11 @@ An update shows up in Home Assistant when `version` in an add-on's `config.yaml`
 is published**; the workflow then opens a pull request. Merge it and Home Assistant offers the update. `sources.json` says which repository,
 tag pattern and image belong to which add-on.
 
+The beta images only have a moving `beta` tag, so a beta add-on's version is `<newest release>-beta.<build time of the beta image>` (for example
+`1.0.30-beta.202610281205`): every new beta build gives a higher version and an update. The Supervisor then rebuilds the add-on and pulls the
+`beta` image again. The beta folders of DiscVault, Doorbell Map and 3D Print Pricing are **generated** from their stable folders by
+`scripts/derive_beta.py`; change the stable folder and run the script (CI fails when a beta folder has drifted).
+
 ### Maintaining this repository
 
 ```bash
@@ -41,6 +52,7 @@ pip install pyyaml
 python scripts/check_addons.py           # every add-on complete, translated (en/nl), documented in English and Dutch, no port clashes
 python -m unittest discover -s tests     # Python tests
 node --test tests/*.test.js              # Doorbell Map start script
+python scripts/derive_beta.py --check    # beta folders match their stable folders (without --check: regenerate them)
 python scripts/sync_versions.py --check  # which versions would be raised
 ```
 
@@ -60,8 +72,9 @@ Home Assistant-apps (add-ons) voor de zelf te hosten apps van helmerzNL en Flux7
 
 ### De apps
 
-Zie de tabel hierboven: DiscVault (collectiebeheer voor 4K UHD, Blu-ray en dvd), MealieShopper (weekmenu naar boodschappenmandje, ook als beta),
-3D Print Pricing (kostprijs en voorraad voor 3D-printen) en Doorbell Map (wijkkaart voor deur-aan-deur-acties).
+Zie de tabel hierboven: DiscVault (collectiebeheer voor 4K UHD, Blu-ray en dvd), MealieShopper (weekmenu naar boodschappenmandje),
+3D Print Pricing (kostprijs en voorraad voor 3D-printen) en Doorbell Map (wijkkaart voor deur-aan-deur-acties). Elke app heeft ook een
+beta-add-on met een eigen data-map en poort, zodat hij naast de stabiele draait. Gebruik de data van de stabiele app niet voor een beta.
 
 DiscVault, 3D Print Pricing en Doorbell Map loggen in met **passkeys**. Die werken alleen op een **https**-adres met een domeinnaam: zet er een
 reverse proxy met certificaat voor. De documentatie van elke app legt uit wat je invult.
@@ -71,10 +84,13 @@ reverse proxy met certificaat voor. De documentatie van elke app legt uit wat je
 Een update verschijnt in Home Assistant zodra `version` in de `config.yaml` van een add-on verandert. `scripts/sync_versions.py` (dagelijks gedraaid
 door de workflow *Update add-on versions*) vergelijkt die versie met de nieuwste release van elke app en **verhoogt hem pas als het image van die
 release gepubliceerd is**; de workflow opent dan een pull request. Merge die en Home Assistant biedt de update aan. In `sources.json` staat welke
-repository, tag en welk image bij welke add-on horen.
+repository, tag en welk image bij welke add-on horen. De beta-images hebben alleen een meebewegende `beta`-tag; de versie van een beta-add-on is
+daarom `<nieuwste release>-beta.<bouwtijd van het beta-image>`, zodat elke nieuwe beta-build een update geeft. De beta-mappen worden gegenereerd
+uit de stabiele mappen met `scripts/derive_beta.py`.
 
 ### Beheer van deze repository
 
 De commando's staan hierboven bij *Maintaining this repository*. Een nieuwe app toevoegen: maak een map met `config.yaml`, `README.md` en `DOCS.md`
 (elk met een Engelse en een Nederlandse sectie en een snelstart/installatie), `CHANGELOG.md`, `icon.png`, `logo.png` en `translations/en.yaml` en
 `nl.yaml`; zet hem in `sources.json` en in de lijsten van `.github/workflows/ci.yml`. `check_addons.py` meldt wat er nog ontbreekt.
+Een beta maak je door `"channel": "beta"` en `"stable": "<map>"` in `sources.json` te zetten en `python scripts/derive_beta.py` te draaien.

@@ -5,6 +5,9 @@ Home Assistant offers an update of an add-on when `version` in its config.yaml c
 image `<image>:<version>`. So the version may only be raised when that image is really published: the release tag of an app is often set
 before its image is built. `sources.json` says, per add-on, which repository and tag pattern give the version and which image carries it.
 
+A beta add-on (`"channel": "beta"` in sources.json) follows the moving `beta` tag of the app image, which has no version of its own. Its version is
+`<newest release>-beta.<build time of the beta image>`, so it rises with every new beta build and Home Assistant offers an update for it.
+
 Usage:
     python scripts/sync_versions.py            raise the versions and add a line to the CHANGELOG.md of each
     python scripts/sync_versions.py --check    only report what would change (exit code 0)
@@ -59,6 +62,12 @@ def changelog_with(text: str, version: str, repo: str) -> str:
     return text[:first] + section + text[first:]
 
 
+def beta_version(base: str, created: str) -> str:
+    """`1.0.30-beta.202610281205`: the newest release plus the build time (UTC, to the minute) of the beta image."""
+    stamp = re.sub(r"\D", "", created)[:12]
+    return f"{base}-beta.{stamp}"
+
+
 def _get(url: str, headers: dict | None = None, method: str = "GET"):
     request = urllib.request.Request(url, headers={"User-Agent": "home-assistant-addons-sync", **(headers or {})}, method=method)
     return urllib.request.urlopen(request, timeout=30)
@@ -93,7 +102,27 @@ def image_exists(image: str, tag: str) -> bool:
         raise
 
 
-def sync(root: Path = ROOT, write: bool = True, tags_of=repo_tags, exists=image_exists) -> list[str]:
+def image_created(image: str, tag: str) -> str | None:
+    """When the (public) image with this tag was built (ISO time of its amd64 config), or None when the tag does not exist."""
+    host, _, name = image.partition("/")
+    with _get(f"https://{host}/token?service={host}&scope={urllib.parse.quote(f'repository:{name}:pull')}") as response:
+        headers = {"Authorization": f"Bearer {json.load(response)['token']}", "Accept": MANIFEST_TYPES}
+    try:
+        with _get(f"https://{host}/v2/{name}/manifests/{tag}", headers) as response:
+            manifest = json.load(response)
+        if "manifests" in manifest:
+            wanted = [m for m in manifest["manifests"] if m.get("platform", {}).get("architecture") == "amd64"]
+            with _get(f"https://{host}/v2/{name}/manifests/{wanted[0]['digest']}", headers) as response:
+                manifest = json.load(response)
+        with _get(f"https://{host}/v2/{name}/blobs/{manifest['config']['digest']}", headers) as response:
+            return json.load(response).get("created")
+    except urllib.error.HTTPError as error:
+        if error.code in (401, 403, 404):
+            return None
+        raise
+
+
+def sync(root: Path = ROOT, write: bool = True, tags_of=repo_tags, exists=image_exists, created=image_created) -> list[str]:
     """Raise the versions; returns one line per add-on that changed (or would change)."""
     sources = json.loads((root / "sources.json").read_text(encoding="utf-8"))
     report = []
@@ -102,10 +131,18 @@ def sync(root: Path = ROOT, write: bool = True, tags_of=repo_tags, exists=image_
         text = config_path.read_text(encoding="utf-8")
         have = current_version(text)
         latest = newest(tags_of(source["repo"]), source["tag"])
-        if latest is None or version_key(latest) <= version_key(have):
+        if latest is None:
+            continue
+        if source.get("channel") == "beta":
+            built = created(source["image"], source["image_tag"])
+            if not built:
+                report.append(f"{name}: the image {source['image']}:{source['image_tag']} is not published; staying on {have}")
+                continue
+            latest = beta_version(latest, built)
+        if version_key(latest) <= version_key(have):
             continue
         tag = source["image_tag"].format(version=latest)
-        if not exists(source["image"], tag):
+        if source.get("channel") != "beta" and not exists(source["image"], tag):
             report.append(f"{name}: {latest} is released, but the image {source['image']}:{tag} is not published yet; staying on {have}")
             continue
         report.append(f"{name}: {have} -> {latest}")

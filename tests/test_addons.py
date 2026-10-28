@@ -16,7 +16,7 @@ class RepositoryTest(unittest.TestCase):
 
     def test_every_app_has_an_addon(self):
         names = {folder.name for folder in check_addons.addon_dirs()}
-        self.assertEqual(names, {"discvault", "doorbell-map", "mealieshopper", "mealieshopper-beta", "printpricing"})
+        self.assertEqual(names, {"discvault", "discvault-beta", "doorbell-map", "doorbell-map-beta", "mealieshopper", "mealieshopper-beta", "printpricing", "printpricing-beta"})
 
 
 class DefectsAreCaughtTest(unittest.TestCase):
@@ -50,6 +50,16 @@ class DefectsAreCaughtTest(unittest.TestCase):
         dockerfile = self.tmp / "doorbell-map" / "Dockerfile"
         dockerfile.write_text(dockerfile.read_text(encoding="utf-8").replace(":v${BUILD_VERSION}", ":latest"), encoding="utf-8")
         self.assertTrue(any("BUILD_VERSION" in p for p in self.problems()))
+
+    def test_beta_that_drifted_from_its_stable_addon(self):
+        run = self.tmp / "doorbell-map-beta" / "run.js"
+        run.write_text(run.read_text(encoding="utf-8") + "\n// edited by hand\n", encoding="utf-8")
+        self.assertTrue(any("run.js" in p for p in self.problems()))
+
+    def test_beta_dockerfile_must_build_on_the_beta_image(self):
+        dockerfile = self.tmp / "discvault-beta" / "Dockerfile"
+        dockerfile.write_text(dockerfile.read_text(encoding="utf-8").replace("discvault:beta", "discvault:latest"), encoding="utf-8")
+        self.assertTrue(any("beta" in p for p in self.problems()))
 
     def test_addon_without_source(self):
         (self.tmp / "sources.json").write_text('{"discvault": {}}', encoding="utf-8")

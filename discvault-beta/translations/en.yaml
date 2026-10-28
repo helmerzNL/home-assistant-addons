@@ -1,0 +1,29 @@
+configuration:
+  rp_id:
+    name: Domain for passkeys (RP_ID)
+    description: >-
+      The domain name DiscVault is opened on, without https:// or a port, for example vault.example.com. Passkeys are bound to it, so
+      changing it later makes existing passkeys unusable. Required.
+  rp_origins:
+    name: Address(es) DiscVault is opened on (RP_ORIGINS)
+    description: >-
+      The full address browsers use, comma separated, for example https://vault.example.com. Empty means https:// plus the domain above.
+  rp_name:
+    name: Name shown with passkeys
+    description: The name your browser shows when you create or use a passkey. Default DiscVault.
+  trusted_proxies:
+    name: Trusted proxies
+    description: >-
+      Address(es) of the reverse proxy in front of DiscVault (comma separated), so client addresses in the audit log are right. Empty
+      means no forwarding header is believed. Optional.
+  omdb_api_key:
+    name: OMDb API key
+    description: Optional. Free key from omdbapi.com for movie metadata lookups.
+  tmdb_api_key:
+    name: TMDb API key
+    description: Optional. Free key from themoviedb.org, used when OMDb finds nothing.
+  block_crawlers:
+    name: Block search engines and AI crawlers
+    description: Keeps this instance out of search results and AI training sets. On by default.
+network:
+  5000/tcp: Web interface (the MCP endpoint is on the same port, under /mcp)

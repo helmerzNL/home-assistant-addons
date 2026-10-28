@@ -48,8 +48,10 @@ def check_addon(folder: Path, sources: dict) -> list[str]:
         dockerfile = folder / "Dockerfile"
         if not dockerfile.is_file():
             problems.append(f"{name}: no image and no Dockerfile")
-        elif not any("${BUILD_VERSION}" in line for line in dockerfile.read_text(encoding="utf-8").splitlines() if line.startswith("FROM ")):
-            problems.append(f"{name}: the FROM line of the Dockerfile must use ${{BUILD_VERSION}}, so it builds on the image of the version")
+        else:
+            wanted = f":{sources[name]['image_tag']}" if sources.get(name, {}).get("channel") == "beta" else "${BUILD_VERSION}"
+            if not any(wanted in line for line in dockerfile.read_text(encoding="utf-8").splitlines() if line.startswith("FROM ")):
+                problems.append(f"{name}: the FROM line of the Dockerfile must build on {wanted}")
     for language in LANGUAGES:
         translation = load(folder / "translations" / f"{language}.yaml")
         described = set((translation.get("configuration") or {}))
@@ -81,6 +83,12 @@ def check_repository(root: Path = ROOT) -> list[str]:
     problems += [f"repository.yaml has no {key}" for key in ("name", "url", "maintainer") if not repository.get(key)]
     sources = json.loads((root / "sources.json").read_text(encoding="utf-8"))
     folders = addon_dirs(root)
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import derive_beta
+    try:
+        problems += [f"derived beta add-on: {line}" for line in derive_beta.differences(root)]
+    except (AttributeError, SystemExit) as error:
+        problems.append(f"derived beta add-on: cannot be made from its stable add-on ({error}); is the stable Dockerfile built on ${{BUILD_VERSION}}?")
     problems += [f"sources.json lists {name}, which is not an add-on folder" for name in sources if not (root / name / "config.yaml").is_file()]
     seen_slugs, seen_ports = {}, {}
     for folder in folders:
