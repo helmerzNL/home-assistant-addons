@@ -8,9 +8,6 @@ url: https://github.com/helmerzNL/DiscVault
 arch:
   - amd64
   - aarch64
-init: true
-startup: application
-boot: auto
 # One container holds the app and its PostgreSQL. A running database is not a consistent file copy, so the app is stopped for a backup.
 backup: cold
 # Stopping has to give the app and PostgreSQL time to finish cleanly.

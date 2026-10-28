@@ -29,6 +29,10 @@ NOTICE = (
 )
 
 
+def _is_cache(path: Path) -> bool:
+    return "__pycache__" in path.parts or path.suffix == ".pyc"
+
+
 def beta_pairs(root: Path = ROOT) -> dict[str, str]:
     sources = json.loads((root / "sources.json").read_text(encoding="utf-8"))
     return {name: source["stable"] for name, source in sources.items() if source.get("stable")}
@@ -97,7 +101,7 @@ def expected_files(root: Path = ROOT) -> dict[Path, bytes]:
         files[target / "CHANGELOG.md"] = beta_changelog(read(stable, "CHANGELOG.md"), sources[stable_name]["repo"]).encode()
         for source in sorted(stable.rglob("*")):
             relative = source.relative_to(stable)
-            if source.is_file() and relative.as_posix() not in GENERATED:
+            if source.is_file() and relative.as_posix() not in GENERATED and not _is_cache(relative):
                 files[target / relative] = source.read_bytes()
     return files
 
@@ -112,7 +116,7 @@ def differences(root: Path = ROOT) -> list[str]:
             problems.append(f"differs: {path.relative_to(root)}")
     for beta in beta_pairs(root):
         for path in sorted((root / beta).rglob("*")) if (root / beta).is_dir() else []:
-            if path.is_file() and path not in expected:
+            if path.is_file() and path not in expected and not _is_cache(path):
                 problems.append(f"does not belong: {path.relative_to(root)}")
     return problems
 

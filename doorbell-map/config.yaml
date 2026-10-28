@@ -10,8 +10,6 @@ arch:
   - amd64
   - aarch64
 init: false
-startup: application
-boot: auto
 # The app keeps its data (houses, passkeys, backups) as files in /data; a stop gives a consistent copy.
 backup: cold
 ports:
@@ -21,7 +19,6 @@ ports_description:
 webui: "http://[HOST]:[PORT:9888]"
 watchdog: "http://[HOST]:[PORT:9888]/api/auth/status"
 # /data of this app is the DATA_DIR of the app; the generated secrets are kept in /data/secrets.json.
-options: {}
 schema:
   origin: url?
   rp_id: str?

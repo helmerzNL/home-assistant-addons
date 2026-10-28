@@ -1,8 +1,10 @@
 import importlib.util
+import sys
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.dont_write_bytecode = True      # do not leave a __pycache__ in the add-on folder
 spec = importlib.util.spec_from_file_location("discvault_run", ROOT / "discvault" / "run.py")
 run = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(run)

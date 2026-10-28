@@ -9,8 +9,6 @@ image: ghcr.io/helmerznl/mealieshopper
 arch:
   - amd64
   - aarch64
-startup: application
-boot: auto
 # Geen ingress: MealieShopper heeft eigen inlog, passkeys en een MCP-server die op een eigen adres moeten bereikbaar zijn.
 ports:
   8000/tcp: 5959
@@ -19,7 +17,6 @@ ports_description:
 webui: "http://[HOST]:[PORT:8000]"
 # De app herstart zichzelf na een fabrieksreset door te stoppen; de watchdog start de add-on dan weer.
 watchdog: "http://[HOST]:[PORT:8000]/healthz"
-options: {}
 schema:
   mealie_url: str?
   mealie_api_token: password?
