@@ -1,4 +1,4 @@
-# helmerzNL Home Assistant add-ons
+# Home Assistant Add-On Repository by Helmer
 
 *English first · Nederlands hieronder.*
 
@@ -22,8 +22,8 @@ Home Assistant apps (add-ons) for the self-hosted apps of helmerzNL and Flux76. 
 | [**DiscVault (beta)**](discvault-beta/DOCS.md) | The development version, next to the stable one | 6181 | amd64, aarch64 | PostgreSQL, built in |
 | [**MealieShopper**](mealieshopper/DOCS.md) | Week menu from Mealie to your supermarket basket | 5959 | amd64, aarch64 | SQLite |
 | [**MealieShopper (beta)**](mealieshopper-beta/DOCS.md) | The development version, next to the stable one | 5960 | amd64, aarch64 | SQLite |
-| [**3D Print Pricing**](printpricing/DOCS.md) | Cost price calculator and inventory for a 3D-print business | 6080 | amd64 | PostgreSQL, built in |
-| [**3D Print Pricing (beta)**](printpricing-beta/DOCS.md) | The development version, next to the stable one | 6081 | amd64 | PostgreSQL, built in |
+| [**3D Print Pricing**](printpricing/DOCS.md) | Cost price calculator and inventory for a 3D-print business | 6080 | amd64, aarch64 | PostgreSQL, built in |
+| [**3D Print Pricing (beta)**](printpricing-beta/DOCS.md) | The development version, next to the stable one | 6081 | amd64, aarch64 | PostgreSQL, built in |
 | [**Doorbell Map**](doorbell-map/DOCS.md) | Neighbourhood map of houses that do or do not want a visit | 9888 | amd64, aarch64 | files |
 | [**Doorbell Map (beta)**](doorbell-map-beta/DOCS.md) | The development version, next to the stable one | 9889 | amd64, aarch64 | files |
 
@@ -31,7 +31,8 @@ Every app has a beta add-on with its own data folder and port, so it runs next t
 point it at the data of the stable app.
 
 DiscVault, 3D Print Pricing and Doorbell Map sign in with **passkeys**, which only work on an **https** address with a domain name: put a
-reverse proxy with a certificate in front of them. The documentation of each app explains what to enter.
+reverse proxy with a certificate in front of them. 3D Print Pricing and (with the `password_login` option) DiscVault also accept a password on a
+plain local address. The documentation of each app explains what to enter.
 
 ### How updates work
 
@@ -77,7 +78,7 @@ Zie de tabel hierboven: DiscVault (collectiebeheer voor 4K UHD, Blu-ray en dvd),
 beta-add-on met een eigen data-map en poort, zodat hij naast de stabiele draait. Gebruik de data van de stabiele app niet voor een beta.
 
 DiscVault, 3D Print Pricing en Doorbell Map loggen in met **passkeys**. Die werken alleen op een **https**-adres met een domeinnaam: zet er een
-reverse proxy met certificaat voor. De documentatie van elke app legt uit wat je invult.
+reverse proxy met certificaat voor. 3D Print Pricing en (met de optie `password_login`) DiscVault accepteren ook een wachtwoord op een gewoon lokaal adres. De documentatie van elke app legt uit wat je invult.
 
 ### Hoe updates werken
 

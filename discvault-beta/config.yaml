@@ -28,6 +28,11 @@ schema:
   rp_origins: "str?"
   rp_name: "str?"
   password_login: bool
+  oidc_issuer: "url?"
+  oidc_client_id: "str?"
+  oidc_client_secret: "password?"
+  oidc_provider_name: "str?"
+  oidc_insecure_backchannel_origins: "str?"
   trusted_proxies: "str?"
   omdb_api_key: "password?"
   tmdb_api_key: "password?"

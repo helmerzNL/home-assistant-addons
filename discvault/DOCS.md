@@ -52,6 +52,7 @@ recovery codes. **rp_id** may then stay empty.
 | Option | Meaning |
 |---|---|
 | **password_login** | Allow signing in with a username and password (plus TOTP) next to, or instead of, passkeys. Off by default. |
+| **oidc_issuer**, **oidc_client_id**, **oidc_client_secret**, **oidc_provider_name**, **oidc_insecure_backchannel_origins** | Sign in through an OpenID Connect identity provider; see *Signing in through an identity provider*. |
 | **rp_name** | The name your browser shows with a passkey (default DiscVault). |
 | **omdb_api_key**, **tmdb_api_key** | Optional keys for movie metadata lookups (omdbapi.com, themoviedb.org). They can also be entered in the app. |
 | **block_crawlers** | Keeps this instance out of search engines and AI crawlers (on by default). |
@@ -63,17 +64,39 @@ first start and kept in `secrets.json` in the data folder. Do not delete that fi
 
 The MCP endpoint is on the same address, under `/mcp`. Create a personal API key in DiscVault and give the assistant that address.
 
+### Signing in through an identity provider (OpenID Connect)
+
+DiscVault can sign people in through an OpenID Connect identity provider such as Pocket ID, Authentik or Keycloak. It is off until you fill in
+the options below. Passkeys, the password and API keys keep working next to it.
+
+1. Set **rp_id** (or **rp_origins**) to the https address DiscVault is opened on. The redirect address below is built from the first address in
+   **rp_origins**, or from `https://` plus **rp_id**.
+2. In your identity provider make a *confidential* OpenID Connect client and register this redirect URI, exactly like this (no trailing slash):
+   `https://vault.example.com/api/next/auth/oidc/callback`. The Log tab prints the address for your set-up when the app starts.
+3. Fill in **oidc_issuer** (an https address), **oidc_client_id** and **oidc_client_secret**, all three or none: the app does not start with a
+   partial set-up and the Log tab says what is missing. **oidc_provider_name** is the name on the sign-in button (default OIDC).
+4. Restart the app. A sign-in button for your provider appears, and an existing account can link or unlink its identity.
+
+Only when your provider publishes *private http* addresses for token and key requests (for example Pocket ID inside a cluster) you also fill in
+**oidc_insecure_backchannel_origins** with those exact origins, comma separated; leave it empty otherwise. The client secret is kept in the options
+of this app (masked in the form), which Home Assistant includes in its backups.
+
 ### Data, backups and moving
 
 - The database is in `postgres`, the posters, profiles and backups in `posters`, `profiles` and `backups` inside the data folder.
   Home Assistant stops the app while it makes a backup (a running database is not a consistent copy), so a backup takes DiscVault offline for a moment.
 - DiscVault has its own backup and restore, which is the way to move an installation between this app and the Docker installation.
+  It can also back up on a schedule (**Admin → Backup → Schedule**: how often, skip when nothing changed, keep the newest N) and sync your
+  Jellyfin and Plex libraries (**Admin → Scheduled tasks**). Both are off until an admin turns them on. The scheduled backups are written to
+  the `backups` folder, so Home Assistant includes them in its own backups.
 - The database is PostgreSQL 17. A data folder cannot be opened by another major version; the app refuses to start rather than touch it.
 
 ### Updating
 
 A new release shows up as an update of this app. Updating rebuilds the app on your device and restarts it; migrations run on start.
-This app follows the stable line; the beta is not offered here.
+Some releases change the database (26.10 ran four migrations), so take a Home Assistant backup of this app first. If you restore or import a
+library that was made with a version older than 26.10, open **Admin → Metadata**, find the **Vote counts** card and press **Fill in vote
+counts** once: until then the *Minimum votes* filter leaves those films out. **Admin → Plugins** shows the installed plugin versions.
 
 ## Nederlands
 
@@ -125,6 +148,7 @@ herstelcodes. **rp_id** mag dan leeg blijven.
 | Optie | Betekenis |
 |---|---|
 | **password_login** | Sta inloggen met gebruikersnaam en wachtwoord (plus TOTP) toe naast, of in plaats van, passkeys. Standaard uit. |
+| **oidc_issuer**, **oidc_client_id**, **oidc_client_secret**, **oidc_provider_name**, **oidc_insecure_backchannel_origins** | Inloggen via een OpenID Connect-identiteitsprovider; zie *Inloggen via een identiteitsprovider*. |
 | **rp_name** | De naam die je browser bij een passkey toont (standaard DiscVault). |
 | **omdb_api_key**, **tmdb_api_key** | Optionele sleutels voor het opzoeken van filmgegevens (omdbapi.com, themoviedb.org). Ze kunnen ook in de app worden ingevuld. |
 | **block_crawlers** | Houdt deze installatie uit zoekmachines en AI-crawlers (standaard aan). |
@@ -137,14 +161,36 @@ ook de sleutels die in de database staan.
 
 Het MCP-eindpunt staat op hetzelfde adres, onder `/mcp`. Maak in DiscVault een persoonlijke API-sleutel aan en geef de assistent dat adres.
 
+### Inloggen via een identiteitsprovider (OpenID Connect)
+
+DiscVault kan mensen laten inloggen via een OpenID Connect-identiteitsprovider zoals Pocket ID, Authentik of Keycloak. Het staat uit totdat je
+de onderstaande opties invult. Passkeys, het wachtwoord en API-sleutels blijven er gewoon naast werken.
+
+1. Zet **rp_id** (of **rp_origins**) op het https-adres waarop DiscVault wordt geopend. Het redirect-adres hieronder wordt gemaakt van het eerste
+   adres in **rp_origins**, of van `https://` plus **rp_id**.
+2. Maak in je identiteitsprovider een *vertrouwelijke* OpenID Connect-client en registreer precies dit redirect-URI (zonder slash aan het eind):
+   `https://vault.example.com/api/next/auth/oidc/callback`. Het tabblad Logboek toont het adres voor jouw opzet bij het starten van de app.
+3. Vul **oidc_issuer** (een https-adres), **oidc_client_id** en **oidc_client_secret** in, alle drie of geen: de app start niet met een
+   gedeeltelijke opzet en het Logboek zegt wat er ontbreekt. **oidc_provider_name** is de naam op de inlogknop (standaard OIDC).
+4. Herstart de app. Er verschijnt een inlogknop voor je provider, en een bestaand account kan zijn identiteit koppelen of ontkoppelen.
+
+Alleen als je provider *privé-http*-adressen publiceert voor token- en sleutelverzoeken (bijvoorbeeld Pocket ID binnen een cluster) vul je ook
+**oidc_insecure_backchannel_origins** in met precies die origins, kommagescheiden; anders laat je het leeg. Het clientgeheim staat in de opties
+van deze app (gemaskeerd in het formulier), die Home Assistant meeneemt in zijn back-ups.
+
 ### Gegevens, back-ups en verhuizen
 
 - De database staat in `postgres`, de posters, profielen en back-ups in `posters`, `profiles` en `backups` in de data-map.
   Home Assistant stopt de app tijdens een back-up (een draaiende database is geen consistente kopie), dus DiscVault is daarbij even offline.
 - DiscVault heeft een eigen back-up en terugzetten; daarmee verhuis je een installatie tussen deze app en de Docker-installatie.
+  Hij kan ook volgens schema een back-up maken (**Beheer → Backup → Planning**: hoe vaak, overslaan als er niets is gewijzigd, de nieuwste N
+  bewaren) en je Jellyfin- en Plex-bibliotheken synchroniseren (**Beheer → Geplande taken**). Beide staan uit totdat een beheerder ze aanzet. De
+  geplande back-ups komen in de map `backups`, dus Home Assistant neemt ze mee in zijn eigen back-ups.
 - De database is PostgreSQL 17. Een data-map kan niet door een andere hoofdversie worden geopend; de app weigert te starten in plaats van eraan te komen.
 
 ### Updaten
 
 Een nieuwe release verschijnt als update van deze app. Bijwerken bouwt de app opnieuw op je apparaat en herstart hem; migraties draaien bij het starten.
-Deze app volgt de stabiele lijn; de beta wordt hier niet aangeboden.
+Sommige releases wijzigen de database (26.10 voerde vier migraties uit), dus maak eerst een Home Assistant-back-up van deze app. Zet je een
+bibliotheek terug of importeer je er een die met een oudere versie dan 26.10 is gemaakt, open dan **Beheer → Metadata**, zoek de kaart
+**Stemmenaantallen** en druk eenmaal op **Stemmenaantallen invullen**: tot die tijd laat het filter *Minimaal aantal stemmen* die films weg. Onder **Beheer → Plugins** zie je de geïnstalleerde pluginversies.

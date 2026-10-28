@@ -40,6 +40,8 @@ def check_addon(folder: Path, sources: dict) -> list[str]:
     if name not in sources:
         problems.append(f"{name}: not listed in sources.json (nothing would keep its version up to date)")
     schema, options = config.get("schema") or {}, config.get("options") or {}
+    if config.get("ports") and not config.get("webui"):
+        problems.append(f"{name}: has a port but no webui, so the add-on page has no Open web UI button")
     problems += [f"{name}: option {key} is not in schema" for key in options if key not in schema]
     if config.get("image"):
         if (folder / "Dockerfile").exists():

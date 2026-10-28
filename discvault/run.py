@@ -29,6 +29,8 @@ PG_START_SECONDS = 180          # after a hard stop PostgreSQL replays its log b
 APP_STOP_SECONDS = 25
 PG_STOP_SECONDS = 25
 DATA_FOLDERS = ("posters", "profiles", "backups", "avatars")
+OIDC_REQUIRED = (("oidc_issuer", "DISCVAULT_OIDC_ISSUER"), ("oidc_client_id", "DISCVAULT_OIDC_CLIENT_ID"), ("oidc_client_secret", "DISCVAULT_OIDC_CLIENT_SECRET"))
+OIDC_CALLBACK_PATH = "/api/next/auth/oidc/callback"
 
 
 def log(message: str) -> None:
@@ -45,6 +47,33 @@ def read_options() -> dict:
         return json.loads(OPTIONS.read_text(encoding="utf-8"))
     except FileNotFoundError:
         return {}
+
+
+def oidc_settings(options: dict, origins: str) -> dict:
+    """The OpenID Connect variables, or nothing when it is off. The app refuses a partial set-up, so say what is wrong here, in plain words."""
+    values = {variable: str(options.get(option) or "").strip() for option, variable in OIDC_REQUIRED}
+    insecure = str(options.get("oidc_insecure_backchannel_origins") or "").strip()
+    missing = [option for option, variable in OIDC_REQUIRED if not values[variable]]
+    if len(missing) == len(OIDC_REQUIRED) and not insecure:
+        return {}
+    if missing and len(missing) < len(OIDC_REQUIRED):
+        fail(f"OpenID Connect needs oidc_issuer, oidc_client_id and oidc_client_secret together; {', '.join(missing)} is empty. "
+             "Fill in all three, or empty all three to switch it off.")
+    if missing:
+        fail("oidc_insecure_backchannel_origins only works together with oidc_issuer, oidc_client_id and oidc_client_secret.")
+    if not values["DISCVAULT_OIDC_ISSUER"].startswith("https://"):
+        fail("oidc_issuer must start with https:// (the address of the identity provider, for example https://id.example.com).")
+    first_origin = origins.split(",")[0].strip().rstrip("/")
+    if not first_origin:
+        fail("OpenID Connect needs the address DiscVault is opened on: fill in rp_id (or rp_origins). The sign-in redirect address is built from it.")
+    env = dict(values)
+    provider_name = str(options.get("oidc_provider_name") or "").strip()
+    if provider_name:
+        env["DISCVAULT_OIDC_PROVIDER_NAME"] = provider_name
+    if insecure:
+        env["DISCVAULT_OIDC_INSECURE_BACKCHANNEL_ORIGINS"] = insecure
+    log(f"OpenID Connect sign-in is on. Register this redirect URI with your identity provider: {first_origin}{OIDC_CALLBACK_PATH}")
+    return env
 
 
 def settings(options: dict, kept: dict) -> dict:
@@ -76,6 +105,7 @@ def settings(options: dict, kept: dict) -> dict:
         value = str(options.get(option) or "").strip()
         if value:
             env[variable] = value
+    env.update(oidc_settings(options, origins))
     return env
 
 
