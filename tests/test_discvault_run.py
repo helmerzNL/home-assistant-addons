@@ -25,6 +25,25 @@ class SettingsTest(unittest.TestCase):
         env = run.settings({"rp_id": "vault.example.com", "rp_origins": "https://a.example.com,https://b.example.com"}, KEPT)
         self.assertEqual(env["RP_ORIGINS"], "https://a.example.com,https://b.example.com")
 
+    def test_password_login_needs_no_domain(self):
+        env = run.settings({"password_login": True}, KEPT)
+        self.assertEqual(env["LEGACY_AUTH_ENABLED"], "true")
+        self.assertNotIn("RP_ID", env)
+        self.assertNotIn("RP_ORIGINS", env)
+
+    def test_password_login_keeps_the_domain_when_set(self):
+        env = run.settings({"password_login": True, "rp_id": "vault.example.com"}, KEPT)
+        self.assertEqual(env["LEGACY_AUTH_ENABLED"], "true")
+        self.assertEqual(env["RP_ID"], "vault.example.com")
+        self.assertEqual(env["RP_ORIGINS"], "https://vault.example.com")
+
+    def test_password_login_is_off_by_default(self):
+        self.assertEqual(run.settings({"rp_id": "vault.example.com"}, KEPT)["LEGACY_AUTH_ENABLED"], "false")
+
+    def test_password_login_still_refuses_a_malformed_domain(self):
+        with self.assertRaises(SystemExit):
+            run.settings({"password_login": True, "rp_id": "https://vault.example.com"}, KEPT)
+
     def test_missing_domain_stops_with_a_message(self):
         with self.assertRaises(SystemExit):
             run.settings({}, KEPT)

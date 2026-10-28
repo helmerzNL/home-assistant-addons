@@ -3,7 +3,7 @@ configuration:
     name: Domein voor passkeys (RP_ID)
     description: >-
       De domeinnaam waarop DiscVault wordt geopend, zonder https:// en zonder poort, bijvoorbeeld vault.example.com. Passkeys zijn eraan
-      gebonden: later wijzigen maakt bestaande passkeys onbruikbaar. Verplicht.
+      gebonden: later wijzigen maakt bestaande passkeys onbruikbaar. Verplicht, tenzij inloggen met wachtwoord aanstaat.
   rp_origins:
     name: Adres(sen) waarop DiscVault wordt geopend (RP_ORIGINS)
     description: >-
@@ -11,6 +11,10 @@ configuration:
   rp_name:
     name: Naam bij passkeys
     description: De naam die je browser toont bij het aanmaken of gebruiken van een passkey. Standaard DiscVault.
+  password_login:
+    name: Inloggen met wachtwoord (in plaats van passkeys)
+    description: >-
+      Maak het eerste account aan met een gebruikersnaam en wachtwoord (minstens 15 tekens) en een authenticator-app (TOTP), zonder domein of https. Staat dit aan, dan is rp_id optioneel; met een domein kun je ook passkeys gebruiken. Standaard uit.
   trusted_proxies:
     name: Vertrouwde proxy's
     description: >-
