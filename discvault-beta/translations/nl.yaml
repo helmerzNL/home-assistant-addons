@@ -29,5 +29,24 @@ configuration:
   block_crawlers:
     name: Zoekmachines en AI-crawlers blokkeren
     description: Houdt deze installatie uit zoekresultaten en AI-trainingsdata. Standaard aan.
+  oidc_issuer:
+    name: OpenID Connect-issuer
+    description: >-
+      Optioneel. Het https-adres van je identiteitsprovider (Pocket ID, Authentik, Keycloak...), bijvoorbeeld https://id.example.com. Vul dit samen
+      met de client-ID en het geheim in, of laat alle drie leeg. Vraagt om het adres waarop DiscVault wordt geopend (rp_id of rp_origins).
+  oidc_client_id:
+    name: OpenID Connect client-ID
+    description: Optioneel. De client-ID van de vertrouwelijke client die je in de identiteitsprovider hebt gemaakt. Het redirect-adres staat op het tabblad Documentatie.
+  oidc_client_secret:
+    name: OpenID Connect clientgeheim
+    description: Optioneel. Het clientgeheim van die client.
+  oidc_provider_name:
+    name: Naam op de inlogknop
+    description: Optioneel. De naam van de identiteitsprovider zoals die op de inlogknop staat. Standaard OIDC.
+  oidc_insecure_backchannel_origins:
+    name: Privéadressen van de provider (geavanceerd)
+    description: >-
+      Optioneel. Alleen als de provider privé-http-adressen publiceert voor token- en sleutelverzoeken: de exacte origins, kommagescheiden,
+      bijvoorbeeld http://pocket-id.local:1411. Anders leeg laten.
 network:
   5000/tcp: Webinterface (het MCP-eindpunt zit op dezelfde poort, onder /mcp)

@@ -56,5 +56,53 @@ class SettingsTest(unittest.TestCase):
                 run.settings({"rp_id": bad}, KEPT)
 
 
+OIDC = {"rp_id": "vault.example.com", "oidc_issuer": "https://id.example.com", "oidc_client_id": "abc", "oidc_client_secret": "shh"}
+
+
+class OidcTest(unittest.TestCase):
+    def test_off_by_default(self):
+        env = run.settings({"rp_id": "vault.example.com"}, KEPT)
+        self.assertFalse([name for name in env if "OIDC" in name])
+
+    def test_the_three_options_switch_it_on(self):
+        env = run.settings({**OIDC, "oidc_provider_name": " Pocket ID "}, KEPT)
+        self.assertEqual(env["DISCVAULT_OIDC_ISSUER"], "https://id.example.com")
+        self.assertEqual(env["DISCVAULT_OIDC_CLIENT_ID"], "abc")
+        self.assertEqual(env["DISCVAULT_OIDC_CLIENT_SECRET"], "shh")
+        self.assertEqual(env["DISCVAULT_OIDC_PROVIDER_NAME"], "Pocket ID")
+        self.assertNotIn("DISCVAULT_OIDC_INSECURE_BACKCHANNEL_ORIGINS", env)
+
+    def test_private_backchannel_origins_are_passed_on(self):
+        env = run.settings({**OIDC, "oidc_insecure_backchannel_origins": "http://pocket-id.local:1411"}, KEPT)
+        self.assertEqual(env["DISCVAULT_OIDC_INSECURE_BACKCHANNEL_ORIGINS"], "http://pocket-id.local:1411")
+
+    def test_a_partial_set_up_is_refused(self):
+        for missing in ("oidc_issuer", "oidc_client_id", "oidc_client_secret"):
+            with self.assertRaises(SystemExit):
+                run.settings({key: value for key, value in OIDC.items() if key != missing}, KEPT)
+
+    def test_private_origins_alone_are_refused(self):
+        with self.assertRaises(SystemExit):
+            run.settings({"rp_id": "vault.example.com", "oidc_insecure_backchannel_origins": "http://x.local"}, KEPT)
+
+    def test_an_issuer_without_https_is_refused(self):
+        with self.assertRaises(SystemExit):
+            run.settings({**OIDC, "oidc_issuer": "http://id.example.com"}, KEPT)
+
+    def test_it_needs_the_address_the_app_is_opened_on(self):
+        options = {key: value for key, value in OIDC.items() if key != "rp_id"}
+        with self.assertRaises(SystemExit):
+            run.settings({**options, "password_login": True}, KEPT)
+
+    def test_the_callback_is_built_from_the_first_origin(self):
+        import contextlib
+        import io
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            run.settings({**OIDC, "rp_origins": "https://a.example.com/, https://b.example.com"}, KEPT)
+        self.assertIn("https://a.example.com/api/next/auth/oidc/callback", out.getvalue())
+        self.assertNotIn("shh", out.getvalue())
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -29,5 +29,24 @@ configuration:
   block_crawlers:
     name: Block search engines and AI crawlers
     description: Keeps this instance out of search results and AI training sets. On by default.
+  oidc_issuer:
+    name: OpenID Connect issuer
+    description: >-
+      Optional. The https address of your identity provider (Pocket ID, Authentik, Keycloak...), for example https://id.example.com. Fill in
+      this and the client ID and secret together, or leave all three empty. Needs the address DiscVault is opened on (rp_id or rp_origins).
+  oidc_client_id:
+    name: OpenID Connect client ID
+    description: Optional. The client ID of the confidential client you made in the identity provider. See the Documentation tab for the redirect address.
+  oidc_client_secret:
+    name: OpenID Connect client secret
+    description: Optional. The client secret of that client.
+  oidc_provider_name:
+    name: Name on the sign-in button
+    description: Optional. The name of the identity provider as shown on the sign-in button. Default OIDC.
+  oidc_insecure_backchannel_origins:
+    name: Private provider addresses (advanced)
+    description: >-
+      Optional. Only when the provider publishes private http addresses for token and key requests: the exact origins, comma separated, for
+      example http://pocket-id.local:1411. Leave empty otherwise.
 network:
   5000/tcp: Web interface (the MCP endpoint is on the same port, under /mcp)
