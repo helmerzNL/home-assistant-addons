@@ -12,23 +12,27 @@ run in this one container; everything they store lives in the app's own data fol
 1. In Home Assistant open **Settings > Apps > Install app** (older versions: **Settings > Add-ons > Add-on store**), then the menu (⋮) > **Repositories**, and add
    `https://github.com/helmerzNL/home-assistant-addons`.
 2. Choose **3D Print Pricing** and **Install**. Home Assistant builds the app on your device, which takes a few minutes the first time.
-3. Fill in **rp_id** on the **Configuration** tab (see below), save, and **Start** the app.
+3. Optionally fill in **rp_id** on the **Configuration** tab (see below), save, and **Start** the app.
 4. Open the **Log** tab: the setup code for the first screen is printed there (or type your own under *Setup code*).
-5. Open the app at `https://<your domain>` and go through the onboarding: setup code, your name, a passkey, and save the 8 recovery codes.
+5. Open the app (`https://<your domain>` with a domain, otherwise `http://<address of Home Assistant>:6080`) and go through the onboarding: setup code, your name, a passkey or a password, and save the 8 recovery codes.
 
-### Domain and https: needed for passkeys
+### Passkey or password
 
-Signing in uses passkeys. A browser only creates them on a page served over **https**, on a **domain name** (not an IP address and not
-`http://homeassistant.local:6080`; `http://localhost` is the one exception). So the app has to be reachable on an https address you
-control, and that address is what you enter:
+The app works on any address. How you sign in depends on it:
+
+- **A password** works everywhere, also on `http://<address of Home Assistant>:6080` on your own network. Choose it on the first screen; you can add
+  two-step verification with an authenticator app later, under Settings.
+- **A passkey** is more secure and easier, but a browser only creates one on a page served over **https**, on a **domain name** (not an IP address and not
+  `http://homeassistant.local:6080`; `http://localhost` is the one exception). For that the app has to be reachable on an https address you control, and that
+  address is what you enter below. The first screen tells you when a passkey cannot work on the address you are using.
 
 | Option | What to enter |
 |---|---|
-| **rp_id** | The domain only, for example `print.example.com`. Required. Passkeys are bound to it: changing it later makes existing passkeys unusable (recovery codes still work). |
-| **rp_origins** | The full address(es), comma separated, for example `https://print.example.com`. Empty means `https://` plus the domain. |
+| **rp_id** | Optional. The domain only, for example `print.example.com`. Leave it empty to follow the address the app is opened on. Passkeys are bound to it: changing it later makes existing passkeys unusable (recovery codes still work). Set it once you use passkeys. |
+| **rp_origins** | Optional. The full address(es), comma separated, for example `https://print.example.com`. Empty means `https://` plus the domain, or the address the app is opened on when there is no domain. When set, writes from any other address are refused. |
 | **proxy_hops** | `1` when one reverse proxy sits in front of the app (the usual case), `0` when the app is opened on its port directly. |
 
-Put a reverse proxy with a certificate in front of port **6080** of this app (for example the Nginx Proxy Manager or Caddy app, a
+For passkeys put a reverse proxy with a certificate in front of port **6080** of this app (for example the Nginx Proxy Manager or Caddy app, a
 Cloudflare Tunnel, or Tailscale serve). Home Assistant Cloud (Nabu Casa) only forwards Home Assistant itself, not other ports. The app is
 not offered through the Home Assistant sidebar (Ingress): it is made to be served from the root of its own domain, which is what passkeys are bound to.
 
@@ -56,7 +60,7 @@ Changes take effect after a restart of the app.
 ### Updating
 
 A new release shows up as an update of this app. Updating rebuilds the app on your device and restarts it; migrations run on start. The
-architecture is **amd64** only for now (the published image is built for that).
+architectures are **amd64** and **aarch64** (the published image is built for both, so it also runs on a Raspberry Pi 4/5 or an ARM mini PC).
 
 ## Nederlands
 
@@ -68,23 +72,27 @@ samen in deze ene container; alles wat ze opslaan staat in de eigen data-map van
 1. Ga in Home Assistant naar **Instellingen > Apps > App installeren** (oudere versies: **Instellingen > Add-ons > Add-on store**), open het
    menu (⋮) > **Repositories** en voeg `https://github.com/helmerzNL/home-assistant-addons` toe.
 2. Kies **3D Print Pricing** en klik op **Installeren**. Home Assistant bouwt de app op je apparaat; de eerste keer duurt dat een paar minuten.
-3. Vul op het tabblad **Configuratie** **rp_id** in (zie hieronder), sla op en **Start** de app.
+3. Vul op het tabblad **Configuratie** eventueel **rp_id** in (zie hieronder), sla op en **Start** de app.
 4. Open het tabblad **Logboek**: daar staat de instelcode voor het eerste scherm (of typ zelf een code bij *Instelcode*).
-5. Open de app op `https://<jouw domein>` en doorloop de onboarding: instelcode, je naam, een passkey, en bewaar de 8 herstelcodes.
+5. Open de app (`https://<jouw domein>` met een domein, anders `http://<adres van Home Assistant>:6080`) en doorloop de onboarding: instelcode, je naam, een passkey of een wachtwoord, en bewaar de 8 herstelcodes.
 
-### Domein en https: nodig voor passkeys
+### Passkey of wachtwoord
 
-Inloggen gaat met passkeys. Een browser maakt die alleen aan op een pagina via **https**, op een **domeinnaam** (dus niet op een IP-adres en
-niet op `http://homeassistant.local:6080`; `http://localhost` is de enige uitzondering). De app moet dus bereikbaar zijn op een https-adres
-dat je zelf beheert, en dat adres vul je in:
+De app werkt op elk adres. Hoe je inlogt hangt daarvan af:
+
+- **Een wachtwoord** werkt overal, ook op `http://<adres van Home Assistant>:6080` in je eigen netwerk. Kies het op het eerste scherm; later kun je
+  onder Instellingen tweestapsverificatie met een authenticator-app toevoegen.
+- **Een passkey** is veiliger en makkelijker, maar een browser maakt die alleen aan op een pagina via **https**, op een **domeinnaam** (dus niet op een
+  IP-adres en niet op `http://homeassistant.local:6080`; `http://localhost` is de enige uitzondering). Daarvoor moet de app bereikbaar zijn op een
+  https-adres dat je zelf beheert, en dat adres vul je hieronder in. Het eerste scherm meldt het als een passkey op het adres dat je gebruikt niet kan werken.
 
 | Optie | Wat invullen |
 |---|---|
-| **rp_id** | Alleen het domein, bijvoorbeeld `print.example.com`. Verplicht. Passkeys zijn eraan gebonden: later wijzigen maakt bestaande passkeys onbruikbaar (herstelcodes werken nog). |
-| **rp_origins** | Het volledige adres (of adressen, kommagescheiden), bijvoorbeeld `https://print.example.com`. Leeg betekent `https://` plus het domein. |
+| **rp_id** | Optioneel. Alleen het domein, bijvoorbeeld `print.example.com`. Leeg betekent het adres waarop de app wordt geopend. Passkeys zijn eraan gebonden: later wijzigen maakt bestaande passkeys onbruikbaar (herstelcodes werken nog). Vul het in zodra je passkeys gebruikt. |
+| **rp_origins** | Optioneel. Het volledige adres (of adressen, kommagescheiden), bijvoorbeeld `https://print.example.com`. Leeg betekent `https://` plus het domein, of het adres waarop de app wordt geopend als er geen domein is. Als het is ingevuld, worden wijzigingen vanaf een ander adres geweigerd. |
 | **proxy_hops** | `1` als er één reverse proxy voor de app staat (het gebruikelijke geval), `0` als de app rechtstreeks op zijn poort wordt geopend. |
 
-Zet een reverse proxy met certificaat voor poort **6080** van deze app (bijvoorbeeld de Nginx Proxy Manager- of Caddy-app, een Cloudflare
+Voor passkeys: zet een reverse proxy met certificaat voor poort **6080** van deze app (bijvoorbeeld de Nginx Proxy Manager- of Caddy-app, een Cloudflare
 Tunnel of Tailscale serve). Home Assistant Cloud (Nabu Casa) stuurt alleen Home Assistant zelf door, geen andere poorten. De app wordt niet
 via de zijbalk van Home Assistant (Ingress) aangeboden: hij is gemaakt om op de root van een eigen domein te draaien, en daaraan zijn passkeys gebonden.
 
@@ -112,4 +120,4 @@ Wijzigingen gaan in na een herstart van de app.
 ### Updaten
 
 Een nieuwe release verschijnt als update van deze app. Bijwerken bouwt de app opnieuw op je apparaat en herstart hem; migraties draaien bij
-het starten. De architectuur is voorlopig alleen **amd64** (daarvoor wordt het gepubliceerde image gebouwd).
+het starten. De architecturen zijn **amd64** en **aarch64** (het gepubliceerde image is voor beide gebouwd, dus het draait ook op een Raspberry Pi 4/5 of een ARM-minipc).

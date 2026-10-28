@@ -22,8 +22,8 @@ Home Assistant apps (add-ons) for the self-hosted apps of helmerzNL and Flux76. 
 | [**DiscVault (beta)**](discvault-beta/DOCS.md) | The development version, next to the stable one | 6181 | amd64, aarch64 | PostgreSQL, built in |
 | [**MealieShopper**](mealieshopper/DOCS.md) | Week menu from Mealie to your supermarket basket | 5959 | amd64, aarch64 | SQLite |
 | [**MealieShopper (beta)**](mealieshopper-beta/DOCS.md) | The development version, next to the stable one | 5960 | amd64, aarch64 | SQLite |
-| [**3D Print Pricing**](printpricing/DOCS.md) | Cost price calculator and inventory for a 3D-print business | 6080 | amd64 | PostgreSQL, built in |
-| [**3D Print Pricing (beta)**](printpricing-beta/DOCS.md) | The development version, next to the stable one | 6081 | amd64 | PostgreSQL, built in |
+| [**3D Print Pricing**](printpricing/DOCS.md) | Cost price calculator and inventory for a 3D-print business | 6080 | amd64, aarch64 | PostgreSQL, built in |
+| [**3D Print Pricing (beta)**](printpricing-beta/DOCS.md) | The development version, next to the stable one | 6081 | amd64, aarch64 | PostgreSQL, built in |
 | [**Doorbell Map**](doorbell-map/DOCS.md) | Neighbourhood map of houses that do or do not want a visit | 9888 | amd64, aarch64 | files |
 | [**Doorbell Map (beta)**](doorbell-map-beta/DOCS.md) | The development version, next to the stable one | 9889 | amd64, aarch64 | files |
 
@@ -31,7 +31,8 @@ Every app has a beta add-on with its own data folder and port, so it runs next t
 point it at the data of the stable app.
 
 DiscVault, 3D Print Pricing and Doorbell Map sign in with **passkeys**, which only work on an **https** address with a domain name: put a
-reverse proxy with a certificate in front of them. The documentation of each app explains what to enter.
+reverse proxy with a certificate in front of them. 3D Print Pricing and (with the `password_login` option) DiscVault also accept a password on a
+plain local address. The documentation of each app explains what to enter.
 
 ### How updates work
 
@@ -43,10 +44,7 @@ tag pattern and image belong to which add-on.
 The beta images only have a moving `beta` tag, so a beta add-on's version is `<newest release>-beta.<build time of the beta image>` (for example
 `1.0.30-beta.202610281205`): every new beta build gives a higher version and an update. The Supervisor then rebuilds the add-on and pulls the
 `beta` image again. The beta folders of DiscVault, Doorbell Map and 3D Print Pricing are **generated** from their stable folders by
-`scripts/derive_beta.py`; change the stable folder and run the script (CI fails when a beta folder has drifted). **Exception:** `printpricing-beta` is
-edited by hand (`"hand_kept"` in `sources.json`) for as long as the beta app is ahead of the stable app (now: optional `rp_id`/`rp_origins`, a password
-on its own, and arm64 images). When that reaches the stable app, copy the beta files into `printpricing` (without the beta notice, name and port),
-remove `hand_kept` and run `scripts/derive_beta.py`.
+`scripts/derive_beta.py`; change the stable folder and run the script (CI fails when a beta folder has drifted).
 
 ### Maintaining this repository
 
@@ -80,7 +78,7 @@ Zie de tabel hierboven: DiscVault (collectiebeheer voor 4K UHD, Blu-ray en dvd),
 beta-add-on met een eigen data-map en poort, zodat hij naast de stabiele draait. Gebruik de data van de stabiele app niet voor een beta.
 
 DiscVault, 3D Print Pricing en Doorbell Map loggen in met **passkeys**. Die werken alleen op een **https**-adres met een domeinnaam: zet er een
-reverse proxy met certificaat voor. De documentatie van elke app legt uit wat je invult.
+reverse proxy met certificaat voor. 3D Print Pricing en (met de optie `password_login`) DiscVault accepteren ook een wachtwoord op een gewoon lokaal adres. De documentatie van elke app legt uit wat je invult.
 
 ### Hoe updates werken
 
@@ -89,9 +87,7 @@ door de workflow *Update add-on versions*) vergelijkt die versie met de nieuwste
 release gepubliceerd is**; de workflow opent dan een pull request. Merge die en Home Assistant biedt de update aan. In `sources.json` staat welke
 repository, tag en welk image bij welke add-on horen. De beta-images hebben alleen een meebewegende `beta`-tag; de versie van een beta-add-on is
 daarom `<nieuwste release>-beta.<bouwtijd van het beta-image>`, zodat elke nieuwe beta-build een update geeft. De beta-mappen worden gegenereerd
-uit de stabiele mappen met `scripts/derive_beta.py`, behalve `printpricing-beta`: die wordt met de hand onderhouden zolang de beta-app voorloopt op de
-stabiele (nu: optionele `rp_id`/`rp_origins`, inloggen met alleen een wachtwoord en arm64-images). Komt dat in de stabiele app, kopieer de beta-bestanden
-dan naar `printpricing`, haal `hand_kept` weg en draai `scripts/derive_beta.py`.
+uit de stabiele mappen met `scripts/derive_beta.py`.
 
 ### Beheer van deze repository
 

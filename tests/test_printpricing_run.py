@@ -1,4 +1,4 @@
-"""The stable add-on follows the stable app (domain required); the beta add-on follows the beta app (domain optional)."""
+"""Since 0.26.22 the stable app, like the beta app, starts without a domain (password sign-in) and is published for arm64."""
 import importlib.util
 import sys
 import unittest
@@ -19,26 +19,25 @@ KEPT = {"postgres_password": "abc", "session_secret": "s", "setup_code": "c", "v
 
 
 class RelyingPartyTest(unittest.TestCase):
-    def test_stable_still_needs_a_domain(self):
-        with self.assertRaises(SystemExit):
-            load("printpricing").settings({}, KEPT)
+    def test_starts_without_a_domain(self):
+        for folder in ("printpricing", "printpricing-beta"):
+            env = load(folder).settings({}, KEPT)
+            self.assertEqual((env["RP_ID"], env["RP_ORIGINS"]), ("", ""), folder)
 
-    def test_beta_starts_without_a_domain(self):
-        env = load("printpricing-beta").settings({}, KEPT)
-        self.assertEqual((env["RP_ID"], env["RP_ORIGINS"]), ("", ""))
+    def test_a_domain_pins_the_relying_party(self):
+        for folder in ("printpricing", "printpricing-beta"):
+            env = load(folder).settings({"rp_id": "Print.Example.com"}, KEPT)
+            self.assertEqual((env["RP_ID"], env["RP_ORIGINS"]), ("print.example.com", "https://print.example.com"), folder)
 
-    def test_beta_with_a_domain_pins_it(self):
-        env = load("printpricing-beta").settings({"rp_id": "Print.Example.com"}, KEPT)
-        self.assertEqual((env["RP_ID"], env["RP_ORIGINS"]), ("print.example.com", "https://print.example.com"))
+    def test_a_malformed_domain_is_still_refused(self):
+        for folder in ("printpricing", "printpricing-beta"):
+            with self.assertRaises(SystemExit):
+                load(folder).settings({"rp_id": "https://print.example.com"}, KEPT)
 
-    def test_beta_still_refuses_a_malformed_domain(self):
-        with self.assertRaises(SystemExit):
-            load("printpricing-beta").settings({"rp_id": "https://print.example.com"}, KEPT)
-
-    def test_only_the_beta_is_offered_for_arm(self):
+    def test_both_are_offered_for_arm(self):
         import yaml
-        self.assertNotIn("aarch64", yaml.safe_load((ROOT / "printpricing" / "config.yaml").read_text())["arch"])
-        self.assertIn("aarch64", yaml.safe_load((ROOT / "printpricing-beta" / "config.yaml").read_text())["arch"])
+        for folder in ("printpricing", "printpricing-beta"):
+            self.assertIn("aarch64", yaml.safe_load((ROOT / folder / "config.yaml").read_text())["arch"], folder)
 
 
 if __name__ == "__main__":
