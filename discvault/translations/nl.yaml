@@ -1,0 +1,29 @@
+configuration:
+  rp_id:
+    name: Domein voor passkeys (RP_ID)
+    description: >-
+      De domeinnaam waarop DiscVault wordt geopend, zonder https:// en zonder poort, bijvoorbeeld vault.example.com. Passkeys zijn eraan
+      gebonden: later wijzigen maakt bestaande passkeys onbruikbaar. Verplicht.
+  rp_origins:
+    name: Adres(sen) waarop DiscVault wordt geopend (RP_ORIGINS)
+    description: >-
+      Het volledige adres dat browsers gebruiken, kommagescheiden, bijvoorbeeld https://vault.example.com. Leeg betekent https:// plus het domein hierboven.
+  rp_name:
+    name: Naam bij passkeys
+    description: De naam die je browser toont bij het aanmaken of gebruiken van een passkey. Standaard DiscVault.
+  trusted_proxies:
+    name: Vertrouwde proxy's
+    description: >-
+      Adres(sen) van de reverse proxy vóór DiscVault (kommagescheiden), zodat clientadressen in het auditlogboek kloppen. Leeg betekent dat
+      geen doorstuurheader wordt geloofd. Optioneel.
+  omdb_api_key:
+    name: OMDb API-sleutel
+    description: Optioneel. Gratis sleutel van omdbapi.com voor het opzoeken van filmgegevens.
+  tmdb_api_key:
+    name: TMDb API-sleutel
+    description: Optioneel. Gratis sleutel van themoviedb.org, gebruikt als OMDb niets vindt.
+  block_crawlers:
+    name: Zoekmachines en AI-crawlers blokkeren
+    description: Houdt deze installatie uit zoekresultaten en AI-trainingsdata. Standaard aan.
+network:
+  5000/tcp: Webinterface (het MCP-eindpunt zit op dezelfde poort, onder /mcp)

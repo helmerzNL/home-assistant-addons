@@ -1,0 +1,32 @@
+{
+  "discvault": {
+    "repo": "helmerzNL/DiscVault",
+    "tag": "^v(26\\.\\d+\\.\\d+)$",
+    "image": "ghcr.io/helmerznl/discvault",
+    "image_tag": "{version}"
+  },
+  "doorbell-map": {
+    "repo": "helmerzNL/Doorbell-Map",
+    "tag": "^v(\\d+\\.\\d+\\.\\d+)$",
+    "image": "ghcr.io/helmerznl/doorbell-map",
+    "image_tag": "v{version}"
+  },
+  "mealieshopper": {
+    "repo": "helmerzNL/MealieShopper",
+    "tag": "^v(\\d+\\.\\d+\\.\\d+)$",
+    "image": "ghcr.io/helmerznl/mealieshopper",
+    "image_tag": "{version}"
+  },
+  "mealieshopper-beta": {
+    "repo": "helmerzNL/MealieShopper",
+    "tag": "^v(\\d+\\.\\d+\\.\\d+-beta)$",
+    "image": "ghcr.io/helmerznl/mealieshopper",
+    "image_tag": "{version}"
+  },
+  "printpricing": {
+    "repo": "Flux76HQ/3dprint_pricing",
+    "tag": "^v(\\d+\\.\\d+\\.\\d+)$",
+    "image": "ghcr.io/flux76hq/3dprint_pricing",
+    "image_tag": "{version}"
+  }
+}

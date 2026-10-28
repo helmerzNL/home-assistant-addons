@@ -1,0 +1,30 @@
+# Home Assistant app (add-on) for Doorbell Map. Reference: https://contributors.home-assistant.io/apps/reference/configuration/
+# `version` is the version of the app image this app is built on (ghcr.io/helmerznl/doorbell-map:v<version>), and Dockerfile builds on that tag.
+# `scripts/sync_versions.py` raises it after checking that the image exists; do not edit it by hand.
+name: Doorbell Map
+version: "1.0.30"
+slug: doorbell_map
+description: Interactive neighbourhood map that shows which houses want (or do not want) a visit at the door, for example on St. Martin's Day
+url: https://github.com/helmerzNL/Doorbell-Map
+arch:
+  - amd64
+  - aarch64
+init: false
+startup: application
+boot: auto
+# The app keeps its data (houses, passkeys, backups) as files in /data; a stop gives a consistent copy.
+backup: cold
+ports:
+  9888/tcp: 9888
+ports_description:
+  9888/tcp: Web interface
+webui: "http://[HOST]:[PORT:9888]"
+watchdog: "http://[HOST]:[PORT:9888]/api/auth/status"
+# /data of this app is the DATA_DIR of the app; the generated secrets are kept in /data/secrets.json.
+options: {}
+schema:
+  origin: url?
+  rp_id: str?
+  site_title: str?
+  setup_token: password?
+  session_hours: int(1,720)?

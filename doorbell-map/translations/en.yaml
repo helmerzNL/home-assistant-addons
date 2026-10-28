@@ -1,0 +1,22 @@
+configuration:
+  origin:
+    name: Address the map is opened on (ORIGIN)
+    description: >-
+      The full address browsers use, for example https://map.example.com. It has to be exactly the address in the browser bar. Required.
+      Passkeys for the admin only work over https (or on localhost), so put a reverse proxy with a certificate in front of port 9888.
+  rp_id:
+    name: Domain for passkeys (RP_ID)
+    description: >-
+      Only the domain name, without https:// or a port. Optional: empty means the host name of the address above. Passkeys are bound to it.
+  site_title:
+    name: Site name
+    description: The name of the site until you change it in the admin. Optional.
+  setup_token:
+    name: Setup code
+    description: >-
+      Typed once to create the very first passkey of the admin. Empty makes one and prints it in the Log tab.
+  session_hours:
+    name: Admin session (hours)
+    description: How long the admin stays signed in. Optional; default 12.
+network:
+  9888/tcp: Web interface

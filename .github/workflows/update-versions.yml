@@ -1,0 +1,48 @@
+name: Update add-on versions
+
+# Looks daily whether an app has a newer release whose image is published, and opens a pull request that raises the add-on's version.
+# Home Assistant offers the update as soon as that pull request is merged. Needs "Allow GitHub Actions to create and approve pull requests"
+# under Settings > Actions > General.
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Raise the versions
+        id: sync
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python scripts/sync_versions.py | tee report.txt
+          {
+            echo "report<<EOF"
+            cat report.txt
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          rm report.txt
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/update-addon-versions
+          commit-message: "Update add-on versions"
+          title: "Update add-on versions"
+          body: |
+            The add-ons below have a newer release whose image is published.
+
+            ```
+            ${{ steps.sync.outputs.report }}
+            ```
+
+            Merging this makes Home Assistant offer the update.
+          delete-branch: true

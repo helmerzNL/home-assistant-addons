@@ -1,0 +1,115 @@
+# 3D Print Pricing
+
+*English first · Nederlands hieronder.*
+
+## English
+
+This app runs [3D Print Pricing](https://github.com/Flux76HQ/3dprint_pricing) inside Home Assistant. The app and its PostgreSQL database
+run in this one container; everything they store lives in the app's own data folder, which Home Assistant includes in its backups.
+
+### Install
+
+1. In Home Assistant open **Settings > Apps > Install app** (older versions: **Settings > Add-ons > Add-on store**), then the menu (⋮) > **Repositories**, and add
+   `https://github.com/helmerzNL/home-assistant-addons`.
+2. Choose **3D Print Pricing** and **Install**. Home Assistant builds the app on your device, which takes a few minutes the first time.
+3. Fill in **rp_id** on the **Configuration** tab (see below), save, and **Start** the app.
+4. Open the **Log** tab: the setup code for the first screen is printed there (or type your own under *Setup code*).
+5. Open the app at `https://<your domain>` and go through the onboarding: setup code, your name, a passkey, and save the 8 recovery codes.
+
+### Domain and https: needed for passkeys
+
+Signing in uses passkeys. A browser only creates them on a page served over **https**, on a **domain name** (not an IP address and not
+`http://homeassistant.local:6080`; `http://localhost` is the one exception). So the app has to be reachable on an https address you
+control, and that address is what you enter:
+
+| Option | What to enter |
+|---|---|
+| **rp_id** | The domain only, for example `print.example.com`. Required. Passkeys are bound to it: changing it later makes existing passkeys unusable (recovery codes still work). |
+| **rp_origins** | The full address(es), comma separated, for example `https://print.example.com`. Empty means `https://` plus the domain. |
+| **proxy_hops** | `1` when one reverse proxy sits in front of the app (the usual case), `0` when the app is opened on its port directly. |
+
+Put a reverse proxy with a certificate in front of port **6080** of this app (for example the Nginx Proxy Manager or Caddy app, a
+Cloudflare Tunnel, or Tailscale serve). Home Assistant Cloud (Nabu Casa) only forwards Home Assistant itself, not other ports. The app is
+not offered through the Home Assistant sidebar (Ingress): it is made to be served from the root of its own domain, which is what passkeys are bound to.
+
+### Options
+
+| Option | Meaning |
+|---|---|
+| **setup_code** | Typed once on the first screen. Empty makes one and prints it in the Log. |
+| **max_upload_mb** | Largest STL/3MF upload. A proxy in front has to allow at least as much. |
+| **ai_images_enabled** | Switches on the optional AI product images. The OpenAI key is entered in the app, under Settings. |
+| **spoolman_url** | Address of a Spoolman, for example `http://homeassistant.local:7912`. Empty: type it in the app (Settings > Filaments). |
+| **update_check** | The app asks GitHub whether a newer release exists and tells the owner. It never updates anything; updating is done here, in Home Assistant. |
+
+Changes take effect after a restart of the app.
+
+### Data, backups and moving
+
+- The database is in `/data/postgres`, the uploads in `/data/uploads` and the generated secrets (session key, database password, push keys)
+  in `/data/secrets.json`. Home Assistant stops the app while it makes a backup (a running database is not a consistent copy), so a backup
+  takes the app offline for a moment.
+- The app also has its own backup and restore (Settings > System), which is the way to move an installation between this app and the Docker
+  Compose installation, in either direction. A backup file never contains passkeys or users: the person restoring signs up again.
+- The database is PostgreSQL 17. A data folder cannot be opened by another major version; the app refuses to start rather than touch it.
+
+### Updating
+
+A new release shows up as an update of this app. Updating rebuilds the app on your device and restarts it; migrations run on start. The
+architecture is **amd64** only for now (the published image is built for that).
+
+## Nederlands
+
+This app runs [3D Print Pricing](https://github.com/Flux76HQ/3dprint_pricing) in Home Assistant. De app en de PostgreSQL-database draaien
+samen in deze ene container; alles wat ze opslaan staat in de eigen data-map van de app, die Home Assistant meeneemt in zijn back-ups.
+
+### Installeren
+
+1. Ga in Home Assistant naar **Instellingen > Apps > App installeren** (oudere versies: **Instellingen > Add-ons > Add-on store**), open het
+   menu (⋮) > **Repositories** en voeg `https://github.com/helmerzNL/home-assistant-addons` toe.
+2. Kies **3D Print Pricing** en klik op **Installeren**. Home Assistant bouwt de app op je apparaat; de eerste keer duurt dat een paar minuten.
+3. Vul op het tabblad **Configuratie** **rp_id** in (zie hieronder), sla op en **Start** de app.
+4. Open het tabblad **Logboek**: daar staat de instelcode voor het eerste scherm (of typ zelf een code bij *Instelcode*).
+5. Open de app op `https://<jouw domein>` en doorloop de onboarding: instelcode, je naam, een passkey, en bewaar de 8 herstelcodes.
+
+### Domein en https: nodig voor passkeys
+
+Inloggen gaat met passkeys. Een browser maakt die alleen aan op een pagina via **https**, op een **domeinnaam** (dus niet op een IP-adres en
+niet op `http://homeassistant.local:6080`; `http://localhost` is de enige uitzondering). De app moet dus bereikbaar zijn op een https-adres
+dat je zelf beheert, en dat adres vul je in:
+
+| Optie | Wat invullen |
+|---|---|
+| **rp_id** | Alleen het domein, bijvoorbeeld `print.example.com`. Verplicht. Passkeys zijn eraan gebonden: later wijzigen maakt bestaande passkeys onbruikbaar (herstelcodes werken nog). |
+| **rp_origins** | Het volledige adres (of adressen, kommagescheiden), bijvoorbeeld `https://print.example.com`. Leeg betekent `https://` plus het domein. |
+| **proxy_hops** | `1` als er één reverse proxy voor de app staat (het gebruikelijke geval), `0` als de app rechtstreeks op zijn poort wordt geopend. |
+
+Zet een reverse proxy met certificaat voor poort **6080** van deze app (bijvoorbeeld de Nginx Proxy Manager- of Caddy-app, een Cloudflare
+Tunnel of Tailscale serve). Home Assistant Cloud (Nabu Casa) stuurt alleen Home Assistant zelf door, geen andere poorten. De app wordt niet
+via de zijbalk van Home Assistant (Ingress) aangeboden: hij is gemaakt om op de root van een eigen domein te draaien, en daaraan zijn passkeys gebonden.
+
+### Opties
+
+| Optie | Betekenis |
+|---|---|
+| **setup_code** | Eenmalig in het eerste scherm in te typen. Leeg maakt er een en toont die in het Logboek. |
+| **max_upload_mb** | Grootste STL/3MF-upload. Een proxy ervoor moet minstens zoveel toestaan. |
+| **ai_images_enabled** | Schakelt de optionele AI-productafbeeldingen in. De OpenAI-sleutel voer je in de app in, onder Instellingen. |
+| **spoolman_url** | Adres van een Spoolman, bijvoorbeeld `http://homeassistant.local:7912`. Leeg: typ het in de app (Instellingen > Filamenten). |
+| **update_check** | De app vraagt GitHub of er een nieuwere release is en meldt dat aan de eigenaar. Hij werkt nooit zelf bij; bijwerken doe je hier, in Home Assistant. |
+
+Wijzigingen gaan in na een herstart van de app.
+
+### Gegevens, back-ups en verhuizen
+
+- De database staat in `/data/postgres`, de uploads in `/data/uploads` en de gegenereerde geheimen (sessiesleutel, databasewachtwoord,
+  pushsleutels) in `/data/secrets.json`. Home Assistant stopt de app tijdens een back-up (een draaiende database is geen consistente kopie),
+  dus een back-up haalt de app even offline.
+- De app heeft ook een eigen back-up en terugzetten (Instellingen > Systeem); daarmee verhuis je een installatie tussen deze app en de
+  Docker Compose-installatie, in beide richtingen. Een back-upbestand bevat nooit passkeys of gebruikers: wie terugzet, meldt zich opnieuw aan.
+- De database is PostgreSQL 17. Een data-map kan niet door een andere hoofdversie worden geopend; de app weigert te starten in plaats van eraan te komen.
+
+### Updaten
+
+Een nieuwe release verschijnt als update van deze app. Bijwerken bouwt de app opnieuw op je apparaat en herstart hem; migraties draaien bij
+het starten. De architectuur is voorlopig alleen **amd64** (daarvoor wordt het gepubliceerde image gebouwd).

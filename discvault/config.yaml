@@ -1,0 +1,36 @@
+# Home Assistant app (add-on) for DiscVault. Reference: https://contributors.home-assistant.io/apps/reference/configuration/
+# `version` is the version of the app image this app is built on (ghcr.io/helmerznl/discvault:<version>), and Dockerfile builds on that tag.
+# `scripts/sync_versions.py` raises it after checking that the image exists; do not edit it by hand.
+name: DiscVault
+version: "26.10.17"
+slug: discvault
+description: Self-hosted manager for your 4K UHD, Blu-ray and DVD collection, with its own PostgreSQL database
+url: https://github.com/helmerzNL/DiscVault
+arch:
+  - amd64
+  - aarch64
+init: true
+startup: application
+boot: auto
+# One container holds the app and its PostgreSQL. A running database is not a consistent file copy, so the app is stopped for a backup.
+backup: cold
+# Stopping has to give the app and PostgreSQL time to finish cleanly.
+timeout: 60
+ports:
+  5000/tcp: 6180
+ports_description:
+  5000/tcp: Web interface (the MCP endpoint is on the same port, under /mcp)
+webui: "http://[HOST]:[PORT:5000]"
+watchdog: "http://[HOST]:[PORT:5000]/api/next/health"
+# /data of this app is the data folder of DiscVault: the database in /data/postgres, posters and backups next to it, the generated secrets in /data/secrets.json.
+options:
+  rp_name: DiscVault
+  block_crawlers: true
+schema:
+  rp_id: "str?"
+  rp_origins: "str?"
+  rp_name: "str?"
+  trusted_proxies: "str?"
+  omdb_api_key: "password?"
+  tmdb_api_key: "password?"
+  block_crawlers: bool
