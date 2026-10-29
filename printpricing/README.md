@@ -4,8 +4,8 @@
 
 ## English
 
-Cost price calculator and inventory for a 3D-print business: filament, parts, printer depreciation and energy. This app brings its own
-PostgreSQL database, so nothing else has to be installed.
+Cost price calculator and inventory for a 3D-print business: filament, parts, printer depreciation and energy. Its data is one SQLite file in
+the app's folder, so nothing else has to be installed.
 
 **Quick start**
 
@@ -18,8 +18,8 @@ front of port **6080**. Read the *Documentation* tab before the first start.
 
 ## Nederlands
 
-Kostprijscalculator en voorraadbeheer voor een 3D-printbedrijf: filament, onderdelen, afschrijving van de printer en energie. Deze app
-brengt een eigen PostgreSQL-database mee, dus er hoeft niets anders geïnstalleerd te worden.
+Kostprijscalculator en voorraadbeheer voor een 3D-printbedrijf: filament, onderdelen, afschrijving van de printer en energie. De gegevens
+staan in één SQLite-bestand in de map van de app, dus er hoeft niets anders geïnstalleerd te worden.
 
 **Snel starten**
 

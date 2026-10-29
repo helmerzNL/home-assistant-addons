@@ -4,8 +4,8 @@
 
 ## English
 
-This app runs [3D Print Pricing](https://github.com/Flux76HQ/3dprint_pricing) inside Home Assistant. The app and its PostgreSQL database
-run in this one container; everything they store lives in the app's own data folder, which Home Assistant includes in its backups.
+This app runs [3D Print Pricing](https://github.com/Flux76HQ/3dprint_pricing) inside Home Assistant. Everything it stores (one SQLite database
+and the uploads) lives in the app's own data folder, which Home Assistant includes in its backups.
 
 ### Install
 
@@ -50,12 +50,14 @@ Changes take effect after a restart of the app.
 
 ### Data, backups and moving
 
-- The database is in `/data/postgres`, the uploads in `/data/uploads` and the generated secrets (session key, database password, push keys)
-  in `/data/secrets.json`. Home Assistant stops the app while it makes a backup (a running database is not a consistent copy), so a backup
+- The database is the file `/data/db/printpricing.sqlite3`, the uploads are in `/data/uploads` and the generated secrets (session key, push keys)
+  in `/data/secrets.json`. Home Assistant stops the app while it makes a backup (a database that is being written is not a consistent copy), so a backup
   takes the app offline for a moment.
 - The app also has its own backup and restore (*Settings → System*), which is the way to move an installation between this app and the Docker
   Compose installation, in either direction. A backup file never contains passkeys or users: the person restoring signs up again.
-- The database is PostgreSQL 17. A data folder cannot be opened by another major version; the app refuses to start rather than touch it.
+- An installation from before the SQLite releases (0.26.22 and earlier) still has its database in `/data/postgres`. On the first start after the update the
+  app moves it into the SQLite file by itself (PostgreSQL runs for that one start); `/data/postgres` is left alone, and you can remove it once the app works.
+  The app refuses to start rather than begin empty when it finds that folder and cannot import it.
 
 ### Updating
 
@@ -64,8 +66,8 @@ architectures are **amd64** and **aarch64** (the published image is built for bo
 
 ## Nederlands
 
-Deze app draait [3D Print Pricing](https://github.com/Flux76HQ/3dprint_pricing) in Home Assistant. De app en de PostgreSQL-database draaien
-samen in deze ene container; alles wat ze opslaan staat in de eigen data-map van de app, die Home Assistant meeneemt in zijn back-ups.
+Deze app draait [3D Print Pricing](https://github.com/Flux76HQ/3dprint_pricing) in Home Assistant. Alles wat de app opslaat (één SQLite-database
+en de uploads) staat in de eigen data-map van de app, die Home Assistant meeneemt in zijn back-ups.
 
 ### Installeren
 
@@ -110,12 +112,14 @@ Wijzigingen gaan in na een herstart van de app.
 
 ### Gegevens, back-ups en verhuizen
 
-- De database staat in `/data/postgres`, de uploads in `/data/uploads` en de gegenereerde geheimen (sessiesleutel, databasewachtwoord,
-  pushsleutels) in `/data/secrets.json`. Home Assistant stopt de app tijdens een back-up (een draaiende database is geen consistente kopie),
-  dus een back-up haalt de app even offline.
+- De database is het bestand `/data/db/printpricing.sqlite3`, de uploads staan in `/data/uploads` en de gegenereerde geheimen (sessiesleutel,
+  pushsleutels) in `/data/secrets.json`. Home Assistant stopt de app tijdens een back-up (een database waarnaar geschreven wordt is geen
+  consistente kopie), dus een back-up haalt de app even offline.
 - De app heeft ook een eigen back-up en terugzetten (*Instellingen → Systeem*); daarmee verhuis je een installatie tussen deze app en de
   Docker Compose-installatie, in beide richtingen. Een back-upbestand bevat nooit passkeys of gebruikers: wie terugzet, meldt zich opnieuw aan.
-- De database is PostgreSQL 17. Een data-map kan niet door een andere hoofdversie worden geopend; de app weigert te starten in plaats van eraan te komen.
+- Een installatie van vóór de SQLite-releases (0.26.22 en eerder) heeft haar database nog in `/data/postgres`. Bij de eerste start na de update zet de
+  app die zelf over naar het SQLite-bestand (PostgreSQL draait alleen voor die ene start); `/data/postgres` blijft onaangeroerd en kun je weghalen zodra de app
+  werkt. De app weigert te starten in plaats van leeg te beginnen als hij die map vindt en niet kan importeren.
 
 ### Updaten
 

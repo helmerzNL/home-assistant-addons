@@ -1,16 +1,16 @@
 # DERIVED from ../printpricing by `python scripts/derive_beta.py`: change the stable add-on, not this file. The beta add-on runs the `beta` image of the app;
 # its `version` ends in -beta.<build time of that image> and is raised by `scripts/sync_versions.py`, so Home Assistant offers an update for every new beta build.
 name: 3D Print Pricing (beta)
-version: "0.26.22-beta.202610281446"
+version: "0.26.23-beta.202610290034"
 slug: printpricing_beta
-description: Development version (beta). Cost price calculator and inventory for a 3D-print business, with its own PostgreSQL database
+description: Development version (beta). Cost price calculator and inventory for a 3D-print business, with its own database
 url: https://github.com/Flux76HQ/3dprint_pricing
 arch:
   - amd64
   - aarch64
-# One container holds the app and its PostgreSQL. A running database is not a consistent file copy, so the app is stopped for a backup.
+# The database is one SQLite file in /data. A database that is being written (the -wal file holds the newest data) is not a consistent file copy, so the app is stopped for a backup.
 backup: cold
-# Stopping has to give gunicorn and PostgreSQL time to finish cleanly.
+# Stopping has to give gunicorn (and PostgreSQL, during the one-off import of an earlier release) time to finish cleanly.
 timeout: 60
 ports:
   6080/tcp: 6081
@@ -18,7 +18,7 @@ ports_description:
   6080/tcp: Web interface
 webui: "http://[HOST]:[PORT:6080]"
 watchdog: "http://[HOST]:[PORT:6080]/healthz"
-# /data of this app is the app's DATA_PATH: the database in /data/postgres, the uploads in /data/uploads, the generated secrets in /data/secrets.json.
+# /data of this app is the app's DATA_PATH: the database in /data/db, the uploads in /data/uploads (an earlier release's PostgreSQL data in /data/postgres is only read once), the generated secrets in /data/secrets.json.
 options:
   proxy_hops: 0
   max_upload_mb: 50

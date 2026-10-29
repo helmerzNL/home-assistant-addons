@@ -18,6 +18,6 @@ RUN mkdir -p /etc/postgresql-common && echo 'create_main_cluster = false' > /etc
 
 COPY run.py /run.py
 
-# The image's own entrypoint (migrations, then gunicorn) is started by run.py, next to PostgreSQL.
+# The image's own entrypoint (migrations, then gunicorn) is started by run.py.
 ENTRYPOINT []
 CMD ["python", "/run.py"]
