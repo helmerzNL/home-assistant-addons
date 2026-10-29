@@ -1,4 +1,5 @@
-"""Since 0.26.22 the stable app, like the beta app, starts without a domain (password sign-in) and is published for arm64."""
+"""The stable and the beta add-on start without a domain (password sign-in), are published for arm64, and keep their data in SQLite:
+PostgreSQL runs only for the one-off import of an earlier release."""
 import importlib.util
 import sys
 import unittest
@@ -33,6 +34,29 @@ class RelyingPartyTest(unittest.TestCase):
         for folder in ("printpricing", "printpricing-beta"):
             with self.assertRaises(SystemExit):
                 load(folder).settings({"rp_id": "https://print.example.com"}, KEPT)
+
+    def test_the_app_gets_no_database_url_of_its_own(self):
+        for folder in ("printpricing", "printpricing-beta"):
+            env = load(folder).settings({}, KEPT)
+            self.assertNotIn("DATABASE_URL", env, folder)
+            self.assertNotIn("LEGACY_DATABASE_URL", env, folder)
+
+    def test_postgresql_is_only_for_an_earlier_releases_data(self):
+        import tempfile
+        for folder in ("printpricing", "printpricing-beta"):
+            module = load(folder)
+            with tempfile.TemporaryDirectory() as tmp:
+                data = Path(tmp)
+                module.PGDATA, module.SQLITE = data / "postgres", data / "db" / "printpricing.sqlite3"
+                self.assertFalse(module.has_old_database(), folder)                         # a new installation
+                module.PGDATA.mkdir()
+                (module.PGDATA / "PG_VERSION").write_text("17\n")
+                self.assertTrue(module.has_old_database(), folder)                          # old data, not imported yet
+                self.assertEqual(module.settings({}, KEPT)["LEGACY_DATABASE_URL"], "postgresql://printpricing:abc@127.0.0.1:5432/printpricing", folder)
+                module.SQLITE.parent.mkdir()
+                module.SQLITE.write_text("")
+                self.assertFalse(module.has_old_database(), folder)                         # imported: the app alone
+                self.assertNotIn("LEGACY_DATABASE_URL", module.settings({}, KEPT), folder)
 
     def test_both_are_offered_for_arm(self):
         import yaml
