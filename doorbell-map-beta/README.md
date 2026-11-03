@@ -20,7 +20,7 @@ admin draws the houses and manages everything, protected by a **password** or a 
 
 1. Install and start the app, and read the setup code in the *Log* tab.
 2. Open the app with **Open web UI** (`http://<address of Home Assistant>:9889`) or at your https address, and go to `/beheer`.
-3. Enter the setup code and choose a password (or, over https, a passkey).
+3. Enter the setup code, choose a username and a password (or, over https, a passkey).
 
 Passkeys need an **https** address on a domain name: put a reverse proxy with a certificate in front of port **9889** and you can add one
 later. The full explanation is on the *Documentation* tab.
@@ -35,7 +35,7 @@ telefoon; de beheerder tekent de huizen en beheert alles, beveiligd met een **wa
 
 1. Installeer en start de app en lees de instelcode op het tabblad *Logboek*.
 2. Open de app met **Webinterface openen** (`http://<adres van Home Assistant>:9889`) of op je https-adres, en ga naar `/beheer`.
-3. Voer de instelcode in en kies een wachtwoord (of, via https, een passkey).
+3. Voer de instelcode in en kies een gebruikersnaam en een wachtwoord (of, via https, een passkey).
 
 Passkeys vragen om een **https**-adres op een domeinnaam: zet een reverse proxy met certificaat voor poort **9889**, dan kun je er later een
 toevoegen. De volledige uitleg staat op het tabblad *Documentatie*.

@@ -29,14 +29,14 @@ per house and manages everything under `/beheer`.
 3. **Start** the app and open the **Log** tab: the setup code for the admin is printed there (or type your own under *Setup code*).
 4. Open the app with **Open web UI** (it opens in a new window at `http://<address of Home Assistant>:9889`) or at `https://<your domain>`.
    The map is at the root; the admin is at `/beheer`.
-5. Enter the setup code and choose a **password**, or, on an https address, a **passkey**.
+5. Enter the setup code, choose a username and sign in with a **password** or, on an https address, a **passkey**.
 
 ### Password or passkey
 
 The app works on any address. How the admin signs in depends on it:
 
-- **A password** works everywhere, also on `http://<address of Home Assistant>:9889` on your own network. Choose it on the first screen of
-  `/beheer`. You can add a passkey later, once the app is reachable over https.
+- **A username and password** work everywhere, also on `http://<address of Home Assistant>:9889` on your own network. Choose this on the first screen of
+  `/beheer`; you can turn on two-step verification (MFA) later, and add a passkey once the app is reachable over https.
 - **A passkey** is more secure and easier, but a browser only creates one on a page served over **https**, on a **domain name** (not an IP
   address and not `http://homeassistant.local:9889`; `http://localhost` is the one exception). The first screen only offers it where it works.
 
@@ -53,7 +53,7 @@ other address are then refused, so open the map on that address instead of with 
 
 | Option | Meaning |
 |---|---|
-| **origin** | Optional. The full address the map is opened on, for example `https://map.example.com`. Empty means the address in the browser. Versions of the app up to 1.0.33 still need it; the Log says so. |
+| **origin** | Optional. The full address the map is opened on, for example `https://map.example.com`. Empty means the address in the browser. Older versions of the app still need it; the Log says so. |
 | **rp_id** | The domain for passkeys. Empty means the host name of *origin* (or of the address in the browser), which is almost always right. Changing it makes existing passkeys unusable. |
 | **site_title** | Name of the site until you change it in the admin. |
 | **setup_token** | Typed once for the very first passkey or password. Empty makes one and prints it in the Log. |
@@ -90,14 +90,14 @@ huizen, maakt QR-codes per huis en beheert alles onder `/beheer`.
 3. **Start** de app en open het tabblad **Logboek**: daar staat de instelcode voor de beheerder (of typ zelf een code bij *Instelcode*).
 4. Open de app met **Webinterface openen** (die opent in een nieuw venster op `http://<adres van Home Assistant>:9889`) of op
    `https://<jouw domein>`. De kaart staat op de root, het beheer op `/beheer`.
-5. Voer de instelcode in en kies een **wachtwoord**, of op een https-adres een **passkey**.
+5. Voer de instelcode in, kies een gebruikersnaam en log in met een **wachtwoord** of, op een https-adres, een **passkey**.
 
 ### Wachtwoord of passkey
 
 De app werkt op elk adres. Hoe de beheerder inlogt, hangt ervan af:
 
-- **Een wachtwoord** werkt overal, ook op `http://<adres van Home Assistant>:9889` in je eigen netwerk. Kies het op het eerste scherm van
-  `/beheer`. Een passkey kun je later toevoegen, als de app via https bereikbaar is.
+- **Een gebruikersnaam en wachtwoord** werken overal, ook op `http://<adres van Home Assistant>:9889` in je eigen netwerk. Kies dit op het eerste scherm van
+  `/beheer`; later kun je tweestapsverificatie (MFA) aanzetten, en een passkey toevoegen als de app via https bereikbaar is.
 - **Een passkey** is veiliger en makkelijker, maar een browser maakt die alleen aan op een pagina via **https**, op een **domeinnaam** (dus niet
   op een IP-adres en niet op `http://homeassistant.local:9889`; `http://localhost` is de enige uitzondering). Het eerste scherm biedt hem alleen
   aan waar hij werkt.
@@ -115,7 +115,7 @@ vanaf een ander adres worden dan geweigerd, dus open de kaart dan op dat adres i
 
 | Optie | Betekenis |
 |---|---|
-| **origin** | Optioneel. Het volledige adres waarop de kaart wordt geopend, bijvoorbeeld `https://kaart.example.com`. Leeg betekent het adres in de browser. Versies van de app tot en met 1.0.33 hebben het nog nodig; het Logboek zegt het dan. |
+| **origin** | Optioneel. Het volledige adres waarop de kaart wordt geopend, bijvoorbeeld `https://kaart.example.com`. Leeg betekent het adres in de browser. Oudere versies van de app hebben het nog nodig; het Logboek zegt het dan. |
 | **rp_id** | Het domein voor passkeys. Leeg betekent de hostnaam van *origin* (of van het adres in de browser), wat bijna altijd goed is. Wijzigen maakt bestaande passkeys onbruikbaar. |
 | **site_title** | Naam van de site totdat je die in het beheer aanpast. |
 | **setup_token** | Eenmalig nodig voor de allereerste passkey of het eerste wachtwoord. Leeg maakt er een en toont die in het Logboek. |
