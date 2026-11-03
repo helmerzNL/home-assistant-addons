@@ -18,28 +18,37 @@ per house and manages everything under `/beheer`.
 1. In Home Assistant open **Settings > Apps > Install app** (older versions: **Settings > Add-ons > Add-on store**), then the menu (⋮) >
    **Repositories**, and add `https://github.com/helmerzNL/home-assistant-addons`.
 2. Choose **Doorbell Map** and **Install**. Home Assistant builds the app on your device, which takes a minute the first time.
-3. Fill in **origin** on the **Configuration** tab (see below) and save.
-4. **Start** the app and open the **Log** tab: the setup code for the first passkey is printed there (or type your own under *Setup code*).
-5. Open `<origin>/beheer`, enter the setup code, and create your passkey. The map itself is at `<origin>`.
+3. **Start** the app and open the **Log** tab: the setup code for the admin is printed there (or type your own under *Setup code*).
+4. Open the app with **Open web UI** (it opens in a new window at `http://<address of Home Assistant>:9888`) or at `https://<your domain>`.
+   The map is at the root; the admin is at `/beheer`.
+5. Enter the setup code and choose a **password**, or, on an https address, a **passkey**.
 
-### Address and https: needed for the admin's passkey
+### Password or passkey
 
-The admin signs in with a passkey. A browser only creates one on a page served over **https**, on a **domain name** (not an IP address and
-not `http://homeassistant.local:9888`; `http://localhost` is the one exception). So the app has to be reachable on an https address you
-control, and that address is what you enter as **origin**. It has to be exactly the address in the browser bar, or changes are refused.
+The app works on any address. How the admin signs in depends on it:
 
-Put a reverse proxy with a certificate in front of port **9888** of this app (for example the Nginx Proxy Manager or Caddy app, a
-Cloudflare Tunnel, or Tailscale serve). Home Assistant Cloud (Nabu Casa) only forwards Home Assistant itself, not other ports. The app is
-not offered through the Home Assistant sidebar (Ingress): it is made to be served from the root of its own address.
+- **A password** works everywhere, also on `http://<address of Home Assistant>:9888` on your own network. Choose it on the first screen of
+  `/beheer`. You can add a passkey later, once the app is reachable over https.
+- **A passkey** is more secure and easier, but a browser only creates one on a page served over **https**, on a **domain name** (not an IP
+  address and not `http://homeassistant.local:9888`; `http://localhost` is the one exception). The first screen only offers it where it works.
+
+For passkeys, installing the map as an app on a phone and notifications, put a reverse proxy with a certificate in front of port **9888** of
+this app (for example the Nginx Proxy Manager or Caddy app, a Cloudflare Tunnel, or Tailscale serve). Home Assistant Cloud (Nabu Casa) only
+forwards Home Assistant itself, not other ports. The app is not offered through the Home Assistant sidebar (Ingress): it is made to be served
+from the root of its own address.
+
+Without **origin** the app follows the address it is opened on (behind a proxy through `X-Forwarded-Proto` and `X-Forwarded-Host`), and the links
+in the QR codes get the address you open the admin on. Fill in **origin** when the map should only be reachable on one address; changes from any
+other address are then refused, so open the map on that address instead of with **Open web UI**.
 
 ### Options
 
 | Option | Meaning |
 |---|---|
-| **origin** | The full address the map is opened on, for example `https://map.example.com`. Required. |
-| **rp_id** | The domain for passkeys. Empty means the host name of *origin*, which is almost always right. Changing it makes existing passkeys unusable. |
+| **origin** | Optional. The full address the map is opened on, for example `https://map.example.com`. Empty means the address in the browser. Versions of the app up to 1.0.33 still need it; the Log says so. |
+| **rp_id** | The domain for passkeys. Empty means the host name of *origin* (or of the address in the browser), which is almost always right. Changing it makes existing passkeys unusable. |
 | **site_title** | Name of the site until you change it in the admin. |
-| **setup_token** | Typed once for the very first passkey. Empty makes one and prints it in the Log. |
+| **setup_token** | Typed once for the very first passkey or password. Empty makes one and prints it in the Log. |
 | **session_hours** | How long the admin stays signed in (default 12). |
 
 Changes take effect after a restart of the app.
@@ -70,29 +79,38 @@ huizen, maakt QR-codes per huis en beheert alles onder `/beheer`.
 1. Ga in Home Assistant naar **Instellingen > Apps > App installeren** (oudere versies: **Instellingen > Add-ons > Add-on store**), open het
    menu (⋮) > **Repositories** en voeg `https://github.com/helmerzNL/home-assistant-addons` toe.
 2. Kies **Doorbell Map** en klik op **Installeren**. Home Assistant bouwt de app op je apparaat; de eerste keer duurt dat een minuutje.
-3. Vul op het tabblad **Configuratie** **origin** in (zie hieronder) en sla op.
-4. **Start** de app en open het tabblad **Logboek**: daar staat de instelcode voor de eerste passkey (of typ zelf een code bij *Instelcode*).
-5. Open `<origin>/beheer`, voer de instelcode in en maak je passkey aan. De kaart zelf staat op `<origin>`.
+3. **Start** de app en open het tabblad **Logboek**: daar staat de instelcode voor de beheerder (of typ zelf een code bij *Instelcode*).
+4. Open de app met **Webinterface openen** (die opent in een nieuw venster op `http://<adres van Home Assistant>:9888`) of op
+   `https://<jouw domein>`. De kaart staat op de root, het beheer op `/beheer`.
+5. Voer de instelcode in en kies een **wachtwoord**, of op een https-adres een **passkey**.
 
-### Adres en https: nodig voor de passkey van de beheerder
+### Wachtwoord of passkey
 
-De beheerder logt in met een passkey. Een browser maakt die alleen aan op een pagina via **https**, op een **domeinnaam** (dus niet op een
-IP-adres en niet op `http://homeassistant.local:9888`; `http://localhost` is de enige uitzondering). De app moet dus bereikbaar zijn op een
-https-adres dat je zelf beheert, en dat adres vul je in bij **origin**. Het moet precies het adres in de adresbalk zijn, anders worden
-wijzigingen geweigerd.
+De app werkt op elk adres. Hoe de beheerder inlogt, hangt ervan af:
 
-Zet een reverse proxy met certificaat voor poort **9888** van deze app (bijvoorbeeld de Nginx Proxy Manager- of Caddy-app, een Cloudflare
-Tunnel of Tailscale serve). Home Assistant Cloud (Nabu Casa) stuurt alleen Home Assistant zelf door, geen andere poorten. De app wordt niet
-via de zijbalk van Home Assistant (Ingress) aangeboden: hij is gemaakt om op de root van een eigen adres te draaien.
+- **Een wachtwoord** werkt overal, ook op `http://<adres van Home Assistant>:9888` in je eigen netwerk. Kies het op het eerste scherm van
+  `/beheer`. Een passkey kun je later toevoegen, als de app via https bereikbaar is.
+- **Een passkey** is veiliger en makkelijker, maar een browser maakt die alleen aan op een pagina via **https**, op een **domeinnaam** (dus niet
+  op een IP-adres en niet op `http://homeassistant.local:9888`; `http://localhost` is de enige uitzondering). Het eerste scherm biedt hem alleen
+  aan waar hij werkt.
+
+Voor passkeys, het installeren van de kaart als app op een telefoon en meldingen zet je een reverse proxy met certificaat voor poort **9888** van
+deze app (bijvoorbeeld de Nginx Proxy Manager- of Caddy-app, een Cloudflare Tunnel of Tailscale serve). Home Assistant Cloud (Nabu Casa) stuurt
+alleen Home Assistant zelf door, geen andere poorten. De app wordt niet via de zijbalk van Home Assistant (Ingress) aangeboden: hij is gemaakt om
+op de root van een eigen adres te draaien.
+
+Zonder **origin** volgt de app het adres waarop hij wordt geopend (achter een proxy via `X-Forwarded-Proto` en `X-Forwarded-Host`), en krijgen
+de links in de QR-codes het adres waarop je het beheer opent. Vul **origin** in als de kaart maar op één adres bereikbaar hoort te zijn; wijzigingen
+vanaf een ander adres worden dan geweigerd, dus open de kaart dan op dat adres in plaats van met **Webinterface openen**.
 
 ### Opties
 
 | Optie | Betekenis |
 |---|---|
-| **origin** | Het volledige adres waarop de kaart wordt geopend, bijvoorbeeld `https://kaart.example.com`. Verplicht. |
-| **rp_id** | Het domein voor passkeys. Leeg betekent de hostnaam van *origin*, wat bijna altijd goed is. Wijzigen maakt bestaande passkeys onbruikbaar. |
+| **origin** | Optioneel. Het volledige adres waarop de kaart wordt geopend, bijvoorbeeld `https://kaart.example.com`. Leeg betekent het adres in de browser. Versies van de app tot en met 1.0.33 hebben het nog nodig; het Logboek zegt het dan. |
+| **rp_id** | Het domein voor passkeys. Leeg betekent de hostnaam van *origin* (of van het adres in de browser), wat bijna altijd goed is. Wijzigen maakt bestaande passkeys onbruikbaar. |
 | **site_title** | Naam van de site totdat je die in het beheer aanpast. |
-| **setup_token** | Eenmalig nodig voor de allereerste passkey. Leeg maakt er een en toont die in het Logboek. |
+| **setup_token** | Eenmalig nodig voor de allereerste passkey of het eerste wachtwoord. Leeg maakt er een en toont die in het Logboek. |
 | **session_hours** | Hoe lang de beheerder ingelogd blijft (standaard 12). |
 
 Wijzigingen gaan in na een herstart van de app.
