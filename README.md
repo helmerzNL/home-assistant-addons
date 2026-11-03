@@ -117,8 +117,8 @@ what changed per version is in the `CHANGELOG.md` next to it.
   then open the origin address followed by `/beheer`, enter the setup code and create your passkey.
 
 DiscVault, 3D Print Pricing and Doorbell Map sign in with **passkeys**, which only work on an **https** address with a domain name: put a
-reverse proxy with a certificate in front of them. 3D Print Pricing and (with the `password_login` option) DiscVault also accept a password on
-a plain local address.
+reverse proxy with a certificate in front of them. 3D Print Pricing, Doorbell Map and (with the `password_login` option) DiscVault also accept a
+password on a plain local address. The documentation of each app explains what to enter.
 
 ## Configuration
 
