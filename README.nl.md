@@ -74,7 +74,7 @@ komen.
 - **Dezelfde app als de Docker-versie**: elke app draait het image dat de app zelf publiceert; DiscVault neemt zijn eigen PostgreSQL mee in
   dezelfde container, dus er hoeft niets anders geïnstalleerd te worden.
 - **Stabiel en beta naast elkaar**: elke beta heeft een eigen data-map en poort, zodat beide tegelijk draaien.
-- **Updates zodra het image er is**: een dagelijkse controle verhoogt de versie van een app pas als het image van de nieuwe release
+- **Updates zodra het image er is**: een controle elke 6 uur verhoogt de versie van een app pas als het image van de nieuwe release
   gepubliceerd is, dus Home Assistant biedt nooit een update aan die hij niet kan installeren.
 - **In je Home Assistant-back-ups**: de gegevens van elke app staan in een eigen map, die Home Assistant met de app back-upt en terugzet.
 - **Instellingen in het Engels en het Nederlands**: elke optie op het tabblad *Configuratie* is in beide talen uitgelegd, en elke app heeft een
@@ -156,10 +156,11 @@ versie.
 
 ### Hoe updates werken
 
-Een update verschijnt in Home Assistant zodra `version` in de `config.yaml` van een app verandert. `scripts/sync_versions.py` (dagelijks
-gedraaid door de workflow *Update add-on versions*) vergelijkt die versie met de nieuwste release van elke app en **verhoogt hem pas als het
-image van die release gepubliceerd is**; de workflow opent dan een pull request. Merge die en Home Assistant biedt de update aan. In
-`sources.json` staat welke repository, tag en welk image bij welke app horen.
+Een update verschijnt in Home Assistant zodra `version` in de `config.yaml` van een app verandert. `scripts/sync_versions.py` vergelijkt die
+versie met de nieuwste release van elke app en **verhoogt hem pas als het image van die release gepubliceerd is**. Elke 6 uur draait een
+geplande Claude Code-taak het script op `main` en opent of werkt één pull request bij vanaf de branch `automation/update-versions` (de workflow
+*Update add-on versions* doet hetzelfde met de hand). Merge die en Home Assistant biedt de update aan. In `sources.json` staat welke
+repository, tag en welk image bij welke app horen.
 
 ## Data en back-ups
 
@@ -186,7 +187,7 @@ het beheer.
 ```mermaid
 flowchart LR
     R[App-repository<br/>release] -->|publiceert| I[(ghcr.io-image)]
-    I -.->|dagelijkse controle| S[sync_versions.py<br/>pull request]
+    I -.->|elke 6 uur| S[sync_versions.py<br/>pull request]
     S -->|gemerged| C[config.yaml<br/>versie]
     C --> HA[Home Assistant<br/>Supervisor]
     I -->|haalt op of bouwt op| HA
@@ -208,7 +209,7 @@ Er zijn twee soorten apps:
 | `repository.yaml` | De naam en maintainer die Home Assistant voor deze repository toont |
 | `sources.json` | Per app: de repository, het tagpatroon en het image dat zijn versie volgt |
 | `scripts/`, `tests/` | De controles, de beta-generator en de versiesynchronisatie |
-| `.github/workflows/` | De CI bij elke pull request, en de dagelijkse run *Update add-on versions* |
+| `.github/workflows/` | De CI bij elke pull request, en de handmatige workflow *Update add-on versions* |
 
 ## Stabiel en beta
 

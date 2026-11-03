@@ -1,11 +1,13 @@
 name: Update add-on versions
 
-# Looks daily whether an app has a newer release whose image is published, and opens a pull request that raises the add-on's version.
-# Home Assistant offers the update as soon as that pull request is merged. Needs "Allow GitHub Actions to create and approve pull requests"
-# under Settings > Actions > General.
+# Looks whether an app has a newer release (or beta build) whose image is published, and opens a pull request that raises the add-on's
+# version. Home Assistant offers the update as soon as that pull request is merged.
+#
+# The regular check is not this workflow: a scheduled Claude Code task runs scripts/sync_versions.py every 6 hours and opens or updates the
+# pull request from the same branch, automation/update-versions. This workflow is the manual fallback (Actions > Update add-on versions >
+# Run workflow), so it has no schedule of its own: two schedules would push the same branch against each other. It needs "Allow GitHub
+# Actions to create and approve pull requests" under Settings > Actions > General.
 on:
-  schedule:
-    - cron: "17 5 * * *"
   workflow_dispatch:
 
 permissions:
@@ -34,7 +36,7 @@ jobs:
           rm report.txt
       - uses: peter-evans/create-pull-request@v7
         with:
-          branch: automation/update-addon-versions
+          branch: automation/update-versions
           commit-message: "Update add-on versions"
           title: "Update add-on versions"
           body: |

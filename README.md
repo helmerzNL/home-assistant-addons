@@ -73,7 +73,7 @@ with its own data and port, so you can try what is coming without touching your 
 - **The same app as the Docker version**: every app runs the image the app itself publishes; DiscVault brings its own PostgreSQL in the same
   container, so nothing else has to be installed.
 - **Stable and beta side by side**: every beta has its own data folder and port, so both run at the same time.
-- **Updates as soon as the image exists**: a daily check raises an app's version only once the image of the new release is published, so
+- **Updates as soon as the image exists**: a check every 6 hours raises an app's version only once the image of the new release is published, so
   Home Assistant never offers an update it cannot install.
 - **In your Home Assistant backups**: each app's data is in its own folder, which Home Assistant backs up and restores with the app.
 - **Settings in English and Dutch**: every option on the *Configuration* tab is explained in both languages, and every app has a quick start
@@ -152,10 +152,11 @@ Some releases change the database, so take that backup: a release that changed t
 
 ### How updates work
 
-An update shows up in Home Assistant when `version` in an app's `config.yaml` changes. `scripts/sync_versions.py` (run daily by the
-*Update add-on versions* workflow) compares that version with the newest release of each app and **only raises it once the image of that
-release is published**; the workflow then opens a pull request. Merge it and Home Assistant offers the update. `sources.json` says which
-repository, tag pattern and image belong to which app.
+An update shows up in Home Assistant when `version` in an add-on's `config.yaml` changes. `scripts/sync_versions.py` compares that version
+with the newest release of each app and **only raises it once the image of that release is published**. Every 6 hours a scheduled Claude Code
+task runs it on `main` and opens, or updates, one pull request from the branch `automation/update-versions` (the *Update add-on versions*
+workflow does the same by hand). Merge it and Home Assistant offers the update. `sources.json` says which repository,
+tag pattern and image belong to which add-on.
 
 ## Data and backups
 
@@ -180,7 +181,7 @@ System > Backup and restore**), or for Doorbell Map copy the data folder or use 
 ```mermaid
 flowchart LR
     R[App repository<br/>release] -->|publishes| I[(ghcr.io image)]
-    I -.->|daily check| S[sync_versions.py<br/>pull request]
+    I -.->|every 6 hours| S[sync_versions.py<br/>pull request]
     S -->|merged| C[config.yaml<br/>version]
     C --> HA[Home Assistant<br/>Supervisor]
     I -->|pulls or builds on| HA
@@ -202,7 +203,7 @@ The apps come in two kinds:
 | `repository.yaml` | The name and maintainer Home Assistant shows for this repository |
 | `sources.json` | Per app: the repository, tag pattern and image its version follows |
 | `scripts/`, `tests/` | The checks, the beta generator and the version sync |
-| `.github/workflows/` | CI on every pull request, and the daily *Update add-on versions* run |
+| `.github/workflows/` | CI on every pull request, and the manual *Update add-on versions* workflow |
 
 ## Stable and beta
 
