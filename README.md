@@ -31,8 +31,8 @@ Every app has a beta add-on with its own data folder and port, so it runs next t
 point it at the data of the stable app.
 
 DiscVault, 3D Print Pricing and Doorbell Map sign in with **passkeys**, which only work on an **https** address with a domain name: put a
-reverse proxy with a certificate in front of them. 3D Print Pricing and (with the `password_login` option) DiscVault also accept a password on a
-plain local address. The documentation of each app explains what to enter.
+reverse proxy with a certificate in front of them. 3D Print Pricing, Doorbell Map and (with the `password_login` option) DiscVault also accept a
+password on a plain local address. The documentation of each app explains what to enter.
 
 ### How updates work
 
@@ -78,7 +78,7 @@ Zie de tabel hierboven: DiscVault (collectiebeheer voor 4K UHD, Blu-ray en dvd),
 beta-add-on met een eigen data-map en poort, zodat hij naast de stabiele draait. Gebruik de data van de stabiele app niet voor een beta.
 
 DiscVault, 3D Print Pricing en Doorbell Map loggen in met **passkeys**. Die werken alleen op een **https**-adres met een domeinnaam: zet er een
-reverse proxy met certificaat voor. 3D Print Pricing en (met de optie `password_login`) DiscVault accepteren ook een wachtwoord op een gewoon lokaal adres. De documentatie van elke app legt uit wat je invult.
+reverse proxy met certificaat voor. 3D Print Pricing, Doorbell Map en (met de optie `password_login`) DiscVault accepteren ook een wachtwoord op een gewoon lokaal adres. De documentatie van elke app legt uit wat je invult.
 
 ### Hoe updates werken
 

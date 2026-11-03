@@ -12,6 +12,13 @@ const DATA = process.env.DATA_DIR || '/data';
 const OPTIONS = process.env.OPTIONS_FILE || path.join(DATA, 'options.json');
 const SECRETS = path.join(DATA, 'secrets.json');
 const ENTRYPOINT = process.env.APP_ENTRYPOINT || 'docker-entrypoint.sh';
+// The folder of the app in its image (its WORKDIR, where run.js is started).
+const APP_DIR = process.env.APP_DIR || process.cwd();
+
+// Newer images of the app follow the address they are opened on when ORIGIN is empty, and let the admin sign in with a password on an address
+// without https. Older images fall back to a fixed address of their own instead, so for them origin stays required. The image has the
+// feature when it ships server/origin.js.
+const appFollowsAddress = (dir = APP_DIR) => fs.existsSync(path.join(dir, 'server', 'origin.js'));
 
 function log(message) { console.log(`[doorbell-map] ${message}`); }
 
@@ -29,23 +36,25 @@ function keptSecrets(kept, options) {
   return { secrets: next, changed: made.length > 0, printSetupToken: !String(options.setup_token || '').trim() };
 }
 
-// The environment of the app. Throws an Error with a readable message when the address is not set or not usable.
-function buildEnv(options, kept) {
+// The environment of the app. Throws an Error with a readable message when the address is not usable, or missing on an image that needs it.
+function buildEnv(options, kept, followsAddress = appFollowsAddress()) {
   const origin = String(options.origin || '').trim().replace(/\/+$/, '');
-  if (!origin) {
-    throw new Error('Set origin (the address the map is opened on, for example https://map.example.com) on the Configuration tab of this app, then start it again. '
-      + 'Passkeys for the admin only work over https (see the Documentation tab).');
+  if (!origin && !followsAddress) {
+    throw new Error('This version of Doorbell Map still needs origin (the address the map is opened on, for example https://map.example.com): set it on the '
+      + 'Configuration tab of this app, then start it again. Newer versions of the app work without it (see the Documentation tab).');
   }
-  let url;
-  try { url = new URL(origin); } catch { throw new Error(`origin "${origin}" is not an address; use the form https://map.example.com`); }
-  if (url.protocol !== 'https:' && url.protocol !== 'http:') throw new Error('origin has to start with https:// (or http:// for a test on localhost).');
+  if (origin) {
+    let url;
+    try { url = new URL(origin); } catch { throw new Error(`origin "${origin}" is not an address; use the form https://map.example.com`); }
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') throw new Error('origin has to start with https:// (or http:// for an address without https).');
+  }
   const env = {
-    ORIGIN: origin,
     SESSION_SECRET: kept.session_secret,
     SETUP_TOKEN: String(options.setup_token || '').trim() || kept.setup_token,
     DATA_DIR: DATA,
     PORT: '9888',
   };
+  if (origin) env.ORIGIN = origin;
   const rpId = String(options.rp_id || '').trim().toLowerCase();
   if (rpId) {
     if (/[:/]/.test(rpId)) throw new Error('rp_id must be a domain name only, without https://, a path or a port (for example map.example.com).');
@@ -67,7 +76,10 @@ function main() {
     fs.writeFileSync(tmp, JSON.stringify(secrets, null, 2), { mode: 0o600 });
     fs.renameSync(tmp, SECRETS);
   }
-  if (printSetupToken) log(`Setup code for the first passkey of the admin: ${secrets.setup_token}  (set your own under Configuration if you prefer)`);
+  if (!env.ORIGIN) {
+    log('No origin set: the map follows the address it is opened on. Passkeys only work over https; on any other address the admin signs in with a password.');
+  }
+  if (printSetupToken) log(`Setup code for the first passkey or password of the admin: ${secrets.setup_token}  (set your own under Configuration if you prefer)`);
   const child = spawn(ENTRYPOINT, ['node', 'server/index.js'], { env: { ...process.env, ...env }, stdio: 'inherit' });
   for (const signal of ['SIGTERM', 'SIGINT']) process.on(signal, () => child.kill(signal));
   child.on('exit', (code, signal) => process.exit(code ?? (signal ? 1 : 0)));
@@ -80,4 +92,4 @@ if (require.main === module) {
   if (code !== null) process.exit(code);
 }
 
-module.exports = { buildEnv, keptSecrets };
+module.exports = { buildEnv, keptSecrets, appFollowsAddress };
