@@ -36,9 +36,10 @@ password on a plain local address. The documentation of each app explains what t
 
 ### How updates work
 
-An update shows up in Home Assistant when `version` in an add-on's `config.yaml` changes. `scripts/sync_versions.py` (run daily by the
-*Update add-on versions* workflow) compares that version with the newest release of each app and **only raises it once the image of that release
-is published**; the workflow then opens a pull request. Merge it and Home Assistant offers the update. `sources.json` says which repository,
+An update shows up in Home Assistant when `version` in an add-on's `config.yaml` changes. `scripts/sync_versions.py` compares that version
+with the newest release of each app and **only raises it once the image of that release is published**. Every 6 hours a scheduled Claude Code
+task runs it on `main` and opens, or updates, one pull request from the branch `automation/update-versions` (the *Update add-on versions*
+workflow does the same by hand). Merge it and Home Assistant offers the update. `sources.json` says which repository,
 tag pattern and image belong to which add-on.
 
 The beta images only have a moving `beta` tag, so a beta add-on's version is `<newest release>-beta.<build time of the beta image>` (for example
@@ -82,9 +83,10 @@ reverse proxy met certificaat voor. 3D Print Pricing, Doorbell Map en (met de op
 
 ### Hoe updates werken
 
-Een update verschijnt in Home Assistant zodra `version` in de `config.yaml` van een add-on verandert. `scripts/sync_versions.py` (dagelijks gedraaid
-door de workflow *Update add-on versions*) vergelijkt die versie met de nieuwste release van elke app en **verhoogt hem pas als het image van die
-release gepubliceerd is**; de workflow opent dan een pull request. Merge die en Home Assistant biedt de update aan. In `sources.json` staat welke
+Een update verschijnt in Home Assistant zodra `version` in de `config.yaml` van een add-on verandert. `scripts/sync_versions.py` vergelijkt die
+versie met de nieuwste release van elke app en **verhoogt hem pas als het image van die release gepubliceerd is**. Elke 6 uur draait een geplande
+Claude Code-taak het script op `main` en opent of werkt één pull request bij vanaf de branch `automation/update-versions` (de workflow
+*Update add-on versions* doet hetzelfde met de hand). Merge die en Home Assistant biedt de update aan. In `sources.json` staat welke
 repository, tag en welk image bij welke add-on horen. De beta-images hebben alleen een meebewegende `beta`-tag; de versie van een beta-add-on is
 daarom `<nieuwste release>-beta.<bouwtijd van het beta-image>`, zodat elke nieuwe beta-build een update geeft. De beta-mappen worden gegenereerd
 uit de stabiele mappen met `scripts/derive_beta.py`.

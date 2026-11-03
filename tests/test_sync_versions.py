@@ -61,6 +61,13 @@ class SyncTest(unittest.TestCase):
         import json
         sources = json.loads((self.tmp / "sources.json").read_text())
         (self.tmp / "sources.json").write_text(json.dumps({k: v for k, v in sources.items() if k in ("doorbell-map", "mealieshopper")}))
+        # The tests start from fixed versions, not from the versions in the repository: those are raised every few hours.
+        self.pin("doorbell-map", "1.0.30")
+        self.pin("mealieshopper", "2.81.0")
+
+    def pin(self, name, version):
+        path = self.tmp / name / "config.yaml"
+        path.write_text(sv.with_version(path.read_text(encoding="utf-8"), version), encoding="utf-8")
 
     def run_sync(self, tags, published, write=True):
         return sv.sync(self.tmp, write=write, tags_of=lambda repo: tags[repo], exists=lambda image, tag: (image, tag) in published)
@@ -86,6 +93,7 @@ class SyncTest(unittest.TestCase):
 
     def test_beta_addon_follows_the_beta_image(self):
         shutil.copytree(ROOT / "doorbell-map-beta", self.tmp / "doorbell-map-beta")
+        self.pin("doorbell-map-beta", "1.0.30-beta.202610280855")
         import json
         sources = json.loads((ROOT / "sources.json").read_text())
         (self.tmp / "sources.json").write_text(json.dumps({"doorbell-map-beta": sources["doorbell-map-beta"]}))
@@ -97,6 +105,7 @@ class SyncTest(unittest.TestCase):
 
     def test_beta_addon_waits_when_the_image_is_missing(self):
         shutil.copytree(ROOT / "doorbell-map-beta", self.tmp / "doorbell-map-beta")
+        self.pin("doorbell-map-beta", "1.0.30-beta.202610280855")
         import json
         sources = json.loads((ROOT / "sources.json").read_text())
         (self.tmp / "sources.json").write_text(json.dumps({"doorbell-map-beta": sources["doorbell-map-beta"]}))
