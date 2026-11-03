@@ -1,7 +1,7 @@
 # DERIVED from ../discvault by `python scripts/derive_beta.py`: change the stable add-on, not this file. The beta add-on runs the `beta` image of the app;
 # its `version` ends in -beta.<build time of that image> and is raised by `scripts/sync_versions.py`, so Home Assistant offers an update for every new beta build.
 name: DiscVault (beta)
-version: "26.10.17-beta.202610281022"
+version: "26.10.17-beta.202611031311"
 slug: discvault_beta
 description: Development version (beta). Self-hosted manager for your 4K UHD, Blu-ray and DVD collection, with its own PostgreSQL database
 url: https://github.com/helmerzNL/DiscVault
