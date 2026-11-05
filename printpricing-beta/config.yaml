@@ -1,7 +1,7 @@
 # DERIVED from ../printpricing by `python scripts/derive_beta.py`: change the stable add-on, not this file. The beta add-on runs the `beta` image of the app;
 # its `version` ends in -beta.<build time of that image> and is raised by `scripts/sync_versions.py`, so Home Assistant offers an update for every new beta build.
 name: 3D Print Pricing (beta)
-version: "0.26.23-beta.202611031910"
+version: "0.27.1-beta.202611042307"
 slug: printpricing_beta
 description: Development version (beta). Cost price calculator and inventory for a 3D-print business, with its own database
 url: https://github.com/Flux76HQ/3dprint_pricing
