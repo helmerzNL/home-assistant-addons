@@ -162,6 +162,10 @@ geplande Claude Code-taak het script op `main` en opent of werkt één pull requ
 *Update add-on versions* doet hetzelfde met de hand). Merge die en Home Assistant biedt de update aan. In `sources.json` staat welke
 repository, tag en welk image bij welke app horen.
 
+Tot 3 november 2026 was `claude/tender-carson-9j0bgt` de standaardbranch van deze repository. Home Assistant blijft de branch lezen die de
+standaard was toen de repository werd toegevoegd, en kan de repository niet verwijderen zolang er apps uit geïnstalleerd zijn. Daarom zet de
+workflow *Keep the old default branch in step* die branch na elke merge op `main`, zodat een installatie van vóór de wissel dezelfde updates krijgt.
+
 ## Data en back-ups
 
 De data-map van een app (`/data` erin) bevat alles:
@@ -209,7 +213,7 @@ Er zijn twee soorten apps:
 | `repository.yaml` | De naam en maintainer die Home Assistant voor deze repository toont |
 | `sources.json` | Per app: de repository, het tagpatroon en het image dat zijn versie volgt |
 | `scripts/`, `tests/` | De controles, de beta-generator en de versiesynchronisatie |
-| `.github/workflows/` | De CI bij elke pull request, en de handmatige workflow *Update add-on versions* |
+| `.github/workflows/` | De CI bij elke pull request, de handmatige workflow *Update add-on versions*, en *Keep the old default branch in step* |
 
 ## Stabiel en beta
 
