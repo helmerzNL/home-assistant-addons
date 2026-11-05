@@ -1,0 +1,28 @@
+name: Keep the old default branch in step
+
+# Until 3 November 2026 the default branch of this repository was claude/tender-carson-9j0bgt. The Supervisor clones the default branch once,
+# when the repository is added, and afterwards only pulls the branch it cloned (`repo.active_branch` in supervisor/store/git.py). It also
+# refuses to remove a repository while apps from it are installed. So a Home Assistant that added this repository before the switch keeps
+# reading that old branch, and would never see an update merged into main. This workflow moves that branch to main after every push to main.
+# It is always a fast-forward: nothing else is pushed to that branch.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: legacy-branch
+  cancel-in-progress: false
+
+jobs:
+  follow-main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Move claude/tender-carson-9j0bgt to main
+        run: git push origin HEAD:refs/heads/claude/tender-carson-9j0bgt

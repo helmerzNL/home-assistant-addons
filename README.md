@@ -158,6 +158,10 @@ task runs it on `main` and opens, or updates, one pull request from the branch `
 workflow does the same by hand). Merge it and Home Assistant offers the update. `sources.json` says which repository,
 tag pattern and image belong to which add-on.
 
+Until 3 November 2026 the default branch of this repository was `claude/tender-carson-9j0bgt`. Home Assistant keeps reading the branch that
+was the default when the repository was added, and it cannot remove the repository while apps from it are installed. So the *Keep the old default
+branch in step* workflow moves that branch to `main` after every merge, and an installation from before the switch gets the same updates.
+
 ## Data and backups
 
 The data folder of an app (`/data` inside it) holds everything:
@@ -203,7 +207,7 @@ The apps come in two kinds:
 | `repository.yaml` | The name and maintainer Home Assistant shows for this repository |
 | `sources.json` | Per app: the repository, tag pattern and image its version follows |
 | `scripts/`, `tests/` | The checks, the beta generator and the version sync |
-| `.github/workflows/` | CI on every pull request, and the manual *Update add-on versions* workflow |
+| `.github/workflows/` | CI on every pull request, the manual *Update add-on versions* workflow, and *Keep the old default branch in step* |
 
 ## Stable and beta
 
