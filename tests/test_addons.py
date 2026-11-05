@@ -16,7 +16,7 @@ class RepositoryTest(unittest.TestCase):
 
     def test_every_app_has_an_addon(self):
         names = {folder.name for folder in check_addons.addon_dirs()}
-        self.assertEqual(names, {"discvault", "discvault-beta", "doorbell-map", "doorbell-map-beta", "mealieshopper", "mealieshopper-beta", "printpricing", "printpricing-beta"})
+        self.assertEqual(names, {"discvault", "discvault-beta", "doorbell-map", "doorbell-map-beta", "mealieshopper", "mealieshopper-beta", "nas-storage-analyzer", "nas-storage-analyzer-beta", "printpricing", "printpricing-beta"})
 
 
 class DefectsAreCaughtTest(unittest.TestCase):

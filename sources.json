@@ -52,5 +52,19 @@
     "image_tag": "beta",
     "channel": "beta",
     "stable": "printpricing"
+  },
+  "nas-storage-analyzer": {
+    "repo": "helmerzNL/NAS-Storage-Analyzer",
+    "tag": "^v(\\d+\\.\\d+\\.\\d+)$",
+    "image": "ghcr.io/helmerznl/nas-storage-analyzer-aio",
+    "image_tag": "{version}"
+  },
+  "nas-storage-analyzer-beta": {
+    "repo": "helmerzNL/NAS-Storage-Analyzer",
+    "tag": "^v(\\d+\\.\\d+\\.\\d+)$",
+    "image": "ghcr.io/helmerznl/nas-storage-analyzer-aio",
+    "image_tag": "beta",
+    "channel": "beta",
+    "stable": "nas-storage-analyzer"
   }
 }

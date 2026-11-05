@@ -1,0 +1,49 @@
+# Home Assistant app (add-on) for NAS Storage Analyzer. Reference: https://contributors.home-assistant.io/apps/reference/configuration/
+# `version` is the version of the all-in-one image this app is built on (ghcr.io/helmerznl/nas-storage-analyzer-aio:<version>), and Dockerfile builds on that tag.
+# `scripts/sync_versions.py` raises it after checking that the image exists; do not edit it by hand.
+name: NAS Storage Analyzer
+version: "0.0.0"
+slug: nas_storage_analyzer
+description: Read-only storage analysis of your shares, network storage and NFS/SMB servers, with its own PostgreSQL database
+url: https://github.com/helmerzNL/NAS-Storage-Analyzer
+arch:
+  - amd64
+  - aarch64
+# tini of the image is PID 1.
+init: false
+# One container holds the app and its PostgreSQL. A running database is not a consistent file copy, so the app is stopped for a backup.
+backup: cold
+# Stopping has to give the scans, the web interface and PostgreSQL time to finish cleanly.
+timeout: 120
+ports:
+  8080/tcp: 6480
+ports_description:
+  8080/tcp: Web interface
+webui: "http://[HOST]:[PORT:8080]"
+watchdog: "http://[HOST]:[PORT:8080]/readyz"
+# The worker mounts NFS and SMB shares itself, read-only: that needs CAP_SYS_ADMIN, and the default AppArmor profile forbids mount.
+privileged:
+  - SYS_ADMIN
+apparmor: false
+# The folders of Home Assistant that can be scanned, read-only, below /mnt/shares (the folder the app may scan). Network storage added
+# under Settings > System > Storage appears in them.
+map:
+  - type: share
+    read_only: true
+    path: /mnt/shares/share
+  - type: media
+    read_only: true
+    path: /mnt/shares/media
+# /data of this app is the data folder of the all-in-one image: the database in /data/postgres, the encryption key in /data/encryption.key.
+options:
+  worker_parallel: 2
+  update_check: true
+schema:
+  setup_token: password?
+  public_url: url?
+  rp_id: str?
+  rp_origins: str?
+  trusted_proxies: str?
+  worker_parallel: int(1,8)
+  update_check: bool
+  encryption_key: password?
