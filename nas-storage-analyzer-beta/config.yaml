@@ -1,0 +1,48 @@
+# DERIVED from ../nas-storage-analyzer by `python scripts/derive_beta.py`: change the stable add-on, not this file. The beta add-on runs the `beta` image of the app;
+# its `version` ends in -beta.<build time of that image> and is raised by `scripts/sync_versions.py`, so Home Assistant offers an update for every new beta build.
+name: NAS Storage Analyzer (beta)
+version: "0.0.0-beta.0"
+slug: nas_storage_analyzer_beta
+description: Development version (beta). Read-only storage analysis of your shares, network storage and NFS/SMB servers, with its own PostgreSQL database
+url: https://github.com/helmerzNL/NAS-Storage-Analyzer
+arch:
+  - amd64
+  - aarch64
+# tini of the image is PID 1.
+init: false
+# One container holds the app and its PostgreSQL. A running database is not a consistent file copy, so the app is stopped for a backup.
+backup: cold
+# Stopping has to give the scans, the web interface and PostgreSQL time to finish cleanly.
+timeout: 120
+ports:
+  8080/tcp: 6481
+ports_description:
+  8080/tcp: Web interface
+webui: "http://[HOST]:[PORT:8080]"
+watchdog: "http://[HOST]:[PORT:8080]/readyz"
+# The worker mounts NFS and SMB shares itself, read-only: that needs CAP_SYS_ADMIN, and the default AppArmor profile forbids mount.
+privileged:
+  - SYS_ADMIN
+apparmor: false
+# The folders of Home Assistant that can be scanned, read-only, below /mnt/shares (the folder the app may scan). Network storage added
+# under Settings > System > Storage appears in them.
+map:
+  - type: share
+    read_only: true
+    path: /mnt/shares/share
+  - type: media
+    read_only: true
+    path: /mnt/shares/media
+# /data of this app is the data folder of the all-in-one image: the database in /data/postgres, the encryption key in /data/encryption.key.
+options:
+  worker_parallel: 2
+  update_check: true
+schema:
+  setup_token: password?
+  public_url: url?
+  rp_id: str?
+  rp_origins: str?
+  trusted_proxies: str?
+  worker_parallel: int(1,8)
+  update_check: bool
+  encryption_key: password?

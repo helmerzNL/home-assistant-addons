@@ -1,0 +1,38 @@
+configuration:
+  setup_token:
+    name: Setup token
+    description: >-
+      Typed once to create the very first administrator. Optional: empty makes one and prints it in the Log tab (look for setup_token).
+  public_url:
+    name: Public address
+    description: >-
+      Optional. The address others use to reach the app, for the invitation links, for example https://nassa.example.com. Empty means
+      the address you open it on.
+  rp_id:
+    name: Domain for passkeys (RP ID)
+    description: >-
+      Only for passkeys, which need https and a domain name: the domain name only, for example nassa.example.com. Optional; empty means
+      the host name in the browser. Signing in with a password and an authenticator app works without it, also on an IP address.
+  rp_origins:
+    name: Addresses for passkeys (RP origins)
+    description: >-
+      Needed when the domain for passkeys is set: the full https address(es) you open the app on, comma-separated, for example
+      https://nassa.example.com.
+  trusted_proxies:
+    name: Trusted proxies
+    description: >-
+      Optional. The IP addresses or ranges (comma-separated) of a reverse proxy in front of the app, whose X-Forwarded headers are believed.
+  worker_parallel:
+    name: Scans at the same time
+    description: How many scans run at once. Default 2.
+  update_check:
+    name: Update check
+    description: >-
+      Let the app tell the administrator when a newer release exists. Nothing about you is sent. Home Assistant shows app updates itself.
+  encryption_key:
+    name: Encryption key
+    description: >-
+      Leave empty: the app makes one on the first start and keeps it in its data. Only to move an installation, enter the key it used
+      there (base64, 32 bytes). Another key makes the stored SMB passwords unreadable.
+network:
+  8080/tcp: Web interface

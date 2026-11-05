@@ -9,7 +9,7 @@
 
 **De zelf te hosten apps van helmerzNL en Flux76, geïnstalleerd en bijgewerkt vanuit Home Assistant.**
 
-Home Assistant-apps (add-ons) voor DiscVault, 3D Print Pricing, MealieShopper en Doorbell Map, elk in een stabiele en een beta-versie. Elke app draait hetzelfde gepubliceerde image als de Docker-versie.
+Home Assistant-apps (add-ons) voor DiscVault, 3D Print Pricing, MealieShopper, Doorbell Map en NAS Storage Analyzer, elk in een stabiele en een beta-versie. Elke app draait hetzelfde gepubliceerde image als de Docker-versie.
 
 🇳🇱 **Nederlands** · 🇬🇧 [English](README.md)
 
@@ -33,10 +33,11 @@ Home Assistant-apps (add-ons) voor DiscVault, 3D Print Pricing, MealieShopper en
 
 <table>
   <tr>
-    <td align="center" valign="top" width="25%"><a href="https://github.com/helmerzNL/DiscVault"><img src="discvault/icon.png" width="72" alt=""><br><b>DiscVault</b></a><br><sub>Collectie van 4K UHD, Blu-ray en dvd</sub></td>
-    <td align="center" valign="top" width="25%"><a href="https://github.com/Flux76HQ/3dprint_pricing"><img src="printpricing/icon.png" width="72" alt=""><br><b>3D Print Pricing</b></a><br><sub>Kostprijs en voorraad voor 3D-printen</sub></td>
-    <td align="center" valign="top" width="25%"><a href="https://github.com/helmerzNL/MealieShopper"><img src="mealieshopper/icon.png" width="72" alt=""><br><b>MealieShopper</b></a><br><sub>Van weekmenu naar boodschappenmandje</sub></td>
-    <td align="center" valign="top" width="25%"><a href="https://github.com/helmerzNL/Doorbell-Map"><img src="doorbell-map/icon.png" width="72" alt=""><br><b>Doorbell Map</b></a><br><sub>Wijkkaart voor deur-aan-deuracties</sub></td>
+    <td align="center" valign="top" width="20%"><a href="https://github.com/helmerzNL/DiscVault"><img src="discvault/icon.png" width="72" alt=""><br><b>DiscVault</b></a><br><sub>Collectie van 4K UHD, Blu-ray en dvd</sub></td>
+    <td align="center" valign="top" width="20%"><a href="https://github.com/Flux76HQ/3dprint_pricing"><img src="printpricing/icon.png" width="72" alt=""><br><b>3D Print Pricing</b></a><br><sub>Kostprijs en voorraad voor 3D-printen</sub></td>
+    <td align="center" valign="top" width="20%"><a href="https://github.com/helmerzNL/MealieShopper"><img src="mealieshopper/icon.png" width="72" alt=""><br><b>MealieShopper</b></a><br><sub>Van weekmenu naar boodschappenmandje</sub></td>
+    <td align="center" valign="top" width="20%"><a href="https://github.com/helmerzNL/Doorbell-Map"><img src="doorbell-map/icon.png" width="72" alt=""><br><b>Doorbell Map</b></a><br><sub>Wijkkaart voor deur-aan-deuracties</sub></td>
+    <td align="center" valign="top" width="20%"><a href="https://github.com/helmerzNL/NAS-Storage-Analyzer"><img src="nas-storage-analyzer/icon.png" width="72" alt=""><br><b>NAS Storage Analyzer</b></a><br><sub>Opslaganalyse van je shares, alleen-lezen</sub></td>
   </tr>
 </table>
 
@@ -70,9 +71,9 @@ komen.
 
 ## Wat kan het?
 
-- **Vier apps in één repository**: DiscVault, 3D Print Pricing, MealieShopper en Doorbell Map, met één knop aan Home Assistant toegevoegd.
-- **Dezelfde app als de Docker-versie**: elke app draait het image dat de app zelf publiceert; DiscVault neemt zijn eigen PostgreSQL mee in
-  dezelfde container, dus er hoeft niets anders geïnstalleerd te worden.
+- **Vijf apps in één repository**: DiscVault, 3D Print Pricing, MealieShopper, Doorbell Map en NAS Storage Analyzer, met één knop aan Home Assistant toegevoegd.
+- **Dezelfde app als de Docker-versie**: elke app draait het image dat de app zelf publiceert; DiscVault en NAS Storage Analyzer nemen hun eigen
+  PostgreSQL mee in dezelfde container, dus er hoeft niets anders geïnstalleerd te worden.
 - **Stabiel en beta naast elkaar**: elke beta heeft een eigen data-map en poort, zodat beide tegelijk draaien.
 - **Updates zodra het image er is**: een controle elke 6 uur verhoogt de versie van een app pas als het image van de nieuwe release
   gepubliceerd is, dus Home Assistant biedt nooit een update aan die hij niet kan installeren.
@@ -94,6 +95,8 @@ komen.
 | [**3D Print Pricing (beta)**](printpricing-beta/DOCS.md) | De ontwikkelversie, naast de stabiele | 6081 | SQLite |
 | [**Doorbell Map**](doorbell-map/DOCS.md) | Wijkkaart van huizen die wel of geen bezoek aan de deur willen | 9888 | bestanden |
 | [**Doorbell Map (beta)**](doorbell-map-beta/DOCS.md) | De ontwikkelversie, naast de stabiele | 9889 | bestanden |
+| [**NAS Storage Analyzer**](nas-storage-analyzer/DOCS.md) | Opslaganalyse van shares, netwerkopslag en NFS/SMB-servers, alleen-lezen | 6480 | PostgreSQL, ingebouwd |
+| [**NAS Storage Analyzer (beta)**](nas-storage-analyzer-beta/DOCS.md) | De ontwikkelversie, naast de stabiele | 6481 | PostgreSQL, ingebouwd |
 
 Elke app draait op amd64 en aarch64. De naam linkt naar de documentatie van de app, die Home Assistant ook op het tabblad *Documentatie*
 toont; wat er per versie veranderde, staat in de `CHANGELOG.md` ernaast.
@@ -117,6 +120,8 @@ toont; wat er per versie veranderde, staat in de `CHANGELOG.md` ernaast.
   door de beveiliging en de koppelingen met Mealie en je supermarkten.
 - **Doorbell Map**: vul **origin** in (het https-adres waarop je de kaart opent), start de app, lees de instelcode op het tabblad *Logboek*,
   open dan het origin-adres met `/beheer` erachter, vul de instelcode in en maak je passkey.
+- **NAS Storage Analyzer**: start de app, lees de setup-token op het tabblad *Logboek*, open `http://<adres van Home Assistant>:6480` (of
+  *Webinterface openen*), maak de beheerder met een wachtwoord en een authenticator-app, en voeg een share onder `/mnt/shares` toe.
 
 DiscVault, 3D Print Pricing en Doorbell Map loggen in met **passkeys**. Die werken alleen op een **https**-adres met een domeinnaam: zet er een
 reverse proxy met certificaat voor. 3D Print Pricing en (met de optie `password_login`) DiscVault accepteren ook een wachtwoord op een gewoon
@@ -134,6 +139,7 @@ zelf te verzinnen.
 | 3D Print Pricing | Passkeys: `rp_id`, `rp_origins`. Verder `setup_code`, `proxy_hops`, `max_upload_mb`, `ai_images_enabled`, `spoolman_url` en `update_check` |
 | MealieShopper | Alles optioneel, en een koppeling die je in de app maakt, gaat voor: `mealie_url`, `mealie_api_token`, `public_base_url`, `auth_secret`, `anthropic_api_key`, `openai_api_key`, `picnic_country_code`, `offers_schedule`, `offers_sync_hour`, `mcp`, `update_check`, `audit_log`, `audit_retention_days`, en voor passkeys `rp_id`, `rp_origins`, `rp_name` |
 | Doorbell Map | `origin` (verplicht), `rp_id`, `site_title`, `setup_token`, `session_hours` |
+| NAS Storage Analyzer | Alles optioneel: `setup_token`, `public_url`, voor passkeys `rp_id` en `rp_origins`, `trusted_proxies`, `worker_parallel`, `update_check`, en `encryption_key` alleen om een installatie te verhuizen |
 
 ## Beheer
 
@@ -145,10 +151,10 @@ zelf te verzinnen.
 | Logboek | Het tabblad *Logboek* van de app |
 
 - **Health check:** met *Watchdog* aan herstart de Supervisor een app die niet meer antwoordt op zijn health-adres: `/api/next/health` voor
-  DiscVault, `/healthz` voor 3D Print Pricing en MealieShopper, `/api/auth/status` voor Doorbell Map.
+  DiscVault, `/healthz` voor 3D Print Pricing en MealieShopper, `/api/auth/status` voor Doorbell Map, `/readyz` voor NAS Storage Analyzer.
 - **Grootste upload:** 3D Print Pricing accepteert STL- en 3MF-bestanden tot `max_upload_mb` (standaard 50 MB, hoogstens 500). Wat voor een app
   staat (een reverse proxy, een CDN) moet minstens zoveel toelaten. De andere apps noemen hun grens in hun eigen documentatie.
-- **Updatecheck:** 3D Print Pricing en MealieShopper kunnen de eigenaar ook in de app melden dat er een nieuwere release is (`update_check`);
+- **Updatecheck:** 3D Print Pricing, MealieShopper en NAS Storage Analyzer kunnen de eigenaar ook in de app melden dat er een nieuwere release is (`update_check`);
   ze werken zichzelf nooit bij.
 
 Sommige releases wijzigen de database, dus maak die back-up: een release die de database heeft gewijzigd, draait misschien niet op een oudere
@@ -176,14 +182,16 @@ De data-map van een app (`/data` erin) bevat alles:
 | 3D Print Pricing | `db` (de database, één SQLite-bestand), `uploads` (de STL- en 3MF-bestanden) en de gegenereerde geheimen in `secrets.json`. De PostgreSQL-gegevens van een eerdere release in `postgres` worden maar één keer gelezen |
 | MealieShopper | De database `auth.sqlite3` en `secret.key` |
 | Doorbell Map | De huizen, passkeys, instellingen en de automatische back-ups van de app, en de gegenereerde geheimen in `secrets.json` |
+| NAS Storage Analyzer | `postgres` (de database) en de gegenereerde encryptiesleutel in `encryption.key`, die de opgeslagen SMB-wachtwoorden versleutelt |
 
-Home Assistant neemt die map mee in elke back-up van de app. DiscVault, 3D Print Pricing en Doorbell Map worden daarbij even gestopt
+Home Assistant neemt die map mee in elke back-up van de app. DiscVault, 3D Print Pricing, Doorbell Map en NAS Storage Analyzer worden daarbij even gestopt
 (`backup: cold`), omdat een database waarin geschreven wordt geen consistente kopie is. Verwijder `secrets.json` niet: het
-ondertekeningsgeheim van DiscVault beschermt ook de sleutels in zijn database.
+ondertekeningsgeheim van DiscVault beschermt ook de sleutels in zijn database. Zo kan NAS Storage Analyzer zijn opgeslagen SMB-wachtwoorden
+niet lezen zonder `encryption.key`.
 
 **Terugzetten** doe je onder **Instellingen > Systeem > Back-ups**. Om te **verhuizen** tussen Home Assistant en de Docker-installatie gebruik je
 de eigen back-up en het terugzetten van de app (DiscVault: **Beheer → Backup**, ook volgens schema; 3D Print Pricing: *Instellingen → Systeem*;
-MealieShopper: **Instellingen > Systeem > Back-up en terugzetten**), of kopieer je bij Doorbell Map de data-map of gebruik je een back-up uit
+MealieShopper: **Instellingen > Systeem > Back-up en terugzetten**; NAS Storage Analyzer: **Instellingen → Back-up**), of kopieer je bij Doorbell Map de data-map of gebruik je een back-up uit
 het beheer.
 
 ## Architectuur
@@ -201,10 +209,11 @@ flowchart LR
 Er zijn twee soorten apps:
 
 - **MealieShopper** noemt zijn image in `config.yaml`; de Supervisor haalt het kant-en-klare image `<image>:<versie>` op.
-- **DiscVault, 3D Print Pricing en Doorbell Map** hebben een `Dockerfile` die op het app-image van die versie bouwt en een startscript toevoegt
-  (`run.py`, `run.js`). Het script maakt van de opties (`/data/options.json`) de variabelen van de `.env` van de Docker-installatie en maakt de
+- **DiscVault, 3D Print Pricing, Doorbell Map en NAS Storage Analyzer** hebben een `Dockerfile` die op het app-image van die versie bouwt en een
+  startscript toevoegt (`run.py`, `run.js`, `run.sh`). Het script maakt van de opties (`/data/options.json`) de variabelen van de `.env` van de Docker-installatie en maakt de
   geheimen één keer aan. DiscVault voegt PostgreSQL 17 toe en draait zijn database in dezelfde container; 3D Print Pricing heeft die alleen
-  nodig voor de eenmalige import van een eerdere release.
+  nodig voor de eenmalige import van een eerdere release. NAS Storage Analyzer bouwt op het all-in-one image van de app
+  (`nas-storage-analyzer-aio`), waarin PostgreSQL 16, de webinterface en de scan-worker al zitten.
 
 | Onderdeel | Doel |
 |---|---|
@@ -227,7 +236,7 @@ Er zijn twee soorten apps:
 Elke beta heeft een eigen data-map en poort, zodat hij naast de stabiele draait. Een beta is om nieuwe functies te proberen; gebruik de data
 van de stabiele app niet voor een beta.
 
-De beta-images van DiscVault, Doorbell Map en 3D Print Pricing hebben alleen een meebewegende `beta`-tag, dus hun versie draagt de bouwtijd van
+De beta-images van DiscVault, Doorbell Map, 3D Print Pricing en NAS Storage Analyzer hebben alleen een meebewegende `beta`-tag, dus hun versie draagt de bouwtijd van
 het beta-image: elke nieuwe beta-build geeft een hogere versie en een update, en de Supervisor bouwt de app dan opnieuw en haalt het
 `beta`-image opnieuw op. Hun beta-mappen worden **gegenereerd** uit de stabiele mappen met `scripts/derive_beta.py`: pas de stabiele map aan en
 draai het script (de CI faalt als een beta-map is afgedreven). MealieShopper publiceert zijn beta's als eigen releases, en zijn beta-map wordt
@@ -258,6 +267,8 @@ snelstart/installatie), `CHANGELOG.md`, `icon.png` (128 px), `logo.png` (256 px)
   maakt met wie dan ook; met wie een app verbinding maakt, staat in zijn eigen documentatie.
 - De apps hebben geen ingress: elk heeft een eigen inlog en een eigen poort. Zet een poort niet rechtstreeks open naar internet; zet voor
   toegang van buitenaf een reverse proxy met https ervoor.
+- NAS Storage Analyzer vraagt de capability `SYS_ADMIN` en draait zonder AppArmor, omdat zijn scan-worker zelf NFS- en SMB-shares mount
+  (alleen-lezen); het tabblad *Documentatie* legt uit waarom. De andere apps vragen geen extra rechten.
 - Geheimen zijn wachtwoordvelden in het formulier, en de gegenereerde blijven in de data-map van de app; beide komen in je Home
   Assistant-back-ups terecht, dus bewaar die veilig.
 - Meld een kwetsbaarheid vertrouwelijk via een [security advisory](https://github.com/helmerzNL/home-assistant-addons/security/advisories/new),

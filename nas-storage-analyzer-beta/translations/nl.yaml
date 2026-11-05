@@ -1,0 +1,40 @@
+configuration:
+  setup_token:
+    name: Setup-token
+    description: >-
+      Eén keer ingetypt om de allereerste beheerder te maken. Optioneel: leeg maakt er een en zet hem op het tabblad Logboek (zoek
+      setup_token).
+  public_url:
+    name: Publiek adres
+    description: >-
+      Optioneel. Het adres waarop anderen de app bereiken, voor de uitnodigingslinks, bijvoorbeeld https://nassa.example.com. Leeg betekent
+      het adres waarop je hem opent.
+  rp_id:
+    name: Domein voor passkeys (RP-ID)
+    description: >-
+      Alleen voor passkeys, die https en een domeinnaam nodig hebben: alleen de domeinnaam, bijvoorbeeld nassa.example.com. Optioneel; leeg
+      betekent de hostnaam in de browser. Inloggen met een wachtwoord en een authenticator-app werkt zonder, ook op een IP-adres.
+  rp_origins:
+    name: Adressen voor passkeys (RP-origins)
+    description: >-
+      Nodig als het domein voor passkeys is ingevuld: de volledige https-adressen waarop je de app opent, gescheiden door komma's,
+      bijvoorbeeld https://nassa.example.com.
+  trusted_proxies:
+    name: Vertrouwde proxy's
+    description: >-
+      Optioneel. De IP-adressen of reeksen (gescheiden door komma's) van een reverse proxy voor de app, waarvan de X-Forwarded-headers
+      geloofd worden.
+  worker_parallel:
+    name: Scans tegelijk
+    description: Hoeveel scans tegelijk lopen. Standaard 2.
+  update_check:
+    name: Updatecheck
+    description: >-
+      De app meldt de beheerder als er een nieuwere release is. Er gaat niets over jou mee. Home Assistant toont updates van apps zelf.
+  encryption_key:
+    name: Encryptiesleutel
+    description: >-
+      Laat leeg: de app maakt er bij de eerste start een en bewaart hem in zijn data. Alleen om een installatie te verhuizen vul je de
+      sleutel in die daar werd gebruikt (base64, 32 bytes). Een andere sleutel maakt de opgeslagen SMB-wachtwoorden onleesbaar.
+network:
+  8080/tcp: Webinterface
