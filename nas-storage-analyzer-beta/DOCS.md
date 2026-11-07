@@ -45,9 +45,10 @@ its own tab.
 ### Rights the app asks for
 
 To mount NFS and SMB shares itself, the worker needs the Linux capability **`SYS_ADMIN`**, and the default AppArmor profile, which forbids
-mounting, is switched off (`apparmor: false`). That lowers the security rating Home Assistant shows for the app. The web interface and the
-database run as their own users without those rights; only the scan worker runs as root. The folders of Home Assistant are mapped
-read-only, and every mount is read-only too.
+mounting, is switched off (`apparmor: false`). SMB also needs **`DAC_READ_SEARCH`**: the SMB mount helper (`mount.cifs`) asks for it at
+start-up and stops without it, so with `SYS_ADMIN` alone only NFS would work. These rights lower the security rating Home Assistant shows
+for the app. The web interface and the database run as their own users without those rights; only the scan worker runs as root. The folders
+of Home Assistant are mapped read-only, and every mount is read-only too.
 
 ### Options
 
@@ -113,9 +114,10 @@ dus in een eigen tabblad.
 ### Rechten die de app vraagt
 
 Om zelf NFS- en SMB-shares te mounten heeft de worker de Linux-capability **`SYS_ADMIN`** nodig, en het standaard AppArmor-profiel, dat
-mounten verbiedt, staat uit (`apparmor: false`). Daardoor geeft Home Assistant de app een lagere beveiligingsscore. De webinterface en de
-database draaien als eigen gebruikers zonder die rechten; alleen de scan-worker draait als root. De mappen van Home Assistant zijn
-alleen-lezen gekoppeld, en elke mount is ook alleen-lezen.
+mounten verbiedt, staat uit (`apparmor: false`). SMB heeft daarnaast **`DAC_READ_SEARCH`** nodig: het SMB-mounthulpje (`mount.cifs`) vraagt
+die bij het starten en stopt zonder, dus met alleen `SYS_ADMIN` zou alleen NFS werken. Door die rechten geeft Home Assistant de app een
+lagere beveiligingsscore. De webinterface en de database draaien als eigen gebruikers zonder die rechten; alleen de scan-worker draait als
+root. De mappen van Home Assistant zijn alleen-lezen gekoppeld, en elke mount is ook alleen-lezen.
 
 ### Opties
 

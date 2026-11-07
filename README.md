@@ -260,8 +260,9 @@ and to the lists in `.github/workflows/ci.yml`. `check_addons.py` tells you what
   anyone; what an app connects to is described in its own documentation.
 - The apps have no ingress: each has its own login and its own port. Do not expose a port directly to the internet; put a reverse proxy with
   https in front of it for access from outside.
-- NAS Storage Analyzer asks for the capability `SYS_ADMIN` and runs without AppArmor, because its scan worker mounts NFS and SMB shares itself
-  (read-only); its *Documentation* tab explains why. The other apps ask for no extra rights.
+- NAS Storage Analyzer asks for the capabilities `SYS_ADMIN` and `DAC_READ_SEARCH` (the latter for SMB) and runs without AppArmor, because
+  its scan worker mounts NFS and SMB shares itself (read-only); its *Documentation* tab explains why. The other apps ask for no extra
+  rights.
 - Secrets are password fields in the form, and the generated ones stay in the app's data folder; both end up in your Home Assistant backups,
   so keep those safe.
 - Report a vulnerability privately through a [security advisory](https://github.com/helmerzNL/home-assistant-addons/security/advisories/new),
