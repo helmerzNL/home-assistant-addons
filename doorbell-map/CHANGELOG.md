@@ -2,6 +2,11 @@
 
 The release notes of every version are on GitHub: https://github.com/helmerzNL/Doorbell-Map/releases
 
+## 2.0.2
+
+- Updated to version 2.0.2 of the app. / Bijgewerkt naar versie 2.0.2 van de app.
+  https://github.com/helmerzNL/Doorbell-Map/releases/tag/v2.0.2
+
 ## 1.0.35
 
 - Updated to version 1.0.35 of the app. / Bijgewerkt naar versie 1.0.35 van de app.

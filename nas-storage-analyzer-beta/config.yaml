@@ -1,7 +1,7 @@
 # DERIVED from ../nas-storage-analyzer by `python scripts/derive_beta.py`: change the stable add-on, not this file. The beta add-on runs the `beta` image of the app;
 # its `version` ends in -beta.<build time of that image> and is raised by `scripts/sync_versions.py`, so Home Assistant offers an update for every new beta build.
 name: NAS Storage Analyzer (beta)
-version: "0.3.0-beta.202611051432"
+version: "0.3.1-beta.202611052331"
 slug: nas_storage_analyzer_beta
 description: Development version (beta). Read-only storage analysis of your shares, network storage and NFS/SMB servers, with its own PostgreSQL database
 url: https://github.com/helmerzNL/NAS-Storage-Analyzer
