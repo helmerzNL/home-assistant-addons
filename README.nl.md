@@ -267,8 +267,9 @@ snelstart/installatie), `CHANGELOG.md`, `icon.png` (128 px), `logo.png` (256 px)
   maakt met wie dan ook; met wie een app verbinding maakt, staat in zijn eigen documentatie.
 - De apps hebben geen ingress: elk heeft een eigen inlog en een eigen poort. Zet een poort niet rechtstreeks open naar internet; zet voor
   toegang van buitenaf een reverse proxy met https ervoor.
-- NAS Storage Analyzer vraagt de capability `SYS_ADMIN` en draait zonder AppArmor, omdat zijn scan-worker zelf NFS- en SMB-shares mount
-  (alleen-lezen); het tabblad *Documentatie* legt uit waarom. De andere apps vragen geen extra rechten.
+- NAS Storage Analyzer vraagt de capabilities `SYS_ADMIN` en `DAC_READ_SEARCH` (die laatste voor SMB) en draait zonder AppArmor, omdat zijn
+  scan-worker zelf NFS- en SMB-shares mount (alleen-lezen); het tabblad *Documentatie* legt uit waarom. De andere apps vragen geen extra
+  rechten.
 - Geheimen zijn wachtwoordvelden in het formulier, en de gegenereerde blijven in de data-map van de app; beide komen in je Home
   Assistant-back-ups terecht, dus bewaar die veilig.
 - Meld een kwetsbaarheid vertrouwelijk via een [security advisory](https://github.com/helmerzNL/home-assistant-addons/security/advisories/new),

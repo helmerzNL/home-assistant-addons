@@ -22,8 +22,11 @@ ports_description:
 webui: "http://[HOST]:[PORT:8080]"
 watchdog: "http://[HOST]:[PORT:8080]/readyz"
 # The worker mounts NFS and SMB shares itself, read-only: that needs CAP_SYS_ADMIN, and the default AppArmor profile forbids mount.
+# mount.cifs (SMB) also asks for CAP_DAC_READ_SEARCH (and CAP_DAC_OVERRIDE, which Docker grants by default); without it SMB stops with
+# "Unable to set current process capabilities" and only NFS works (helmerzNL/NAS-Storage-Analyzer 1fecd43, in v0.3.1).
 privileged:
   - SYS_ADMIN
+  - DAC_READ_SEARCH
 apparmor: false
 # The folders of Home Assistant that can be scanned, read-only, below /mnt/shares (the folder the app may scan). Network storage added
 # under Settings > System > Storage appears in them.

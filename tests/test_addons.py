@@ -19,6 +19,33 @@ class RepositoryTest(unittest.TestCase):
         self.assertEqual(names, {"discvault", "discvault-beta", "doorbell-map", "doorbell-map-beta", "mealieshopper", "mealieshopper-beta", "nas-storage-analyzer", "nas-storage-analyzer-beta", "printpricing", "printpricing-beta"})
 
 
+class AddonContentTest(unittest.TestCase):
+    """Things an add-on needs that check_addons.py cannot know from the structure alone."""
+
+    def config(self, name):
+        return check_addons.load(ROOT / name / "config.yaml")
+
+    def test_nas_storage_analyzer_may_mount_smb(self):
+        # mount.cifs asks for CAP_DAC_READ_SEARCH next to CAP_SYS_ADMIN and stops without it: with SYS_ADMIN alone only NFS works
+        # (helmerzNL/NAS-Storage-Analyzer 1fecd43). CAP_DAC_OVERRIDE, the third one it asks for, is in Docker's default set.
+        for name in ("nas-storage-analyzer", "nas-storage-analyzer-beta"):
+            with self.subTest(name):
+                self.assertLessEqual({"SYS_ADMIN", "DAC_READ_SEARCH"}, set(self.config(name).get("privileged") or []))
+
+    def test_mealieshopper_beta_keeps_the_options_of_the_stable_addon(self):
+        # derive_beta.py does not cover MealieShopper; its two add-ons are kept in step by hand.
+        stable, beta = self.config("mealieshopper"), self.config("mealieshopper-beta")
+        self.assertEqual(stable.get("schema"), beta.get("schema"))
+        for language in ("en", "nl"):
+            with self.subTest(language):
+                self.assertEqual(check_addons.load(ROOT / "mealieshopper" / "translations" / f"{language}.yaml"),
+                                 check_addons.load(ROOT / "mealieshopper-beta" / "translations" / f"{language}.yaml"))
+
+    def test_mealieshopper_offers_another_ai_address(self):
+        # MealieShopper 3.14.0 reads anthropic_base_url and openai_base_url from options.json (docker-entrypoint.py, OPTION_ENV).
+        self.assertLessEqual({"anthropic_base_url", "openai_base_url"}, set(self.config("mealieshopper").get("schema") or {}))
+
+
 class DefectsAreCaughtTest(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
