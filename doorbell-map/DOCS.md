@@ -50,6 +50,7 @@ other address are then refused, so open the map on that address instead of with 
 | **site_title** | Name of the site until you change it in the admin. |
 | **setup_token** | Typed once for the very first passkey or password. Empty makes one and prints it in the Log. |
 | **session_hours** | How long the admin stays signed in (default 12). |
+| **max_backups** | How many of the app's own backups are kept (default 50); older ones are removed, also at start-up. |
 
 Changes take effect after a restart of the app.
 
@@ -58,6 +59,8 @@ Changes take effect after a restart of the app.
 - The houses, passkeys, settings and the app's automatic backups are in the data folder of this app; the generated secrets (session key,
   setup code) are in `secrets.json` next to them. Home Assistant stops the app for a moment while it makes a backup.
 - To move between this app and the Docker installation, copy the data folder (or use a backup from the admin).
+- The app keeps its newest 50 backups (one ZIP each, in `backups`) and removes older ones, also when it starts. Before version 2.0 it
+  kept 200: set **max_backups** before updating from 1.x if you want to keep more.
 
 ### Updating
 
@@ -112,6 +115,7 @@ vanaf een ander adres worden dan geweigerd, dus open de kaart dan op dat adres i
 | **site_title** | Naam van de site totdat je die in het beheer aanpast. |
 | **setup_token** | Eenmalig nodig voor de allereerste passkey of het eerste wachtwoord. Leeg maakt er een en toont die in het Logboek. |
 | **session_hours** | Hoe lang de beheerder ingelogd blijft (standaard 12). |
+| **max_backups** | Hoeveel eigen back-ups van de app bewaard blijven (standaard 50); oudere worden opgeruimd, ook bij het starten. |
 
 Wijzigingen gaan in na een herstart van de app.
 
@@ -120,6 +124,8 @@ Wijzigingen gaan in na een herstart van de app.
 - De huizen, passkeys, instellingen en de automatische back-ups van de app staan in de data-map van deze app; de gegenereerde geheimen
   (sessiesleutel, instelcode) staan ernaast in `secrets.json`. Home Assistant stopt de app even tijdens een back-up.
 - Om tussen deze app en de Docker-installatie te verhuizen kopieer je de data-map (of gebruik je een back-up uit het beheer).
+- De app bewaart zijn nieuwste 50 back-ups (elk één ZIP, in `backups`) en ruimt oudere op, ook bij het starten. Vóór versie 2.0 waren
+  dat er 200: zet **max_backups** vóór het bijwerken vanaf 1.x als je er meer wilt houden.
 
 ### Updaten
 

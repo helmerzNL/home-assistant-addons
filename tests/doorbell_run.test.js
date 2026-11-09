@@ -24,6 +24,11 @@ test('optional settings are passed on when set', () => {
   assert.equal(env.SESSION_HOURS, '24');
 });
 
+test('max_backups becomes MAX_BACKUPS, and nothing is set without it so the app keeps its own default', () => {
+  assert.equal(buildEnv({ origin: 'https://map.example.com', max_backups: 200 }, kept).MAX_BACKUPS, '200');
+  assert.equal(buildEnv({ origin: 'https://map.example.com' }, kept).MAX_BACKUPS, undefined);
+});
+
 test('without origin a newer app follows the address it is opened on', () => {
   const env = buildEnv({ rp_id: 'map.example.com' }, kept, true);
   assert.equal(env.ORIGIN, undefined);

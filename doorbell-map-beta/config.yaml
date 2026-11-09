@@ -24,3 +24,4 @@ schema:
   site_title: str?
   setup_token: password?
   session_hours: int(1,720)?
+  max_backups: int(1,1000)?

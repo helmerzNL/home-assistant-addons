@@ -62,6 +62,8 @@ function buildEnv(options, kept, followsAddress = appFollowsAddress()) {
   }
   if (String(options.site_title || '').trim()) env.SITE_TITLE = String(options.site_title).trim();
   if (options.session_hours) env.SESSION_HOURS = String(Number(options.session_hours));
+  // Since 2.0.0 the app keeps the newest 50 backups (it was 200) and removes older ones at start-up; MAX_BACKUPS keeps more.
+  if (options.max_backups) env.MAX_BACKUPS = String(Number(options.max_backups));
   return env;
 }
 
