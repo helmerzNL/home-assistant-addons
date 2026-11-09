@@ -20,5 +20,10 @@ configuration:
   session_hours:
     name: Admin session (hours)
     description: How long the admin stays signed in. Optional; default 12.
+  max_backups:
+    name: Backups to keep
+    description: >-
+      How many of the app's own backups to keep; older ones are removed, also at start-up. Optional; default 50 (before version 2.0 it
+      was 200).
 network:
   9888/tcp: Web interface

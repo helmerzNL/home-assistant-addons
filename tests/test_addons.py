@@ -33,13 +33,22 @@ class AddonContentTest(unittest.TestCase):
                 self.assertLessEqual({"SYS_ADMIN", "DAC_READ_SEARCH"}, set(self.config(name).get("privileged") or []))
 
     def test_mealieshopper_beta_keeps_the_options_of_the_stable_addon(self):
-        # derive_beta.py does not cover MealieShopper; its two add-ons are kept in step by hand.
+        # derive_beta.py does not cover MealieShopper; its two add-ons are kept in step by hand. The options and their names stay the same;
+        # a description may differ, because the beta describes a newer app (for example stores the stable version does not have yet).
         stable, beta = self.config("mealieshopper"), self.config("mealieshopper-beta")
         self.assertEqual(stable.get("schema"), beta.get("schema"))
         for language in ("en", "nl"):
             with self.subTest(language):
-                self.assertEqual(check_addons.load(ROOT / "mealieshopper" / "translations" / f"{language}.yaml"),
-                                 check_addons.load(ROOT / "mealieshopper-beta" / "translations" / f"{language}.yaml"))
+                names = [{key: entry.get("name") for key, entry in (check_addons.load(ROOT / name / "translations" / f"{language}.yaml")
+                                                                    .get("configuration") or {}).items()}
+                         for name in ("mealieshopper", "mealieshopper-beta")]
+                self.assertEqual(names[0], names[1])
+
+    def test_doorbell_map_can_keep_more_backups(self):
+        # Since 2.0.0 Doorbell Map keeps 50 backups (it was 200) and removes older ones at start-up; run.js passes max_backups on as MAX_BACKUPS.
+        for name in ("doorbell-map", "doorbell-map-beta"):
+            with self.subTest(name):
+                self.assertIn("max_backups", self.config(name).get("schema") or {})
 
     def test_mealieshopper_offers_another_ai_address(self):
         # MealieShopper 3.14.0 reads anthropic_base_url and openai_base_url from options.json (docker-entrypoint.py, OPTION_ENV).

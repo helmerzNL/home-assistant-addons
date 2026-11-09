@@ -4,8 +4,8 @@
 
 ## English
 
-MealieShopper turns your week menu from [Mealie](https://mealie.io) into a basket at Albert Heijn, Picnic or Jumbo. This app runs the same
-app as the Docker version.
+MealieShopper turns your week menu from [Mealie](https://mealie.io) into a basket at Albert Heijn, Picnic, Jumbo or Crisp. This app runs the
+same app as the Docker version.
 
 **Quick start**
 
@@ -18,8 +18,8 @@ Do not expose the port directly to the internet; put a reverse proxy with https 
 
 ## Nederlands
 
-MealieShopper zet je weekmenu uit [Mealie](https://mealie.io) om in een boodschappenmandje bij Albert Heijn, Picnic of Jumbo. Deze app
-draait dezelfde app als de Docker-versie.
+MealieShopper zet je weekmenu uit [Mealie](https://mealie.io) om in een boodschappenmandje bij Albert Heijn, Picnic, Jumbo of Crisp. Deze
+app draait dezelfde app als de Docker-versie.
 
 **Snel starten**
 

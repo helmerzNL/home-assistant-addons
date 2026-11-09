@@ -21,5 +21,10 @@ configuration:
   session_hours:
     name: Beheersessie (uren)
     description: Hoe lang de beheerder ingelogd blijft. Optioneel; standaard 12.
+  max_backups:
+    name: Te bewaren back-ups
+    description: >-
+      Hoeveel van de eigen back-ups van de app bewaard blijven; oudere worden opgeruimd, ook bij het starten. Optioneel; standaard 50
+      (vóór versie 2.0 was dat 200).
 network:
   9888/tcp: Webinterface
