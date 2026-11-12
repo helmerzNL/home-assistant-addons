@@ -1,0 +1,27 @@
+# DERIVED from ../spoolman by `python scripts/derive_beta.py`: change the stable add-on, not this file. The beta add-on runs the `edge` image of the app;
+# its `version` ends in -beta.<build time of that image> and is raised by `scripts/sync_versions.py`, so Home Assistant offers an update for every new beta build.
+name: Spoolman (beta)
+version: "0.27.1-beta.202611101053"
+slug: spoolman_beta
+description: Development version (beta). Inventory of your 3D-printer filament spools, with what every print uses booked on the right spool
+url: https://github.com/Donkie/Spoolman
+arch:
+  - amd64
+  - aarch64
+# The SQLite database is in /data/spoolman; a stop gives a consistent copy.
+backup: cold
+timeout: 60
+ports:
+  8000/tcp: 7913
+ports_description:
+  8000/tcp: Web interface and API
+webui: "http://[HOST]:[PORT:8000]"
+watchdog: "http://[HOST]:[PORT:8000]/api/v1/health"
+options:
+  automatic_backup: true
+  log_level: INFO
+  update_check: true
+schema:
+  automatic_backup: bool
+  log_level: list(DEBUG|INFO|WARNING|ERROR)
+  update_check: bool

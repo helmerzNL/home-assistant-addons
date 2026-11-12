@@ -1,8 +1,11 @@
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
+import urllib.error
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -49,6 +52,30 @@ class BetaVersionTest(unittest.TestCase):
 
     def test_a_new_release_outranks_older_builds(self):
         self.assertGreater(sv.version_key(sv.beta_version("1.0.31", "2026-10-01T00:00:00Z")), sv.version_key(sv.beta_version("1.0.30", "2026-10-28T00:00:00Z")))
+
+
+class RepoTagsTest(unittest.TestCase):
+    """The API first; git when the API refuses (403 rate limit or proxy, 404, 429), so a public third-party repository is still followed."""
+
+    def refuse(self, code):
+        def _get(url, headers=None, method="GET"):
+            raise urllib.error.HTTPError(url, code, "refused", {}, None)
+        return mock.patch.object(sv, "_get", _get)
+
+    def test_git_answers_when_the_api_refuses(self):
+        listing = ("ff8efd517b76a4b2783f29c89e9b9fbcd8cd167b\trefs/tags/v0.27.1\n"
+                   "bed3f14ee77a3a571d31b14215d54b0b88a7519c\trefs/tags/v0.27.0\n")
+        for code in (403, 404, 429):
+            with self.subTest(code), self.refuse(code), mock.patch.object(sv.subprocess, "run") as run:
+                run.return_value = subprocess.CompletedProcess([], 0, stdout=listing, stderr="")
+                self.assertEqual(sv.repo_tags("Donkie/Spoolman"), ["v0.27.1", "v0.27.0"])
+                self.assertIn("https://github.com/Donkie/Spoolman.git", run.call_args.args[0])
+
+    def test_other_errors_are_not_hidden(self):
+        with self.refuse(500), mock.patch.object(sv.subprocess, "run") as run:
+            with self.assertRaises(urllib.error.HTTPError):
+                sv.repo_tags("Donkie/Spoolman")
+            run.assert_not_called()
 
 
 class SyncTest(unittest.TestCase):

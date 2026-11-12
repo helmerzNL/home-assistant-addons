@@ -1,0 +1,20 @@
+# Home Assistant app for HaspelSync (https://github.com/Rdiger-36/HaspelSync), a third-party app that this repository only packages. The Supervisor
+# builds Dockerfile on the device on the published image ghcr.io/rdiger-36/haspelsync:<version>; `scripts/sync_versions.py` raises `version` once it exists.
+# Everything is set up in its web interface (Spoolman address, printers, password), so the app has no options of its own.
+name: HaspelSync
+version: "1.3.7"
+slug: haspelsync
+description: Keeps Spoolman in step with the AMS of your Bambu Lab printers, and books what every print uses on the right spool
+url: https://github.com/Rdiger-36/HaspelSync
+arch:
+  - amd64
+  - aarch64
+# The printers, settings and mappings are JSON files in /data/printers; a stop gives a consistent copy.
+backup: cold
+timeout: 30
+ports:
+  4000/tcp: 4000
+ports_description:
+  4000/tcp: Web interface
+webui: "http://[HOST]:[PORT:4000]"
+watchdog: "http://[HOST]:[PORT:4000]/api/auth/state"

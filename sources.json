@@ -66,5 +66,35 @@
     "image_tag": "beta",
     "channel": "beta",
     "stable": "nas-storage-analyzer"
+  },
+  "spoolman": {
+    "repo": "Donkie/Spoolman",
+    "tag": "^v(\\d+\\.\\d+\\.\\d+)$",
+    "image": "ghcr.io/donkie/spoolman",
+    "image_tag": "{version}"
+  },
+  "spoolman-beta": {
+    "repo": "Donkie/Spoolman",
+    "tag": "^v(\\d+\\.\\d+\\.\\d+)$",
+    "image": "ghcr.io/donkie/spoolman",
+    "image_tag": "edge",
+    "channel": "beta",
+    "stable": "spoolman",
+    "branch": "master"
+  },
+  "haspelsync": {
+    "repo": "Rdiger-36/HaspelSync",
+    "tag": "^v(\\d+\\.\\d+\\.\\d+)$",
+    "image": "ghcr.io/rdiger-36/haspelsync",
+    "image_tag": "{version}"
+  },
+  "haspelsync-beta": {
+    "repo": "Rdiger-36/HaspelSync",
+    "tag": "^v(\\d+\\.\\d+\\.\\d+)$",
+    "image": "ghcr.io/rdiger-36/haspelsync",
+    "image_tag": "dev",
+    "channel": "beta",
+    "stable": "haspelsync",
+    "branch": "main"
   }
 }

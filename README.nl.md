@@ -7,9 +7,9 @@
 
 # Home Assistant Add-On Repository by Helmer
 
-**De zelf te hosten apps van helmerzNL en Flux76, geïnstalleerd en bijgewerkt vanuit Home Assistant.**
+**De zelf te hosten apps van helmerzNL en Flux76, en de 3D-printtools Spoolman en HaspelSync, geïnstalleerd en bijgewerkt vanuit Home Assistant.**
 
-Home Assistant-apps (add-ons) voor DiscVault, 3D Print Pricing, MealieShopper, Doorbell Map en NAS Storage Analyzer, elk in een stabiele en een beta-versie. Elke app draait hetzelfde gepubliceerde image als de Docker-versie.
+Home Assistant-apps (add-ons) voor DiscVault, 3D Print Pricing, MealieShopper, Doorbell Map en NAS Storage Analyzer, en voor Spoolman en HaspelSync (gemaakt door anderen, hier verpakt), elk in een stabiele en een beta-versie. Elke app draait hetzelfde gepubliceerde image als de Docker-versie.
 
 🇳🇱 **Nederlands** · 🇬🇧 [English](README.md)
 
@@ -38,6 +38,10 @@ Home Assistant-apps (add-ons) voor DiscVault, 3D Print Pricing, MealieShopper, D
     <td align="center" valign="top" width="20%"><a href="https://github.com/helmerzNL/MealieShopper"><img src="mealieshopper/icon.png" width="72" alt=""><br><b>MealieShopper</b></a><br><sub>Van weekmenu naar boodschappenmandje</sub></td>
     <td align="center" valign="top" width="20%"><a href="https://github.com/helmerzNL/Doorbell-Map"><img src="doorbell-map/icon.png" width="72" alt=""><br><b>Doorbell Map</b></a><br><sub>Wijkkaart voor deur-aan-deuracties</sub></td>
     <td align="center" valign="top" width="20%"><a href="https://github.com/helmerzNL/NAS-Storage-Analyzer"><img src="nas-storage-analyzer/icon.png" width="72" alt=""><br><b>NAS Storage Analyzer</b></a><br><sub>Opslaganalyse van je shares, alleen-lezen</sub></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top" width="20%"><a href="https://github.com/Donkie/Spoolman"><img src="spoolman/icon.png" width="72" alt=""><br><b>Spoolman</b></a><br><sub>Voorraad van je filamentspoelen (door Donkie)</sub></td>
+    <td align="center" valign="top" width="20%"><a href="https://github.com/Rdiger-36/HaspelSync"><img src="haspelsync/icon.png" width="72" alt=""><br><b>HaspelSync</b></a><br><sub>Bambu Lab-AMS gelijk met Spoolman (door Rdiger-36)</sub></td>
   </tr>
 </table>
 
@@ -71,7 +75,8 @@ komen.
 
 ## Wat kan het?
 
-- **Vijf apps in één repository**: DiscVault, 3D Print Pricing, MealieShopper, Doorbell Map en NAS Storage Analyzer, met één knop aan Home Assistant toegevoegd.
+- **Zeven apps in één repository**: DiscVault, 3D Print Pricing, MealieShopper, Doorbell Map en NAS Storage Analyzer, plus Spoolman en HaspelSync
+  voor je 3D-printer, met één knop aan Home Assistant toegevoegd. Spoolman en HaspelSync zijn gemaakt door anderen; deze repository verpakt ze alleen.
 - **Dezelfde app als de Docker-versie**: elke app draait het image dat de app zelf publiceert; DiscVault en NAS Storage Analyzer nemen hun eigen
   PostgreSQL mee in dezelfde container, dus er hoeft niets anders geïnstalleerd te worden.
 - **Stabiel en beta naast elkaar**: elke beta heeft een eigen data-map en poort, zodat beide tegelijk draaien.
@@ -97,6 +102,10 @@ komen.
 | [**Doorbell Map (beta)**](doorbell-map-beta/DOCS.md) | De ontwikkelversie, naast de stabiele | 9889 | bestanden |
 | [**NAS Storage Analyzer**](nas-storage-analyzer/DOCS.md) | Opslaganalyse van shares, netwerkopslag en NFS/SMB-servers, alleen-lezen | 6480 | PostgreSQL, ingebouwd |
 | [**NAS Storage Analyzer (beta)**](nas-storage-analyzer-beta/DOCS.md) | De ontwikkelversie, naast de stabiele | 6481 | PostgreSQL, ingebouwd |
+| [**Spoolman**](spoolman/DOCS.md) | Voorraad van je filamentspoelen voor de 3D-printer, door [Donkie](https://github.com/Donkie/Spoolman) | 7912 | SQLite |
+| [**Spoolman (beta)**](spoolman-beta/DOCS.md) | De ontwikkelversie (`edge`), naast de stabiele | 7913 | SQLite |
+| [**HaspelSync**](haspelsync/DOCS.md) | Houdt Spoolman gelijk met de AMS van een Bambu Lab-printer, door [Rdiger-36](https://github.com/Rdiger-36/HaspelSync) | 4000 | bestanden |
+| [**HaspelSync (beta)**](haspelsync-beta/DOCS.md) | De ontwikkelversie (`dev`), naast de stabiele | 4001 | bestanden |
 
 Elke app draait op amd64 en aarch64. De naam linkt naar de documentatie van de app, die Home Assistant ook op het tabblad *Documentatie*
 toont; wat er per versie veranderde, staat in de `CHANGELOG.md` ernaast.
@@ -122,10 +131,14 @@ toont; wat er per versie veranderde, staat in de `CHANGELOG.md` ernaast.
   open dan het origin-adres met `/beheer` erachter, vul de instelcode in en maak je passkey.
 - **NAS Storage Analyzer**: start de app, lees de setup-token op het tabblad *Logboek*, open `http://<adres van Home Assistant>:6480` (of
   *Webinterface openen*), maak de beheerder met een wachtwoord en een authenticator-app, en voeg een share onder `/mnt/shares` toe.
+- **Spoolman**: start de app en open `http://<adres van Home Assistant>:7912` (of *Webinterface openen*). Hij heeft geen eigen inlog, dus houd
+  poort 7912 op je thuisnetwerk.
+- **HaspelSync**: start de app en open `http://<adres van Home Assistant>:4000`; stel onder **Settings** een wachtwoord en het Spoolman-endpoint in
+  (`http://<adres van Home Assistant>:7912` voor de Spoolman-app) en voeg je printers toe met serienummer, IP-adres en toegangscode.
 
 DiscVault, 3D Print Pricing en Doorbell Map loggen in met **passkeys**. Die werken alleen op een **https**-adres met een domeinnaam: zet er een
 reverse proxy met certificaat voor. 3D Print Pricing en (met de optie `password_login`) DiscVault accepteren ook een wachtwoord op een gewoon
-lokaal adres.
+lokaal adres. Spoolman heeft geen eigen inlog, en HaspelSync vraagt pas om een wachtwoord als je er een instelt.
 
 ## Configuratie
 
@@ -140,6 +153,8 @@ zelf te verzinnen.
 | MealieShopper | Alles optioneel, en een koppeling die je in de app maakt, gaat voor: `mealie_url`, `mealie_api_token`, `public_base_url`, `auth_secret`, `anthropic_api_key`, `openai_api_key`, `picnic_country_code`, `offers_schedule`, `offers_sync_hour`, `mcp`, `update_check`, `audit_log`, `audit_retention_days`, en voor passkeys `rp_id`, `rp_origins`, `rp_name` |
 | Doorbell Map | `origin` (verplicht), `rp_id`, `site_title`, `setup_token`, `session_hours` |
 | NAS Storage Analyzer | Alles optioneel: `setup_token`, `public_url`, voor passkeys `rp_id` en `rp_origins`, `trusted_proxies`, `worker_parallel`, `update_check`, en `encryption_key` alleen om een installatie te verhuizen |
+| Spoolman | `automatic_backup` (standaard aan), `log_level`, `update_check` |
+| HaspelSync | Geen: het Spoolman-endpoint, de printers en het wachtwoord stel je in in zijn webinterface |
 
 ## Beheer
 
@@ -151,10 +166,11 @@ zelf te verzinnen.
 | Logboek | Het tabblad *Logboek* van de app |
 
 - **Health check:** met *Watchdog* aan herstart de Supervisor een app die niet meer antwoordt op zijn health-adres: `/api/next/health` voor
-  DiscVault, `/healthz` voor 3D Print Pricing en MealieShopper, `/api/auth/status` voor Doorbell Map, `/readyz` voor NAS Storage Analyzer.
+  DiscVault, `/healthz` voor 3D Print Pricing en MealieShopper, `/api/auth/status` voor Doorbell Map, `/readyz` voor NAS Storage Analyzer,
+  `/api/v1/health` voor Spoolman en `/api/auth/state` voor HaspelSync.
 - **Grootste upload:** 3D Print Pricing accepteert STL- en 3MF-bestanden tot `max_upload_mb` (standaard 50 MB, hoogstens 500). Wat voor een app
   staat (een reverse proxy, een CDN) moet minstens zoveel toelaten. De andere apps noemen hun grens in hun eigen documentatie.
-- **Updatecheck:** 3D Print Pricing, MealieShopper en NAS Storage Analyzer kunnen de eigenaar ook in de app melden dat er een nieuwere release is (`update_check`);
+- **Updatecheck:** 3D Print Pricing, MealieShopper, NAS Storage Analyzer en Spoolman kunnen de eigenaar ook in de app melden dat er een nieuwere release is (`update_check`);
   ze werken zichzelf nooit bij.
 
 Sommige releases wijzigen de database, dus maak die back-up: een release die de database heeft gewijzigd, draait misschien niet op een oudere
@@ -183,8 +199,10 @@ De data-map van een app (`/data` erin) bevat alles:
 | MealieShopper | De database `auth.sqlite3` en `secret.key` |
 | Doorbell Map | De huizen, passkeys, instellingen en de automatische back-ups van de app, en de gegenereerde geheimen in `secrets.json` |
 | NAS Storage Analyzer | `postgres` (de database) en de gegenereerde encryptiesleutel in `encryption.key`, die de opgeslagen SMB-wachtwoorden versleutelt |
+| Spoolman | `spoolman`: de database `spoolman.db`, de nachtelijke kopieën in `backups` en de logs |
+| HaspelSync | `printers` (de printers, instellingen, vak-koppelingen en API-sleutels, als JSON-bestanden) en `logs` |
 
-Home Assistant neemt die map mee in elke back-up van de app. DiscVault, 3D Print Pricing, Doorbell Map en NAS Storage Analyzer worden daarbij even gestopt
+Home Assistant neemt die map mee in elke back-up van de app. Elke app behalve MealieShopper wordt daarbij even gestopt
 (`backup: cold`), omdat een database waarin geschreven wordt geen consistente kopie is. Verwijder `secrets.json` niet: het
 ondertekeningsgeheim van DiscVault beschermt ook de sleutels in zijn database. Zo kan NAS Storage Analyzer zijn opgeslagen SMB-wachtwoorden
 niet lezen zonder `encryption.key`.
@@ -192,7 +210,8 @@ niet lezen zonder `encryption.key`.
 **Terugzetten** doe je onder **Instellingen > Systeem > Back-ups**. Om te **verhuizen** tussen Home Assistant en de Docker-installatie gebruik je
 de eigen back-up en het terugzetten van de app (DiscVault: **Beheer → Backup**, ook volgens schema; 3D Print Pricing: *Instellingen → Systeem*;
 MealieShopper: **Instellingen > Systeem > Back-up en terugzetten**; NAS Storage Analyzer: **Instellingen → Back-up**), of kopieer je bij Doorbell Map de data-map of gebruik je een back-up uit
-het beheer.
+het beheer. Bij Spoolman kopieer je `spoolman.db`, bij HaspelSync de bestanden van zijn map `printers`; hun documentatie zegt waar die in het
+Docker-image staan.
 
 ## Architectuur
 
@@ -214,6 +233,8 @@ Er zijn twee soorten apps:
   geheimen één keer aan. DiscVault voegt PostgreSQL 17 toe en draait zijn database in dezelfde container; 3D Print Pricing heeft die alleen
   nodig voor de eenmalige import van een eerdere release. NAS Storage Analyzer bouwt op het all-in-one image van de app
   (`nas-storage-analyzer-aio`), waarin PostgreSQL 16, de webinterface en de scan-worker al zitten.
+- **Spoolman en HaspelSync** hebben ook een `Dockerfile` op het app-image van die versie. Het `run.py` van Spoolman maakt van de opties zijn
+  `SPOOLMAN_*`-variabelen en geeft zijn data-map aan de eigen gebruiker van het image; HaspelSync heeft geen opties en zet alleen zijn bestanden in `/data`.
 
 | Onderdeel | Doel |
 |---|---|
@@ -229,16 +250,17 @@ Er zijn twee soorten apps:
 | | Stabiel | Beta |
 |---|---|---|
 | Map | `<app>` | `<app>-beta` |
-| Image | de eigen versietag van de release | de meebewegende tag `beta` (MealieShopper: zijn `-beta`-release) |
+| Image | de eigen versietag van de release | de meebewegende tag `beta` (Spoolman: `edge`, HaspelSync: `dev`; MealieShopper: zijn `-beta`-release) |
 | Versie in Home Assistant | de release, bijvoorbeeld `1.0.30` | `<nieuwste release>-beta.<bouwtijd van het beta-image>`, bijvoorbeeld `1.0.30-beta.202610281205` |
 | Poort | de poort van de app | één hoger |
 
 Elke beta heeft een eigen data-map en poort, zodat hij naast de stabiele draait. Een beta is om nieuwe functies te proberen; gebruik de data
 van de stabiele app niet voor een beta.
 
-De beta-images van DiscVault, Doorbell Map, 3D Print Pricing en NAS Storage Analyzer hebben alleen een meebewegende `beta`-tag, dus hun versie draagt de bouwtijd van
-het beta-image: elke nieuwe beta-build geeft een hogere versie en een update, en de Supervisor bouwt de app dan opnieuw en haalt het
-`beta`-image opnieuw op. Hun beta-mappen worden **gegenereerd** uit de stabiele mappen met `scripts/derive_beta.py`: pas de stabiele map aan en
+De beta-images van DiscVault, Doorbell Map, 3D Print Pricing en NAS Storage Analyzer hebben alleen een meebewegende `beta`-tag, en die van
+Spoolman (`edge`, gebouwd vanaf zijn `master`-branch) en HaspelSync (`dev`, zijn `-dev`-releases) een eigen meebewegende tag, dus hun versie draagt
+de bouwtijd van het beta-image: elke nieuwe beta-build geeft een hogere versie en een update, en de Supervisor bouwt de app dan opnieuw en haalt
+dat image opnieuw op. Hun beta-mappen worden **gegenereerd** uit de stabiele mappen met `scripts/derive_beta.py`: pas de stabiele map aan en
 draai het script (de CI faalt als een beta-map is afgedreven). MealieShopper publiceert zijn beta's als eigen releases, en zijn beta-map wordt
 met de hand gelijk gehouden.
 
@@ -259,14 +281,16 @@ python scripts/sync_versions.py --check  # welke versies verhoogd zouden worden
 Een nieuwe app toevoegen: maak een map met `config.yaml`, `README.md` en `DOCS.md` (elk met een Engelse en een Nederlandse sectie en een
 snelstart/installatie), `CHANGELOG.md`, `icon.png` (128 px), `logo.png` (256 px) en `translations/en.yaml` en `nl.yaml`; zet hem in
 `sources.json` en in de lijsten van `.github/workflows/ci.yml`. `check_addons.py` meldt wat er nog ontbreekt. Een beta maak je door
-`"channel": "beta"` en `"stable": "<map>"` in zijn regel in `sources.json` te zetten en `python scripts/derive_beta.py` te draaien.
+`"channel": "beta"` en `"stable": "<map>"` in zijn regel in `sources.json` te zetten (en, als de meebewegende tag van de app niet `beta` is, die tag
+als `"image_tag"` en de branch waarvan hij gebouwd wordt als `"branch"`) en `python scripts/derive_beta.py` te draaien.
 
 ## Privacy en beveiliging
 
 - Alles draait op je eigen Home Assistant: geen account bij ons, geen analytics, geen tracking. Deze repository voegt niets toe dat contact
   maakt met wie dan ook; met wie een app verbinding maakt, staat in zijn eigen documentatie.
-- De apps hebben geen ingress: elk heeft een eigen inlog en een eigen poort. Zet een poort niet rechtstreeks open naar internet; zet voor
-  toegang van buitenaf een reverse proxy met https ervoor.
+- De apps hebben geen ingress: elk heeft een eigen poort en een eigen inlog, behalve Spoolman, die er geen heeft, en HaspelSync, die pas om een
+  wachtwoord vraagt als je er een instelt. Zet een poort niet rechtstreeks open naar internet; zet voor toegang van buitenaf een reverse proxy met
+  https ervoor, en houd Spoolman op je thuisnetwerk.
 - NAS Storage Analyzer vraagt de capabilities `SYS_ADMIN` en `DAC_READ_SEARCH` (die laatste voor SMB) en draait zonder AppArmor, omdat zijn
   scan-worker zelf NFS- en SMB-shares mount (alleen-lezen); het tabblad *Documentatie* legt uit waarom. De andere apps vragen geen extra
   rechten.

@@ -16,7 +16,7 @@ class RepositoryTest(unittest.TestCase):
 
     def test_every_app_has_an_addon(self):
         names = {folder.name for folder in check_addons.addon_dirs()}
-        self.assertEqual(names, {"discvault", "discvault-beta", "doorbell-map", "doorbell-map-beta", "mealieshopper", "mealieshopper-beta", "nas-storage-analyzer", "nas-storage-analyzer-beta", "printpricing", "printpricing-beta"})
+        self.assertEqual(names, {"discvault", "discvault-beta", "doorbell-map", "doorbell-map-beta", "mealieshopper", "mealieshopper-beta", "nas-storage-analyzer", "nas-storage-analyzer-beta", "printpricing", "printpricing-beta", "spoolman", "spoolman-beta", "haspelsync", "haspelsync-beta"})
 
 
 class AddonContentTest(unittest.TestCase):
@@ -53,6 +53,35 @@ class AddonContentTest(unittest.TestCase):
     def test_mealieshopper_offers_another_ai_address(self):
         # MealieShopper 3.14.0 reads anthropic_base_url and openai_base_url from options.json (docker-entrypoint.py, OPTION_ENV).
         self.assertLessEqual({"anthropic_base_url", "openai_base_url"}, set(self.config("mealieshopper").get("schema") or {}))
+
+
+class DeriveBetaTagTest(unittest.TestCase):
+    """A beta on another moving tag than `beta` (Spoolman's `edge` from master, HaspelSync's `dev` from main) is derived on that tag and names its branch."""
+
+    def setUp(self):
+        import derive_beta
+        self.derive = derive_beta
+
+    def test_dockerfile_builds_on_the_beta_tag(self):
+        stable = "ARG BUILD_VERSION=latest\nFROM ghcr.io/donkie/spoolman:${BUILD_VERSION}\nCOPY run.py /run.py\n"
+        text = self.derive.beta_dockerfile(stable, "edge", "master")
+        self.assertIn("FROM ghcr.io/donkie/spoolman:edge\n", text)
+        self.assertIn("the `edge` image of the app, which moves with every build of its master branch", text)
+        self.assertNotIn(":beta", text)
+
+    def test_notice_and_changelog_name_the_branch(self):
+        doc = "# Spoolman\n\n*English first, Nederlands hieronder.*\n\nPort 7912.\n"
+        text = self.derive.beta_doc(doc, "Spoolman", "7912", "7913", "master")
+        self.assertIn("built from its `master` branch", text)
+        self.assertIn("gebouwd vanaf de `master`-branch", text)
+        self.assertIn("Port 7913.", text)
+        changelog = self.derive.beta_changelog("", "Donkie/Spoolman", "master")
+        self.assertIn("https://github.com/Donkie/Spoolman/commits/master", changelog)
+
+    def test_the_defaults_are_the_beta_tag_and_branch(self):
+        stable = "ARG BUILD_VERSION=latest\nFROM ghcr.io/helmerznl/discvault:${BUILD_VERSION}\n"
+        self.assertIn("FROM ghcr.io/helmerznl/discvault:beta\n", self.derive.beta_dockerfile(stable))
+        self.assertIn("commits/beta", self.derive.beta_changelog("", "helmerzNL/DiscVault"))
 
 
 class DefectsAreCaughtTest(unittest.TestCase):

@@ -1,0 +1,19 @@
+# DERIVED from ../haspelsync by `python scripts/derive_beta.py`: change the stable add-on, not this file. The beta add-on runs the `dev` image of the app;
+# its `version` ends in -beta.<build time of that image> and is raised by `scripts/sync_versions.py`, so Home Assistant offers an update for every new beta build.
+name: HaspelSync (beta)
+version: "1.3.7-beta.202611110138"
+slug: haspelsync_beta
+description: Development version (beta). Keeps Spoolman in step with the AMS of your Bambu Lab printers, and books what every print uses on the right spool
+url: https://github.com/Rdiger-36/HaspelSync
+arch:
+  - amd64
+  - aarch64
+# The printers, settings and mappings are JSON files in /data/printers; a stop gives a consistent copy.
+backup: cold
+timeout: 30
+ports:
+  4000/tcp: 4001
+ports_description:
+  4000/tcp: Web interface
+webui: "http://[HOST]:[PORT:4000]"
+watchdog: "http://[HOST]:[PORT:4000]/api/auth/state"
