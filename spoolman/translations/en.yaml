@@ -1,0 +1,14 @@
+configuration:
+  automatic_backup:
+    name: Automatic backup
+    description: Let Spoolman copy its database every night into the backups folder in the app's data folder. On by default.
+  log_level:
+    name: Log level
+    description: How much Spoolman writes to the Log tab. INFO is enough; DEBUG for tracking down a problem.
+  update_check:
+    name: Check for new releases
+    description: >-
+      Let Spoolman ask GitHub whether a newer release exists and show it in its web interface. The update itself comes as an update of this
+      app, once its image is published.
+network:
+  8000/tcp: Web interface and API of Spoolman (also the address for HaspelSync, Klipper/Moonraker, OctoPrint and 3D Print Pricing)

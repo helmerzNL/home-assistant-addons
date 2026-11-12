@@ -1,0 +1,2 @@
+network:
+  4000/tcp: Webinterface van HaspelSync

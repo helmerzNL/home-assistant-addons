@@ -19,6 +19,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import subprocess
 import sys
 import urllib.error
 import urllib.parse
@@ -74,6 +75,27 @@ def _get(url: str, headers: dict | None = None, method: str = "GET"):
 
 
 def repo_tags(repo: str) -> list[str]:
+    """The tags of a GitHub repository: from the API, or with git when the API refuses.
+
+    The API can answer 403 or 429 (the hourly limit for requests without a token, or a proxy that only lets it reach some repositories, as the
+    container of the scheduled version check does for apps outside this account), and 404 for a repository the token cannot see. A public repository
+    still answers `git ls-remote` then, so the third-party apps (Spoolman, HaspelSync) are followed from there as well.
+    """
+    try:
+        return api_tags(repo)
+    except urllib.error.HTTPError as error:
+        if error.code not in (403, 404, 429):
+            raise
+        return git_tags(repo)
+
+
+def git_tags(repo: str) -> list[str]:
+    done = subprocess.run(["git", "ls-remote", "--tags", "--refs", f"https://github.com/{repo}.git"],
+                          capture_output=True, text=True, timeout=60, check=True)
+    return [line.split("refs/tags/", 1)[1] for line in done.stdout.splitlines() if "\trefs/tags/" in line]
+
+
+def api_tags(repo: str) -> list[str]:
     headers = {"Accept": "application/vnd.github+json"}
     if os.environ.get("GITHUB_TOKEN"):
         headers["Authorization"] = f"Bearer {os.environ['GITHUB_TOKEN']}"

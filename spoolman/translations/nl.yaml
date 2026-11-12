@@ -1,0 +1,14 @@
+configuration:
+  automatic_backup:
+    name: Automatische back-up
+    description: Laat Spoolman elke nacht een kopie van zijn database maken in de map backups in de data-map van de app. Standaard aan.
+  log_level:
+    name: Logniveau
+    description: Hoeveel Spoolman op het tabblad Logboek schrijft. INFO is genoeg; DEBUG om een probleem op te sporen.
+  update_check:
+    name: Zoeken naar nieuwe releases
+    description: >-
+      Laat Spoolman bij GitHub vragen of er een nieuwere release is en dat in zijn webinterface tonen. De update zelf komt als update van
+      deze app, zodra het image ervan gepubliceerd is.
+network:
+  8000/tcp: Webinterface en API van Spoolman (ook het adres voor HaspelSync, Klipper/Moonraker, OctoPrint en 3D Print Pricing)

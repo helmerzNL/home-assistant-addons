@@ -1,0 +1,27 @@
+# Home Assistant app for Spoolman (https://github.com/Donkie/Spoolman), a third-party app that this repository only packages. The Supervisor builds
+# Dockerfile on the device on the published image ghcr.io/donkie/spoolman:<version>; `scripts/sync_versions.py` raises `version` once that image exists.
+name: Spoolman
+version: "0.27.1"
+slug: spoolman
+description: Inventory of your 3D-printer filament spools, with what every print uses booked on the right spool
+url: https://github.com/Donkie/Spoolman
+arch:
+  - amd64
+  - aarch64
+# The SQLite database is in /data/spoolman; a stop gives a consistent copy.
+backup: cold
+timeout: 60
+ports:
+  8000/tcp: 7912
+ports_description:
+  8000/tcp: Web interface and API
+webui: "http://[HOST]:[PORT:8000]"
+watchdog: "http://[HOST]:[PORT:8000]/api/v1/health"
+options:
+  automatic_backup: true
+  log_level: INFO
+  update_check: true
+schema:
+  automatic_backup: bool
+  log_level: list(DEBUG|INFO|WARNING|ERROR)
+  update_check: bool
