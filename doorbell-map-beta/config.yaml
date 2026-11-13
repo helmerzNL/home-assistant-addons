@@ -1,7 +1,7 @@
 # DERIVED from ../doorbell-map by `python scripts/derive_beta.py`: change the stable add-on, not this file. The beta add-on runs the `beta` image of the app;
 # its `version` ends in -beta.<build time of that image> and is raised by `scripts/sync_versions.py`, so Home Assistant offers an update for every new beta build.
 name: Doorbell Map (beta)
-version: "2.0.2-beta.202611121710"
+version: "2.0.3-beta.202611121710"
 slug: doorbell_map_beta
 description: Development version (beta). Interactive neighbourhood map that shows which houses want (or do not want) a visit at the door, for example on St. Martin's Day
 url: https://github.com/helmerzNL/Doorbell-Map
