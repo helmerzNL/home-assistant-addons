@@ -35,6 +35,17 @@ class RelyingPartyTest(unittest.TestCase):
             with self.assertRaises(SystemExit):
                 load(folder).settings({"rp_id": "https://print.example.com"}, KEPT)
 
+    def test_haspelsync_options_become_its_variables(self):
+        for folder in ("printpricing", "printpricing-beta"):
+            env = load(folder).settings({"haspelsync_url": " http://homeassistant.local:4000 ", "haspelsync_api_key": "ams_x"}, KEPT)
+            self.assertEqual((env["HASPELSYNC_URL"], env["HASPELSYNC_API_KEY"]), ("http://homeassistant.local:4000", "ams_x"), folder)
+            self.assertEqual(load(folder).settings({}, KEPT)["HASPELSYNC_URL"], "", folder)
+
+    def test_a_haspelsync_key_needs_its_address(self):
+        for folder in ("printpricing", "printpricing-beta"):
+            with self.assertRaises(SystemExit):
+                load(folder).settings({"haspelsync_api_key": "ams_x"}, KEPT)
+
     def test_the_app_gets_no_database_url_of_its_own(self):
         for folder in ("printpricing", "printpricing-beta"):
             env = load(folder).settings({}, KEPT)

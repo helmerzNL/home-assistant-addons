@@ -43,7 +43,9 @@ not offered through the Home Assistant sidebar (Ingress): it is made to be serve
 | **setup_code** | Typed once on the first screen. Empty makes one and prints it in the Log. |
 | **max_upload_mb** | Largest STL/3MF upload. A proxy in front has to allow at least as much. |
 | **ai_images_enabled** | Switches on the optional AI product images. The OpenAI key is entered in the app, under *Settings → AI images*. |
-| **spoolman_url** | Address of a Spoolman, for example `http://homeassistant.local:7912`. Empty: type it in the app (*Settings → Filaments*, in the *Spoolman* card, which is folded at first). |
+| **spoolman_url** | Address of a Spoolman, for example `http://homeassistant.local:7912` (the Spoolman app in this repository). Empty: type it in the app (*Settings → Integrations*). |
+| **haspelsync_url** | Address of a HaspelSync, for example `http://homeassistant.local:4000` (the HaspelSync app in this repository): the *Printers* page then shows what each Bambu Lab printer is printing and which filament is in it. Empty: type it in the app (*Settings → Integrations*). A name that does not end in `.local` has to be listed under *Allowed host names* in HaspelSync; an IP address does not. |
+| **haspelsync_api_key** | An API key made in HaspelSync under *Network access* (it starts with `ams_`; it can do everything there, so make one for this app). Needs `haspelsync_url` as well and is only sent to that address. Empty: type it in the app. |
 | **update_check** | The app asks GitHub whether a newer release exists and tells the owner. It never updates anything; updating is done here, in Home Assistant. |
 
 Changes take effect after a restart of the app.
@@ -105,7 +107,9 @@ via de zijbalk van Home Assistant (Ingress) aangeboden: hij is gemaakt om op de 
 | **setup_code** | Eenmalig in het eerste scherm in te typen. Leeg maakt er een en toont die in het Logboek. |
 | **max_upload_mb** | Grootste STL/3MF-upload. Een proxy ervoor moet minstens zoveel toestaan. |
 | **ai_images_enabled** | Schakelt de optionele AI-productafbeeldingen in. De OpenAI-sleutel voer je in de app in, onder *Instellingen → AI-afbeeldingen*. |
-| **spoolman_url** | Adres van een Spoolman, bijvoorbeeld `http://homeassistant.local:7912`. Leeg: typ het in de app (*Instellingen → Filamenten*, in de kaart *Spoolman*, die eerst ingeklapt is). |
+| **spoolman_url** | Adres van een Spoolman, bijvoorbeeld `http://homeassistant.local:7912` (de Spoolman-app in deze repository). Leeg: typ het in de app (*Instellingen → Koppelingen*). |
+| **haspelsync_url** | Adres van een HaspelSync, bijvoorbeeld `http://homeassistant.local:4000` (de HaspelSync-app in deze repository): de pagina *Printers* toont dan wat elke Bambu Lab-printer print en welk filament erin zit. Leeg: typ het in de app (*Instellingen → Koppelingen*). Een naam die niet op `.local` eindigt moet in HaspelSync onder *Allowed host names* staan; een IP-adres niet. |
+| **haspelsync_api_key** | Een API-sleutel die je in HaspelSync maakt onder *Network access* (hij begint met `ams_` en kan daar alles, dus maak er een voor deze app). Heeft ook `haspelsync_url` nodig en wordt alleen naar dat adres gestuurd. Leeg: typ hem in de app. |
 | **update_check** | De app vraagt GitHub of er een nieuwere release is en meldt dat aan de eigenaar. Hij werkt nooit zelf bij; bijwerken doe je hier, in Home Assistant. |
 
 Wijzigingen gaan in na een herstart van de app.
