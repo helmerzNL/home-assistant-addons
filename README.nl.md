@@ -149,7 +149,7 @@ zelf te verzinnen.
 | App | Opties |
 |---|---|
 | DiscVault | Passkeys: `rp_id` (verplicht, tenzij `password_login` aanstaat; later wijzigen maakt bestaande passkeys onbruikbaar), `rp_origins`, `rp_name`. Inloggen met wachtwoord: `password_login`. OpenID Connect: `oidc_issuer`, `oidc_client_id`, `oidc_client_secret`, `oidc_provider_name`, `oidc_insecure_backchannel_origins`. Verder `trusted_proxies`, `omdb_api_key`, `tmdb_api_key` en `block_crawlers` (standaard aan) |
-| 3D Print Pricing | Passkeys: `rp_id`, `rp_origins`. Verder `setup_code`, `proxy_hops`, `max_upload_mb`, `ai_images_enabled`, `spoolman_url` en `update_check` |
+| 3D Print Pricing | Passkeys: `rp_id`, `rp_origins`. Verder `setup_code`, `proxy_hops`, `max_upload_mb`, `ai_images_enabled`, `spoolman_url`, `haspelsync_url`, `haspelsync_api_key` en `update_check` |
 | MealieShopper | Alles optioneel, en een koppeling die je in de app maakt, gaat voor: `mealie_url`, `mealie_api_token`, `public_base_url`, `auth_secret`, `anthropic_api_key`, `openai_api_key`, `picnic_country_code`, `offers_schedule`, `offers_sync_hour`, `mcp`, `update_check`, `audit_log`, `audit_retention_days`, en voor passkeys `rp_id`, `rp_origins`, `rp_name` |
 | Doorbell Map | `origin` (verplicht), `rp_id`, `site_title`, `setup_token`, `session_hours` |
 | NAS Storage Analyzer | Alles optioneel: `setup_token`, `public_url`, voor passkeys `rp_id` en `rp_origins`, `trusted_proxies`, `worker_parallel`, `update_check`, en `encryption_key` alleen om een installatie te verhuizen |

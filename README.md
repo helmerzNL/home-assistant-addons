@@ -147,7 +147,7 @@ Everything is set on the app's *Configuration* tab; each option is explained the
 | App | Options |
 |---|---|
 | DiscVault | Passkeys: `rp_id` (required unless `password_login` is on; changing it later makes existing passkeys unusable), `rp_origins`, `rp_name`. Password sign-in: `password_login`. OpenID Connect: `oidc_issuer`, `oidc_client_id`, `oidc_client_secret`, `oidc_provider_name`, `oidc_insecure_backchannel_origins`. Also `trusted_proxies`, `omdb_api_key`, `tmdb_api_key` and `block_crawlers` (on by default) |
-| 3D Print Pricing | Passkeys: `rp_id`, `rp_origins`. Also `setup_code`, `proxy_hops`, `max_upload_mb`, `ai_images_enabled`, `spoolman_url` and `update_check` |
+| 3D Print Pricing | Passkeys: `rp_id`, `rp_origins`. Also `setup_code`, `proxy_hops`, `max_upload_mb`, `ai_images_enabled`, `spoolman_url`, `haspelsync_url`, `haspelsync_api_key` and `update_check` |
 | MealieShopper | All optional, and a link made in the app takes precedence: `mealie_url`, `mealie_api_token`, `public_base_url`, `auth_secret`, `anthropic_api_key`, `openai_api_key`, `picnic_country_code`, `offers_schedule`, `offers_sync_hour`, `mcp`, `update_check`, `audit_log`, `audit_retention_days`, and for passkeys `rp_id`, `rp_origins`, `rp_name` |
 | Doorbell Map | `origin` (required), `rp_id`, `site_title`, `setup_token`, `session_hours` |
 | NAS Storage Analyzer | All optional: `setup_token`, `public_url`, for passkeys `rp_id` and `rp_origins`, `trusted_proxies`, `worker_parallel`, `update_check`, and `encryption_key` only to move an installation |
