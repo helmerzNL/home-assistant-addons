@@ -202,7 +202,7 @@ De data-map van een app (`/data` erin) bevat alles:
 | Spoolman | `spoolman`: de database `spoolman.db`, de nachtelijke kopieën in `backups` en de logs |
 | HaspelSync | `printers` (de printers, instellingen, vak-koppelingen en API-sleutels, als JSON-bestanden) en `logs` |
 
-Home Assistant neemt die map mee in elke back-up van de app. Elke app behalve MealieShopper wordt daarbij even gestopt
+Home Assistant neemt die map mee in elke back-up van de app. Elke app wordt daarbij even gestopt
 (`backup: cold`), omdat een database waarin geschreven wordt geen consistente kopie is. Verwijder `secrets.json` niet: het
 ondertekeningsgeheim van DiscVault beschermt ook de sleutels in zijn database. Zo kan NAS Storage Analyzer zijn opgeslagen SMB-wachtwoorden
 niet lezen zonder `encryption.key`.

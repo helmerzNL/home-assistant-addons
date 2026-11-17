@@ -50,6 +50,12 @@ class AddonContentTest(unittest.TestCase):
             with self.subTest(name):
                 self.assertIn("max_backups", self.config(name).get("schema") or {})
 
+    def test_every_addon_is_stopped_for_a_backup(self):
+        """Every app keeps a database in /data (SQLite, in WAL for MealieShopper since 4.26.0, or PostgreSQL): a copy taken while it writes is
+        not consistent, so Home Assistant stops the app for a backup. The READMEs say so for every app."""
+        for folder in sorted(p.parent.name for p in ROOT.glob("*/config.yaml")):
+            self.assertEqual(self.config(folder).get("backup"), "cold", folder)
+
     def test_mealieshopper_offers_another_ai_address(self):
         # MealieShopper 3.14.0 reads anthropic_base_url and openai_base_url from options.json (docker-entrypoint.py, OPTION_ENV).
         self.assertLessEqual({"anthropic_base_url", "openai_base_url"}, set(self.config("mealieshopper").get("schema") or {}))

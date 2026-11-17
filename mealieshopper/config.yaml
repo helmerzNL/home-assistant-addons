@@ -9,6 +9,9 @@ image: ghcr.io/helmerznl/mealieshopper
 arch:
   - amd64
   - aarch64
+# De database is SQLite en draait sinds 4.26.0 in WAL: de nieuwste gegevens kunnen in het -wal-bestand staan, en een kopie terwijl de app
+# schrijft is niet consistent. Daarom stopt Home Assistant de app even voor een back-up.
+backup: cold
 # Geen ingress: MealieShopper heeft eigen inlog, passkeys en een MCP-server die op een eigen adres moeten bereikbaar zijn.
 ports:
   8000/tcp: 5959

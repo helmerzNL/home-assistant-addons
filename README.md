@@ -199,7 +199,7 @@ The data folder of an app (`/data` inside it) holds everything:
 | Spoolman | `spoolman`: the database `spoolman.db`, its nightly copies in `backups` and its logs |
 | HaspelSync | `printers` (the printers, settings, slot mappings and API keys, as JSON files) and `logs` |
 
-Home Assistant includes that folder in every backup of the app. Every app except MealieShopper is stopped for a moment while
+Home Assistant includes that folder in every backup of the app. Every app is stopped for a moment while
 it makes one (`backup: cold`), because a database that is being written is not a consistent copy. Do not delete `secrets.json`: DiscVault's signing secret also protects the keys stored in its database. Likewise NAS Storage Analyzer cannot read its stored SMB passwords without `encryption.key`.
 
 **Restore** a backup under **Settings > System > Backups**. To **move** between Home Assistant and the Docker installation, use the app's own
