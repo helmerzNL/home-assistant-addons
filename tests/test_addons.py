@@ -56,6 +56,18 @@ class AddonContentTest(unittest.TestCase):
         for folder in sorted(p.parent.name for p in ROOT.glob("*/config.yaml")):
             self.assertEqual(self.config(folder).get("backup"), "cold", folder)
 
+    def test_haspelsync_hands_its_folders_to_the_node_user(self):
+        """Since 1.4.0 the HaspelSync image runs as `node` (uid 1000) and refuses data folders it cannot write, while /data of an app belongs to
+        root. The start runs as root, creates DATA_DIR and LOG_DIR, gives them to node and then runs the app as node, as the main process."""
+        for folder in ("haspelsync", "haspelsync-beta"):
+            text = (ROOT / folder / "Dockerfile").read_text(encoding="utf-8")
+            self.assertIn("\nUSER root\n", text, folder)
+            self.assertNotIn("apk add", text, folder)  # the image's own BusyBox su: the build needs no package mirror
+            cmd = [line for line in text.splitlines() if line.startswith("CMD ")][-1]
+            self.assertIn('mkdir -p \\"$DATA_DIR\\" \\"$LOG_DIR\\"', cmd, folder)
+            self.assertIn('chown -R node:node \\"$DATA_DIR\\" \\"$LOG_DIR\\"', cmd, folder)
+            self.assertIn("exec su node -s /bin/sh -c 'exec node entrypoint.js'", cmd, folder)
+
     def test_mealieshopper_offers_another_ai_address(self):
         # MealieShopper 3.14.0 reads anthropic_base_url and openai_base_url from options.json (docker-entrypoint.py, OPTION_ENV).
         self.assertLessEqual({"anthropic_base_url", "openai_base_url"}, set(self.config("mealieshopper").get("schema") or {}))
