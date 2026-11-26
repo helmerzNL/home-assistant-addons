@@ -16,8 +16,11 @@ from the sliced file. HaspelSync is made by Rdiger-36; this app only packages th
 - For every printer: its **serial number**, **IP address** and **access code** (on the printer's screen, under the network or LAN settings). Give
   the printer a fixed IP address in your router.
 - Home Assistant has to reach the printer on port **8883** (MQTT, what the AMS holds) and **990** (FTPS, the sliced file). Cloud mode, LAN only mode
-  and developer mode all work: nothing is read through the Bambu cloud.
+  and developer mode all work: nothing is sent to the Bambu cloud. Since version 1.4.1 one thing is read from it: the sliced file of a print
+  that Bambu Studio (2.9.2 or newer) sent through the cloud and that never reached the printer's storage. The printer announces the download
+  link of that job itself; the link holds no account data and needs no login, and the file is checked against the md5 the printer was given.
 - A **P2S**, an **H2** series printer or an **X2D** needs a USB stick in the printer: those models only offer the sliced file from the stick.
+  Without one, only a print sent through the cloud is booked (from version 1.4.1).
 - In Bambu Studio turn on **Update remaining capacity**, so the AMS reports the remaining weight a spool is matched against.
 
 ### Install
@@ -73,9 +76,12 @@ geslicede bestand. HaspelSync is gemaakt door Rdiger-36; deze app verpakt alleen
 - Van elke printer: het **serienummer**, het **IP-adres** en de **toegangscode** (op het scherm van de printer, bij de netwerk- of LAN-instellingen).
   Geef de printer een vast IP-adres in je router.
 - Home Assistant moet de printer kunnen bereiken op poort **8883** (MQTT, wat de AMS bevat) en **990** (FTPS, het geslicede bestand). Cloudmodus,
-  alleen-LAN-modus en ontwikkelaarsmodus werken allemaal: er wordt niets via de Bambu-cloud gelezen.
+  alleen-LAN-modus en ontwikkelaarsmodus werken allemaal: er wordt niets naar de Bambu-cloud gestuurd. Sinds versie 1.4.1 wordt er één ding
+  uit gelezen: het geslicede bestand van een print die Bambu Studio (2.9.2 of nieuwer) via de cloud stuurde en die nooit in de opslag van de
+  printer terechtkwam. De printer meldt de downloadlink van die opdracht zelf; de link bevat geen accountgegevens en vraagt geen inlog, en het
+  bestand wordt gecontroleerd met de md5 die de printer kreeg.
 - Een **P2S**, een printer uit de **H2**-serie of een **X2D** heeft een USB-stick in de printer nodig: die modellen bieden het geslicede bestand
-  alleen vanaf de stick aan.
+  alleen vanaf de stick aan. Zonder stick wordt alleen een print geboekt die via de cloud is gestuurd (vanaf versie 1.4.1).
 - Zet in Bambu Studio **Update remaining capacity** aan, zodat de AMS het resterende gewicht doorgeeft waarop een spoel wordt gematcht.
 
 ### Installeren

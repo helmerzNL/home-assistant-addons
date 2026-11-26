@@ -68,6 +68,24 @@ class AddonContentTest(unittest.TestCase):
             self.assertIn('chown -R node:node \\"$DATA_DIR\\" \\"$LOG_DIR\\"', cmd, folder)
             self.assertIn("exec su node -s /bin/sh -c 'exec node entrypoint.js'", cmd, folder)
 
+    def test_mealieshopper_beta_describes_the_window_of_the_offers_run(self):
+        # Since 4.33.0 offers_sync_hour (MEALIESHOPPER_OFFERS_SYNC_HOUR) is the hour a 90-minute window starts on, and empty is 07:30 to 09:00
+        # (mealieshopper/offers_schedule.py); the add-on sets no default, so the window applies. The text follows the app's own add-on folder.
+        for language, window in (("en", "between 07:30 and 09:00"), ("nl", "tussen 07:30 en 09:00")):
+            with self.subTest(language):
+                entry = check_addons.load(ROOT / "mealieshopper-beta" / "translations" / f"{language}.yaml")["configuration"]["offers_sync_hour"]
+                self.assertIn(window, entry["description"])
+        self.assertNotIn("offers_sync_hour", self.config("mealieshopper-beta").get("options") or {})
+
+    def test_haspelsync_says_what_it_reads_from_the_bambu_cloud(self):
+        # Since 1.4.1 HaspelSync downloads the sliced file of a cloud print from the job's cloud link when the printer has no copy
+        # (Rdiger-36/HaspelSync issue #281): the documentation no longer says nothing is read through the cloud.
+        for folder in ("haspelsync", "haspelsync-beta"):
+            text = (ROOT / folder / "DOCS.md").read_text(encoding="utf-8")
+            self.assertNotIn("nothing is read through the Bambu cloud", text, folder)
+            self.assertIn("nothing is sent to the Bambu cloud", text, folder)
+            self.assertIn("niets naar de Bambu-cloud gestuurd", text, folder)
+
     def test_mealieshopper_offers_another_ai_address(self):
         # MealieShopper 3.14.0 reads anthropic_base_url and openai_base_url from options.json (docker-entrypoint.py, OPTION_ENV).
         self.assertLessEqual({"anthropic_base_url", "openai_base_url"}, set(self.config("mealieshopper").get("schema") or {}))
